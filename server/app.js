@@ -29,7 +29,7 @@ function criarApp({ config, store, io, relogio = () => new Date() }) {
     };
 
     function configPublica() {
-        return { tratamentos: config.tratamentos, som: config.som, painel: config.painel };
+        return { tratamentos: config.tratamentos, salas: config.salas, som: config.som, painel: config.painel };
     }
 
     function visao() {

@@ -29,7 +29,7 @@ cd web && npm install && npm run build
 
 ## Configuração
 
-`config/configuracao.json`: tratamentos (id, nome, cor), som (repetições, intervalo
+`config/configuracao.json`: tratamentos (id, nome, cor), salas (atalhos numerados: quantidade e prefixo, padrão 6 × "Sala"; mais `extras` com salas de nome próprio, ex.: "Sala Reiki"), som (repetições, intervalo
 em ms — padrão 4000, volume) e painel (tempo de destaque, exibir sobrenome completo,
 quantidade de chamadas anteriores). Alterações valem ao reiniciar o servidor.
 

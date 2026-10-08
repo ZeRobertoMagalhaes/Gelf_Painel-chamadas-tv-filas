@@ -3,6 +3,7 @@ const path = require('path');
 
 const PADRAO = {
     tratamentos: [],
+    salas: { quantidade: 6, prefixo: 'Sala', extras: [] },
     som: { repeticoes: 2, intervaloMs: 4000, volume: 0.3 },
     painel: { destaqueMs: 15000, exibirSobrenomeCompleto: true, ultimasChamadas: 4 },
 };
@@ -25,10 +26,20 @@ function normalizar(bruto) {
     if (tratamentos.length === 0) {
         throw new Error('configuracao.json: defina ao menos um tratamento (id, nome, cor).');
     }
+    const salas = bruto.salas || {};
     const som = bruto.som || {};
     const painel = bruto.painel || {};
     return {
         tratamentos,
+        salas: {
+            quantidade: numeroEntre(salas.quantidade, 0, 30, PADRAO.salas.quantidade),
+            prefixo: typeof salas.prefixo === 'string' && salas.prefixo.trim() ? salas.prefixo.trim().slice(0, 20) : PADRAO.salas.prefixo,
+            // Salas com nome próprio (ex: "Sala Reiki"), além das numeradas.
+            extras: (Array.isArray(salas.extras) ? salas.extras : [])
+                .filter((n) => typeof n === 'string' && n.trim())
+                .map((n) => n.trim().slice(0, 40))
+                .slice(0, 8),
+        },
         som: {
             repeticoes: numeroEntre(som.repeticoes, 1, 5, PADRAO.som.repeticoes),
             intervaloMs: numeroEntre(som.intervaloMs, 500, 15000, PADRAO.som.intervaloMs),

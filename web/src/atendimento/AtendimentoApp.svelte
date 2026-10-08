@@ -28,7 +28,12 @@
       .sort((a, b) => (b.chamadoPor === equipeId) - (a.chamadoPor === equipeId)),
   );
   const euAtendo = $derived(emCurso.some((p) => p.chamadoPor === equipeId));
-  const salasDoDia = $derived([...new Set((estado?.pacientes ?? []).map((p) => p.sala).filter(Boolean))].slice(0, 8));
+  // Atalhos de sala: numeradas (1..N, tocar escolhe "Sala N") e as de nome próprio
+  // da configuração (ex.: "Sala Reiki"). O campo continua livre.
+  const salasRapidas = $derived([
+    ...Array.from({ length: config?.salas.quantidade ?? 0 }, (_, i) => ({ valor: `${config.salas.prefixo} ${i + 1}`, rotulo: String(i + 1) })),
+    ...(config?.salas.extras ?? []).map((nome) => ({ valor: nome, rotulo: nome, nomeada: true })),
+  ]);
   const fechado = $derived(estado && !estado.atendimentoAberto);
 
   onMount(() => conectar());
@@ -130,14 +135,15 @@
 
     {#if !euAtendo}
       <section class="bloco-chamar">
-        <label for="sala">Sala / maca desta chamada</label>
-        <input id="sala" bind:value={sala} placeholder="Ex.: Sala 2" maxlength="40" autocomplete="off" />
-        {#if salasDoDia.length > 0}
-          <div class="chips-sala">
-            {#each salasDoDia as s}
-              <button class="chip-claro" class:ativo={sala === s} onclick={() => (sala = s)}>{s}</button>
+        <label for="sala">Sala / Maca</label>
+        <input id="sala" bind:value={sala} placeholder="Ex: Sala 02 ou digite livremente" maxlength="40" autocomplete="off" />
+        {#if salasRapidas.length > 0}
+          <div class="room-quick-select">
+            {#each salasRapidas as s (s.valor)}
+              <button type="button" class="room-chip" class:nomeada={s.nomeada} class:active={sala === s.valor} onclick={() => (sala = s.valor)}>{s.rotulo}</button>
             {/each}
           </div>
+          <div class="room-hint">Toque em uma sala ou digite livremente acima</div>
         {/if}
         <button class="btn-call btn-grande" disabled={ocupado || fechado || fila.length === 0} onclick={chamarProximo}>
           {fila.length ? `Chamar próximo: ${fila[0].nomeExibicao}` : "Fila vazia"}

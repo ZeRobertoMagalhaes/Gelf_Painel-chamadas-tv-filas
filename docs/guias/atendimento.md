@@ -5,7 +5,7 @@ Endereço: `/atendimento` (ex.: http://painel-gelf.local:3000/atendimento)
 **Primeira vez:** escolha o **seu tratamento**. O aparelho lembra; para mudar, toque em *trocar*.
 
 **Chamar um paciente**
-1. Digite a **sala/maca** (ou toque numa já usada hoje).
+1. Toque no número da **sala** (1 a 6) ou em **Sala Reiki** ou digite livremente a sala/maca (ex.: "Sala 02").
 2. Toque em **Chamar próximo**. A TV mostra nome, sala e toca o sinal duas vezes.
 
 **Depois**

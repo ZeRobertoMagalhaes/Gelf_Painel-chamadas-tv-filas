@@ -7,6 +7,11 @@
     { "id": "entrevista",   "nome": "Entrevista",    "cor": "#0891b2" },
     { "id": "gao",          "nome": "GAO",           "cor": "#ea580c" }
   ],
+  "salas": {
+    "quantidade": 6,
+    "prefixo": "Sala",
+    "extras": ["Sala Reiki"]
+  },
   "som": {
     "repeticoes": 2,
     "intervaloMs": 4000,
