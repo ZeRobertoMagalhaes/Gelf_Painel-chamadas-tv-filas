@@ -1,0 +1,19 @@
+{
+  "name": "gelf-painel-filas-web",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Front-end (Svelte) do Painel GELF por filas: Recepção, Atendimento e Painel de TV. O build gera public/ (versionado: o notebook-servidor só serve os arquivos prontos, não roda o Vite).",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build"
+  },
+  "dependencies": {
+    "socket.io-client": "^4.8.1"
+  },
+  "devDependencies": {
+    "@sveltejs/vite-plugin-svelte": "^7.3.0",
+    "svelte": "^5.57.0",
+    "vite": "^8.2.2"
+  }
+}

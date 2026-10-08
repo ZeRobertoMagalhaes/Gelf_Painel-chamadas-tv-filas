@@ -1,0 +1,20 @@
+{
+  "tratamentos": [
+    { "id": "apometrico",   "nome": "Apométrico",    "cor": "#7c3aed" },
+    { "id": "passe",        "nome": "Passe em sala", "cor": "#2563eb" },
+    { "id": "reiki",        "nome": "Reiki",         "cor": "#059669" },
+    { "id": "acolhimento",  "nome": "Acolhimento",   "cor": "#db2777" },
+    { "id": "entrevista",   "nome": "Entrevista",    "cor": "#0891b2" },
+    { "id": "gao",          "nome": "GAO",           "cor": "#ea580c" }
+  ],
+  "som": {
+    "repeticoes": 2,
+    "intervaloMs": 4000,
+    "volume": 0.3
+  },
+  "painel": {
+    "destaqueMs": 15000,
+    "exibirSobrenomeCompleto": true,
+    "ultimasChamadas": 4
+  }
+}

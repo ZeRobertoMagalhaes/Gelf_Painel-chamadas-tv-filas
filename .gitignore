@@ -1,0 +1,6 @@
+node_modules/
+# Dados do dia (nomes de pacientes): nunca versionar (LGPD)
+dados/*.json
+dados/*.tmp
+*.zip
+logs/
