@@ -407,13 +407,15 @@ function naoCompareceu(estado, args, ctx) {
     return { paciente: p };
 }
 
-// Paciente chamado que não apareceu, mas ainda está no local: volta ao fim
-// da espera da mesma etapa.
+// Paciente chamado que não apareceu, mas ainda está no local (ou que chegou
+// atrasado depois de marcado "não compareceu"): volta ao fim da espera da
+// mesma etapa.
 function devolverEspera(estado, args, ctx) {
     exigirAberto(estado);
     const p = buscar(estado, args.id);
-    exigirSituacao(p, ['chamado'], 'devolver à espera');
+    exigirSituacao(p, ['chamado', 'nao_compareceu'], 'devolver à espera');
     movimento(p, 'devolvido_espera', ctx, { etapa: etapaAtual(p), sala: p.sala });
+    p.concluido = null;
     estado.historicoChamadas = estado.historicoChamadas.filter((c) => c.pacienteId !== p.id);
     entrarEspera(estado, p, ctx);
     return { paciente: p };

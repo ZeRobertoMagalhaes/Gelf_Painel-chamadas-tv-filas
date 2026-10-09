@@ -119,6 +119,11 @@ test('não compareceu encerra; devolver à espera volta ao fim da fila da etapa'
     assert.equal(e.historicoChamadas.some((h) => h.pacienteId === b.id), false);
     // a sala voltou a ter vaga (sem preparo, pois não houve atendimento)
     assert.equal(R.vagas(e, e.salas.find((s) => s.id === 'captacao1')), 1);
+    // chegou atrasado: quem foi marcado "não compareceu" volta ao fim da espera
+    R.devolverEspera(e, { id: b.id }, ctx());
+    assert.equal(b.situacao, 'aguardando');
+    assert.equal(b.concluido, null);
+    assert.equal(R.filaEspera(e, 'captacao').at(-1).id, b.id);
 });
 
 test('ajustar sala: capacidade do reiki muda no dia; não desativa sala ocupada', () => {

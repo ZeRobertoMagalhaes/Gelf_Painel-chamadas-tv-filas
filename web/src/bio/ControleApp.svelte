@@ -59,6 +59,13 @@
 
   onMount(() => conectar("/bio"));
 
+  $effect(() => {
+    if (!config) return;
+    for (const s of config.etapas.flatMap((e) => e.salas)) {
+      if (!ajustesDia[s.id]) ajustesDia[s.id] = { ativa: true, capacidade: s.capacidade };
+    }
+  });
+
   function mostrar(texto, erro = false) {
     aviso = { texto, erro };
     clearTimeout(timerAviso);
@@ -116,8 +123,10 @@
     if (r.ok) editRota = null;
   }
 
+  // Só lê: gravar estado durante o desenho da tela quebra o Svelte (state_unsafe_mutation).
+  // Os padrões são preenchidos em $effect assim que a configuração chega.
   function ajusteDe(s) {
-    return (ajustesDia[s.id] ??= { ativa: true, capacidade: s.capacidade });
+    return ajustesDia[s.id] ?? { ativa: true, capacidade: s.capacidade };
   }
   async function abrirDia() {
     const salas = config.etapas.flatMap((e) => e.salas).map((s) => ({ id: s.id, ...ajusteDe(s) }));
@@ -205,7 +214,7 @@
             <span>{duplicado.situacoes.map((d) => ROTULO_SITUACAO[d.situacao].toLowerCase()).join(", ")}.</span>
             <div class="alerta-acoes">
               <button type="button" class="btn-mini ouro" onclick={() => registrarChegada(true)}>Registrar mesmo assim</button>
-              <button type="button" class="btn-mini" onclick={() => (duplicado = null)}>Cancelar</button>
+              <button type="button" class="btn-mini" onclick={() => { duplicado = null; nome = ""; sobrenome = ""; campoNome?.focus(); }}>Cancelar</button>
             </div>
           </div>
         {/if}
@@ -378,6 +387,9 @@
             <div class="cartao-paciente finalizado" class:faltou={p.situacao === "nao_compareceu"}>
               <div class="cartao-nome">{p.nomeExibicao}</div>
               <div class="cartao-meta">{ROTULO_SITUACAO[p.situacao]} às {horaCurta(p.concluido)}</div>
+              {#if p.situacao === "nao_compareceu"}
+                <div class="alerta-acoes"><button class="btn-mini ouro" onclick={() => devolver(p)}>Voltar à espera</button></div>
+              {/if}
               {@render historico(p)}
             </div>
           {/each}

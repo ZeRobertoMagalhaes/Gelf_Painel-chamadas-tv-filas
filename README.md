@@ -51,7 +51,7 @@ mesmo dia; arquivos de dias anteriores são apagados ao iniciar e na virada do d
 
 ## Instalação, guias e checklist
 
-`instalacao/` (scripts do Windows) e `docs/guias/` (instalação, checklist de abertura, guia da recepção e das equipes).
+`instalacao/` (scripts do Windows) e `docs/guias/` (instalação, checklist de abertura, guia da recepção, das equipes e da Cura Mediúnica `bio.md`).
 
 ## Identidade visual
 
@@ -92,4 +92,4 @@ próprio do Socket.io (`/bio`) e arquivo diário próprio (`dados/bio-AAAA-MM-DD
 - Pré-inscritos: colar uma pessoa por linha, `Nome Sobrenome ; dia ; descrição`.
 
 Regras em `server/bio/regras.js` (testes em `tests/bio.test.js`). Fase seguinte: tela de sala para celular (reiki avisa pelo celular),
-orientações pós-atendimento do roteiro e guias de uso.
+orientações pós-atendimento do roteiro (o guia de uso já está em `docs/guias/bio.md`).
