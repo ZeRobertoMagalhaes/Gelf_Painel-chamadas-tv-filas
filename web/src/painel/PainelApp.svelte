@@ -20,6 +20,10 @@
   const anteriores = $derived(
     historico.filter((c) => c.pacienteId !== atual?.pacienteId).slice(0, rede.config?.painel.ultimasChamadas ?? 4),
   );
+  // Status vem do estado dos pacientes: muda sem som, só a chamada toca o alarme.
+  const STATUS_TV = { chamado: "Chamado", em_atendimento: "Em atendimento", concluido: "Atendimento concluído" };
+  const situacaoPorId = $derived(new Map((rede.estado?.pacientes ?? []).map((p) => [p.id, p.situacao])));
+  const statusDe = (c) => situacaoPorId.get(c?.pacienteId);
   const tratamento = $derived(atual ? tratamentoPorId(rede.config, atual.tratamento) : null);
 
   // Fila de exibição: se duas salas chamam ao mesmo tempo, as chamadas
@@ -89,6 +93,9 @@
           <div class="badge-therapy" style:background-color={tratamento.cor}>{tratamento.nome}</div>
           <div class="patient-name">{atual.nomeExibicao}</div>
           <div class="location-info">{atual.sala}</div>
+          {#if STATUS_TV[statusDe(atual)]}
+            <div class="status-tv" data-status={statusDe(atual)}>{STATUS_TV[statusDe(atual)]}</div>
+          {/if}
         {:else if rede.estado && !rede.estado.atendimentoAberto}
           <div class="patient-name ocioso">Atendimento encerrado</div>
         {:else}
@@ -108,7 +115,7 @@
               style:animation-delay={`${i * 0.05}s`}
             >
               <div class="h-name">{item.nomeExibicao}</div>
-              <div class="h-type">{tratamentoPorId(rede.config, item.tratamento).nome} • {item.sala}</div>
+              <div class="h-type">{tratamentoPorId(rede.config, item.tratamento).nome} • {item.sala}{#if STATUS_TV[statusDe(item)]}{" "}• {STATUS_TV[statusDe(item)]}{/if}</div>
             </div>
           {/each}
         </div>

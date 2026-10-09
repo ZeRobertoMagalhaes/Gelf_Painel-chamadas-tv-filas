@@ -764,3 +764,72 @@ button:disabled { opacity: .5; cursor: not-allowed; filter: grayscale(.3); }
 @media (prefers-reduced-motion: reduce) {
     * { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
 }
+
+/* Fases do ciclo do paciente (recepção) */
+.fila-subtitulo { margin: 8px 0 0; font-size: .72rem; font-weight: 800; letter-spacing: .6px; text-transform: uppercase; color: #64748b; }
+.cartao-paciente.finalizado { opacity: .9; background: #f0fdf4; }
+.cartao-paciente.finalizado.faltou { background: #fef2f2; }
+.link-hist { appearance: none; background: none; border: 0; padding: 0; align-self: flex-start; cursor: pointer; font: inherit; font-size: .74rem; font-weight: 700; color: var(--gelf-blue-main); text-decoration: underline; }
+.hist-lista { list-style: none; margin: 0; padding: 6px 0 0 8px; border-left: 2px solid #cbd5e1; display: flex; flex-direction: column; gap: 3px; font-size: .75rem; color: #334155; font-weight: 600; }
+.hist-lista li { display: flex; gap: 8px; }
+.hist-hora { font-variant-numeric: tabular-nums; color: #64748b; min-width: 2.6em; }
+
+/* Status do paciente no painel da TV (sem som) */
+.status-tv {
+    display: inline-block;
+    margin-top: 1.2vh; padding: .6vh 2.4vw; border-radius: 999px;
+    font-weight: 800; font-size: clamp(1.1rem, 2.4vw, 2.4rem); letter-spacing: .5px;
+    background: #fef3c7; color: #92400e; transition: background-color .4s, color .4s;
+}
+.status-tv[data-status="em_atendimento"] { background: #dcfce7; color: #166534; }
+.status-tv[data-status="concluido"] { background: #e2e8f0; color: #475569; }
+
+/* ========================= MODO TV (Samsung LN32C450, 32" 1366×768, 16:9) =========================
+   Tudo em vh/vw para caber sem rolagem e sem cortes em 1366×768 (e escalar em 720p/1080p).
+   Margem de segurança ~4%: TVs dessa geração fazem overscan e cortam as bordas. */
+body.tv-only {
+    height: 100vh;
+    overflow: hidden;
+    padding: 4vh 4vw;
+    gap: 2.2vh;
+}
+body.tv-only .hero { height: 12vh; border-radius: var(--radius-lg); }
+body.tv-only .hero-logo { height: 6.5vh; }
+body.tv-only .hero-logo-card { padding: 1vh 1.4vw; }
+body.tv-only .hero-text .tagline { font-size: 2.6vh; }
+body.tv-only .hero-text .tagline small { font-size: 1.9vh; }
+body.tv-only .app-body { flex: 1; min-height: 0; height: auto; overflow: hidden; flex-direction: column; }
+body.tv-only .tv-display { padding: 0; gap: 2.2vh; min-height: 0; overflow: hidden; background: none; }
+body.tv-only .call-card {
+    flex: 1; min-height: 0; padding: 1.5vh 2vw;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+}
+body.tv-only .badge-therapy { font-size: 3.6vh; padding: .7vh 2vw; }
+body.tv-only .patient-name { font-size: min(12vh, 7.5vw); margin: 1vh 0; max-width: 100%; }
+body.tv-only .patient-name.ocioso { font-size: min(7vh, 5vw); }
+body.tv-only .location-info { font-size: min(9vh, 6vw); margin-top: 0; }
+body.tv-only .status-tv { font-size: 3.4vh; padding: .5vh 2vw; margin-top: 1.2vh; }
+body.tv-only .history-section { padding: 1.4vh 1.4vw; flex-shrink: 0; }
+body.tv-only .history-title { font-size: 2vh; margin-bottom: 1vh; }
+body.tv-only .history-container { flex-wrap: nowrap; gap: 1.2vw; }
+body.tv-only .history-card { min-width: 0; max-width: none; padding: 1vh 1vw; overflow: hidden; }
+body.tv-only .history-card .h-name,
+body.tv-only .history-card .h-type { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+body.tv-only .history-card .h-name { font-size: 3vh; }
+body.tv-only .history-card .h-type { font-size: 2.1vh; margin-top: .3vh; }
+body.tv-only .conn-status { top: 4.5vh; right: 4.5vw; }
+body.tv-only .btn-som { bottom: 5vh; }
+body.tv-only .hero { margin-bottom: 2.2vh; }
+
+/* Pendentes por tratamento (tela de atendimento) */
+.trat-contagem { display: block; margin-top: 4px; font-size: .78rem; font-weight: 600; opacity: .9; }
+.resumo-filas { display: grid; grid-template-columns: repeat(auto-fit, minmax(96px, 1fr)); gap: 8px; }
+.resumo-item {
+    display: flex; flex-direction: column; align-items: center; gap: 2px;
+    padding: 8px 6px; background: #fff; border-radius: var(--radius-sm);
+    border-top: 4px solid var(--cor); box-shadow: 0 2px 8px rgba(0, 0, 0, .06);
+}
+.resumo-item.meu { outline: 2px solid var(--cor); }
+.resumo-item.vazio { opacity: .6; }
+.resumo-numero { font-size: 1.6rem; font-weight: 800; line-height: 1; color: var(--gelf-blue-dark); }
+.resumo-nome { font-size: .7rem; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: .3px; text-align: center; overflow-wrap: anywhere; }

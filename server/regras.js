@@ -131,9 +131,17 @@ function cadastrar(estado, args, ctx) {
         concluido: null,
         chamadas: 0,
         chamadoPor: null,
+        movimentos: [],
     };
+    movimento(paciente, 'cadastrado', ctx, { tratamento: paciente.tratamento });
     estado.pacientes.push(paciente);
     return { paciente };
+}
+
+// Histórico de movimentos do paciente (só cresce; a recepção consulta sob demanda).
+function movimento(p, acao, ctx, extra = {}) {
+    if (!Array.isArray(p.movimentos)) p.movimentos = [];
+    p.movimentos.push({ acao, em: isoLocal(ctx.agora), ...extra });
 }
 
 function corrigir(estado, args, ctx) {
@@ -145,6 +153,7 @@ function corrigir(estado, args, ctx) {
     if (!nome || !sobrenome) throw new ErroRegra('invalido', 'Informe nome e sobrenome.');
     p.nome = nome;
     p.sobrenome = sobrenome;
+    movimento(p, 'nome_corrigido', ctx);
     return { paciente: p };
 }
 
@@ -155,13 +164,15 @@ function trocarFila(estado, args, ctx) {
     exigirSituacao(p, ['aguardando'], 'trocar de fila');
     exigirTratamento(ctx.config, args.tratamento);
     if (p.tratamento === args.tratamento) return { paciente: p };
+    const de = p.tratamento;
     p.tratamento = args.tratamento;
+    movimento(p, 'fila_trocada', ctx, { de, para: args.tratamento });
     p.ordem = ++estado.seq;
     if (p.prioridade) p.prioridadeEm = ++estado.seq;
     return { paciente: p };
 }
 
-function priorizar(estado, args) {
+function priorizar(estado, args, ctx) {
     exigirAberto(estado);
     const p = buscar(estado, args.id);
     exigirSituacao(p, ['aguardando'], 'priorizar');
@@ -169,24 +180,28 @@ function priorizar(estado, args) {
     if (quer && !p.prioridade) {
         p.prioridade = true;
         p.prioridadeEm = ++estado.seq;
-    } else if (!quer) {
+        movimento(p, 'prioridade_ligada', ctx);
+    } else if (!quer && p.prioridade) {
         p.prioridade = false;
         p.prioridadeEm = null;
+        movimento(p, 'prioridade_removida', ctx);
     }
     return { paciente: p };
 }
 
-function remover(estado, args) {
+function remover(estado, args, ctx) {
     exigirAberto(estado);
     const p = buscar(estado, args.id);
     exigirSituacao(p, ['aguardando'], 'remover');
     p.situacao = 'removido';
+    movimento(p, 'removido', ctx);
     return { paciente: p };
 }
 
 function registrarChamada(estado, p, ctx) {
     p.chamado = isoLocal(ctx.agora);
     p.chamadas += 1;
+    movimento(p, p.chamadas === 1 ? 'chamado' : 'rechamado', ctx, { sala: p.sala });
     const chamada = {
         seq: ++estado.chamadaSeq,
         pacienteId: p.id,
@@ -249,6 +264,7 @@ function iniciar(estado, args, ctx) {
     exigirSituacao(p, ['chamado'], 'iniciar o atendimento');
     p.situacao = 'em_atendimento';
     p.iniciado = isoLocal(ctx.agora);
+    movimento(p, 'atendimento_iniciado', ctx, { sala: p.sala });
     return { paciente: p };
 }
 
@@ -258,6 +274,7 @@ function concluir(estado, args, ctx) {
     exigirSituacao(p, ['em_atendimento'], 'concluir');
     p.situacao = 'concluido';
     p.concluido = isoLocal(ctx.agora);
+    movimento(p, 'concluido', ctx, { sala: p.sala });
     return { paciente: p };
 }
 
@@ -267,6 +284,7 @@ function naoCompareceu(estado, args, ctx) {
     exigirSituacao(p, ['chamado'], 'marcar "não compareceu"');
     p.situacao = 'nao_compareceu';
     p.concluido = isoLocal(ctx.agora);
+    movimento(p, 'nao_compareceu', ctx, { sala: p.sala });
     // Sai do histórico da TV: não faz sentido manter na tela quem não veio.
     estado.historicoChamadas = estado.historicoChamadas.filter((c) => c.pacienteId !== p.id);
     return { paciente: p };

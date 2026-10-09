@@ -56,10 +56,10 @@ test('prioridade sobe para o início; entre prioritários vale quem recebeu ante
     const a = cad(e, 'Ana', 'A');
     const b = cad(e, 'Bia', 'B');
     const c = cad(e, 'Caio', 'C');
-    R.priorizar(e, { id: c.id });
-    R.priorizar(e, { id: b.id });
+    R.priorizar(e, { id: c.id }, ctx());
+    R.priorizar(e, { id: b.id }, ctx());
     assert.deepEqual(R.fila(e, 'reiki').map((p) => p.id), [c.id, b.id, a.id]);
-    R.priorizar(e, { id: c.id, prioridade: false });
+    R.priorizar(e, { id: c.id, prioridade: false }, ctx());
     assert.deepEqual(R.fila(e, 'reiki').map((p) => p.id), [b.id, a.id, c.id]);
 });
 
@@ -124,7 +124,7 @@ test('ciclo completo e transições inválidas', () => {
     assert.equal(codigo(() => R.concluir(e, { id: p.id }, ctx())), 'estado_invalido');
     R.chamarProximo(e, { tratamento: 'reiki', sala: '1', equipeId: 'e1' }, ctx());
     assert.equal(codigo(() => R.concluir(e, { id: p.id }, ctx())), 'estado_invalido');
-    assert.equal(codigo(() => R.remover(e, { id: p.id })), 'estado_invalido');
+    assert.equal(codigo(() => R.remover(e, { id: p.id }, ctx())), 'estado_invalido');
     R.iniciar(e, { id: p.id }, ctx());
     assert.equal(p.situacao, 'em_atendimento');
     assert.ok(p.iniciado);
@@ -167,7 +167,7 @@ test('recepção: corrigir, trocar de fila (vai para o fim) e remover', () => {
     R.trocarFila(e, { id: a.id, tratamento: 'gao' }, ctx());
     assert.deepEqual(R.fila(e, 'gao').map((p) => p.id), [g1.id, a.id]);
     assert.equal(R.fila(e, 'reiki').length, 0);
-    R.remover(e, { id: a.id });
+    R.remover(e, { id: a.id }, ctx());
     assert.equal(a.situacao, 'removido');
     assert.deepEqual(R.fila(e, 'gao').map((p) => p.id), [g1.id]);
 });
@@ -190,4 +190,14 @@ test('erro de regra não altera o estado', () => {
     codigo(() => R.chamarProximo(e, { tratamento: 'reiki', sala: '' }, ctx()));
     codigo(() => R.cadastrar(e, { nome: 'x', sobrenome: '', tratamento: 'reiki' }, ctx()));
     assert.equal(JSON.stringify(e), antes);
+});
+
+test('histórico guarda todos os movimentos, inclusive rechamadas', () => {
+    const e = diaAberto();
+    const p = cad(e, 'Ana', 'Lima');
+    R.chamarProximo(e, { tratamento: 'reiki', sala: 'Sala 1' }, ctx());
+    R.rechamar(e, { id: p.id }, ctx());
+    R.iniciar(e, { id: p.id }, ctx());
+    R.concluir(e, { id: p.id }, ctx());
+    assert.deepEqual(p.movimentos.map((m) => m.acao), ['cadastrado', 'chamado', 'rechamado', 'atendimento_iniciado', 'concluido']);
 });

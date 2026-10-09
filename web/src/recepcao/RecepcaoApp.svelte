@@ -24,8 +24,11 @@
     return (config?.tratamentos ?? []).map((t) => {
       const espera = (estado?.filas?.[t.id] ?? []).map((id) => porId.get(id)).filter(Boolean);
       const emCurso = (estado?.pacientes ?? []).filter((p) => p.tratamento === t.id && ["chamado", "em_atendimento"].includes(p.situacao));
-      const concluidos = (estado?.pacientes ?? []).filter((p) => p.tratamento === t.id && p.situacao === "concluido").length;
-      return { ...t, espera, emCurso, concluidos };
+      const finalizados = (estado?.pacientes ?? [])
+        .filter((p) => p.tratamento === t.id && ["concluido", "nao_compareceu"].includes(p.situacao))
+        .sort((a, b) => (b.concluido ?? "").localeCompare(a.concluido ?? ""));
+      const concluidos = finalizados.filter((p) => p.situacao === "concluido").length;
+      return { ...t, espera, emCurso, finalizados, concluidos };
     });
   }
   const filas = $derived(colunas());
@@ -83,10 +86,51 @@
     if (r.ok) mostrar("Atendimento fechado. Filas e chamadas foram apagadas.");
   }
 
+  let aberto_hist = $state(new Set()); // ids com o histórico expandido
+  function alternarHistorico(id) {
+    const novo = new Set(aberto_hist);
+    novo.has(id) ? novo.delete(id) : novo.add(id);
+    aberto_hist = novo;
+  }
+
+  const ROTULO_MOV = {
+    cadastrado: "Entrou na fila",
+    nome_corrigido: "Nome corrigido",
+    fila_trocada: "Trocou de fila",
+    prioridade_ligada: "Prioridade marcada",
+    prioridade_removida: "Prioridade removida",
+    removido: "Removido da fila",
+    chamado: "Chamado",
+    rechamado: "Chamado novamente",
+    atendimento_iniciado: "Atendimento iniciado",
+    concluido: "Atendimento concluído",
+    nao_compareceu: "Não compareceu",
+  };
+  function descMov(m) {
+    const base = ROTULO_MOV[m.acao] ?? m.acao;
+    if (m.acao === "fila_trocada") return `${base}: ${nomeTrat(m.de)} → ${nomeTrat(m.para)}`;
+    return m.sala ? `${base} • ${m.sala}` : base;
+  }
+
   function nomeTrat(id) {
     return config?.tratamentos.find((t) => t.id === id)?.nome ?? id;
   }
 </script>
+
+{#snippet historico(p)}
+  <button class="link-hist" aria-expanded={aberto_hist.has(p.id)} onclick={() => alternarHistorico(p.id)}>
+    {aberto_hist.has(p.id) ? "Ocultar histórico" : "Ver histórico"}
+  </button>
+  {#if aberto_hist.has(p.id)}
+    <ol class="hist-lista" aria-label="Histórico do paciente">
+      {#each p.movimentos ?? [] as m}
+        <li><span class="hist-hora">{horaCurta(m.em)}</span><span>{descMov(m)}</span></li>
+      {:else}
+        <li>Sem movimentos registrados.</li>
+      {/each}
+    </ol>
+  {/if}
+{/snippet}
 
 <ConnStatus online={rede.online} />
 <HeroHeader tagline="Recepção" subtitle="Cadastro de pacientes e filas por tratamento" />
@@ -172,6 +216,7 @@
             <div class="cartao-paciente em-curso">
               <div class="cartao-nome">{p.nomeExibicao}</div>
               <div class="cartao-meta">{SITUACAO[p.situacao]} • {p.sala}</div>
+              {@render historico(p)}
             </div>
           {/each}
 
@@ -224,8 +269,15 @@
             {#if f.emCurso.length === 0}<p class="fila-vazia">Ninguém aguardando</p>{/if}
           {/each}
 
-          {#if f.concluidos > 0}
-            <footer class="fila-rodape">{f.concluidos} {f.concluidos === 1 ? "concluído" : "concluídos"} hoje</footer>
+          {#if f.finalizados.length > 0}
+            <h3 class="fila-subtitulo">Finalizados hoje ({f.concluidos} {f.concluidos === 1 ? "concluído" : "concluídos"})</h3>
+            {#each f.finalizados as p (p.id)}
+              <div class="cartao-paciente finalizado" class:faltou={p.situacao === "nao_compareceu"}>
+                <div class="cartao-nome">{p.nomeExibicao}</div>
+                <div class="cartao-meta">{SITUACAO[p.situacao]} às {horaCurta(p.concluido)}</div>
+                {@render historico(p)}
+              </div>
+            {/each}
           {/if}
         </article>
       {/each}

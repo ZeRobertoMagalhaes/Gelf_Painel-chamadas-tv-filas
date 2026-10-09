@@ -57,3 +57,14 @@ mesmo dia; arquivos de dias anteriores são apagados ao iniciar e na virada do d
 
 Herdada de `Gelf_Painel-chamadas-tv`: tokens em `web/src/style.css`, hero com foto e
 logo, tema claro, botão primário dourado→âmbar. Cores dos tratamentos vêm da configuração.
+
+## TV do painel (Samsung LN32C450E1M)
+
+LCD 32" de 2010, 16:9, resolução nativa 1366×768 (HD ready), entrada HDMI, sem navegador próprio:
+o painel roda no notebook ligado por HDMI. O modo TV (`body.tv-only` em `web/src/style.css`)
+usa só unidades vh/vw, com margem de segurança de 4% (TVs dessa geração cortam as bordas por
+overscan) e nomes em até duas linhas, sem rolagem.
+
+No notebook/TV: resolução 1366×768 (ou 1280×720), Chrome em tela cheia (F11), zoom 100%.
+Na TV: tela "16:9" / "Ajuste de tela → Ajuste à tela" (ou renomear a entrada HDMI para "PC"/"DVI PC")
+para desligar o overscan; dê uma chamada de teste para conferir que nada é cortado.

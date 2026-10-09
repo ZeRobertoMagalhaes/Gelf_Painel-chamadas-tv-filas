@@ -34,6 +34,10 @@
     ...Array.from({ length: config?.salas.quantidade ?? 0 }, (_, i) => ({ valor: `${config.salas.prefixo} ${i + 1}`, rotulo: String(i + 1) })),
     ...(config?.salas.extras ?? []).map((nome) => ({ valor: nome, rotulo: nome, nomeada: true })),
   ]);
+  // Pacientes aguardando em cada tratamento (visão geral para toda a equipe).
+  const pendentes = $derived(
+    (config?.tratamentos ?? []).map((t) => ({ ...t, total: estado?.filas?.[t.id]?.length ?? 0 })),
+  );
   const fechado = $derived(estado && !estado.atendimentoAberto);
 
   onMount(() => conectar());
@@ -101,7 +105,10 @@
     <p class="atend-dica">Você escolhe uma vez; este aparelho vai lembrar.</p>
     <div class="trat-grade">
       {#each config.tratamentos as t (t.id)}
-        <button class="trat-botao" style:background-color={t.cor} onclick={() => escolher(t.id)}>{t.nome}</button>
+        <button class="trat-botao" style:background-color={t.cor} onclick={() => escolher(t.id)}>
+          {t.nome}
+          <span class="trat-contagem">{estado.filas?.[t.id]?.length ?? 0} aguardando</span>
+        </button>
       {/each}
     </div>
   {:else}
@@ -109,6 +116,15 @@
       <span class="trat-pilula" style:background-color={trat.cor}>{trat.nome}</span>
       <span class="atend-contagem">{fila.length} aguardando</span>
       <button class="link-botao" onclick={trocarTratamento}>trocar</button>
+    </div>
+
+    <div class="resumo-filas" role="list" aria-label="Pacientes aguardando por tratamento">
+      {#each pendentes as t (t.id)}
+        <div class="resumo-item" role="listitem" class:meu={t.id === meuTratamento} class:vazio={t.total === 0} style:--cor={t.cor}>
+          <span class="resumo-numero">{t.total}</span>
+          <span class="resumo-nome">{t.nome}</span>
+        </div>
+      {/each}
     </div>
 
     {#if fechado}
