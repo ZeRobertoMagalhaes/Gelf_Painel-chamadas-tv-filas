@@ -1,0 +1,30 @@
+{
+  "locais": [
+    { "id": "terreo", "nome": "Salão do térreo" },
+    { "id": "andar1", "nome": "1º andar" }
+  ],
+  "etapas": [
+    {
+      "id": "captacao", "nome": "Captação", "cor": "#7c3aed", "esperaEm": "terreo", "preparo": true,
+      "salas": [
+        { "id": "captacao1", "nome": "Captação 1", "capacidade": 1 },
+        { "id": "captacao2", "nome": "Captação 2", "capacidade": 1 }
+      ]
+    },
+    {
+      "id": "doutores", "nome": "Doutores", "cor": "#ea580c", "esperaEm": "andar1",
+      "salas": [{ "id": "doutores", "nome": "Sala dos doutores", "capacidade": 2 }]
+    },
+    {
+      "id": "reiki", "nome": "Reiki", "cor": "#059669", "esperaEm": "andar1",
+      "salas": [{ "id": "reiki", "nome": "Sala de reiki", "capacidade": 2 }]
+    },
+    {
+      "id": "quinta", "nome": "5ª sala (acupuntura?)", "cor": "#db2777", "esperaEm": "andar1",
+      "salas": [{ "id": "quinta", "nome": "5ª sala", "capacidade": 1 }]
+    }
+  ],
+  "rotaPadrao": ["captacao", "doutores", "reiki", "quinta"],
+  "som": { "repeticoes": 1, "intervaloMs": 4000, "volume": 0.2 },
+  "painel": { "destaqueMs": 15000, "exibirSobrenomeCompleto": true, "ultimasChamadas": 5 }
+}

@@ -68,3 +68,28 @@ overscan) e nomes em até duas linhas, sem rolagem.
 No notebook/TV: resolução 1366×768 (ou 1280×720), Chrome em tela cheia (F11), zoom 100%.
 Na TV: tela "16:9" / "Ajuste de tela → Ajuste à tela" (ou renomear a entrada HDMI para "PC"/"DVI PC")
 para desligar o overscan; dê uma chamada de teste para conferir que nada é cortado.
+
+## Módulo Cura Mediúnica / Bioenergético (`/bio`)
+
+Tratamento em que o paciente percorre uma **rota de etapas** (esboço em `docs/Cura Mediunica - Esboco e Discovery.pdf`,
+complementado por `docs/Roteiro para tratamento bioenergetico.pdf`). Independente das filas por tratamento: namespace
+próprio do Socket.io (`/bio`) e arquivo diário próprio (`dados/bio-AAAA-MM-DD.json`, apagado na virada do dia e em "Fechar o dia").
+
+| Tela | Endereço | Quem usa |
+|---|---|---|
+| Controle | `/bio/controle` | Responsável pelo fluxo: abre o dia (salas e capacidades, pré-inscritos), registra chegadas, chama cada paciente para uma sala, inicia, conclui, altera a rota, vê o relatório |
+| Painel TV | `/bio/painel` | As duas TVs (térreo e 1º andar) mostram o mesmo: etapa, nome, sala e status |
+
+- **Etapas, salas e capacidades** ficam em `config/bio.json` (captação 2 salas de 1 vaga; doutores 2 por vez; reiki 2 macas; 5ª sala a confirmar).
+  Mudar o fluxo é editar esse arquivo e reiniciar. No dia, as vagas (macas) e salas em uso se ajustam na própria tela.
+- **Espera por local**: cada etapa tem o seu local de espera (térreo ou 1º andar), mostrado nas colunas.
+- **Quem chama**: o controle chama o próximo da espera ou escolhe quem entra (os doutores definem a ordem). Só chama se há vaga.
+- **Preparo**: na captação, a sala só volta a ter vaga depois de "Sala pronta" (fechamento das energias).
+- **Rota por paciente**: igual para a maioria; dá para pular etapa ou redefinir o que falta.
+- **Não compareceu**: encerra o paciente; "Voltar à espera" o devolve ao fim da fila da etapa.
+- **Relatório do dia** (sem nomes): chegadas, concluídos, tempo médio total e, por etapa, atendidos, espera média e duração média.
+  Ao fechar o dia fica salvo em `dados/relatorios/bio-AAAA-MM-DD.json` (fora do Git); os nomes são apagados.
+- Pré-inscritos: colar uma pessoa por linha, `Nome Sobrenome ; dia ; descrição`.
+
+Regras em `server/bio/regras.js` (testes em `tests/bio.test.js`). Fase seguinte: tela de sala para celular (reiki avisa pelo celular),
+orientações pós-atendimento do roteiro e guias de uso.

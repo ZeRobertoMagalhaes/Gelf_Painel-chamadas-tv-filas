@@ -580,7 +580,7 @@ button:disabled { opacity: .5; cursor: not-allowed; filter: grayscale(.3); }
 /* variante para fundo claro */
 .fila-coluna .btn-mini { color: var(--gelf-blue-dark); border-color: #cbd5e1; background: #fff; }
 .fila-coluna .btn-mini.perigo { color: #fff; background: #b91c1c; }
-.fila-coluna .btn-mini.ouro { color: #fff; }
+.fila-coluna .btn-mini.ouro { color: #fff; background: linear-gradient(135deg, var(--gelf-yellow-gold), var(--gelf-sun-amber)); border-color: transparent; }
 
 .link-botao, .link-claro {
     appearance: none; background: none; border: none; cursor: pointer;
@@ -833,3 +833,44 @@ body.tv-only .hero { margin-bottom: 2.2vh; }
 .resumo-item.vazio { opacity: .6; }
 .resumo-numero { font-size: 1.6rem; font-weight: 800; line-height: 1; color: var(--gelf-blue-dark); }
 .resumo-nome { font-size: .7rem; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: .3px; text-align: center; overflow-wrap: anywhere; }
+
+/* ========================= BIOENERGÉTICO (controle) ========================= */
+.etapa-titulo { display: flex; align-items: center; gap: 10px; margin: 18px 0 10px; font-size: 1rem; font-weight: 800; color: var(--gelf-blue-dark); text-transform: uppercase; letter-spacing: .6px; }
+.etapa-titulo:first-child { margin-top: 0; }
+.etapa-titulo small { font-weight: 600; color: #64748b; }
+.senha-chip { min-width: 34px; height: 34px; padding: 0 8px; border-radius: 10px; display: grid; place-items: center; color: #fff; font-weight: 800; font-size: 1rem; flex-shrink: 0; }
+.abertura { max-width: 760px; display: flex; flex-direction: column; gap: 12px; }
+.abertura h2 { color: var(--gelf-blue-dark); }
+.abertura-dica, .abertura-rotulo { color: #64748b; font-size: .9rem; }
+.abertura textarea { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #cbd5e1; font: inherit; }
+.medico-linha { display: grid; grid-template-columns: 2fr 1.4fr 1fr auto; gap: 8px; align-items: center; }
+.medico-linha input, .medico-linha select, .outra-esp { padding: 9px 10px; border-radius: 8px; border: 1px solid #cbd5e1; font: inherit; min-width: 0; background: #fff; }
+.pre-lista { display: flex; flex-direction: column; gap: 6px; max-height: 32vh; overflow: auto; }
+.pre-lista h3 { font-size: .8rem; text-transform: uppercase; letter-spacing: .6px; color: #fde68a; }
+.pre-item { appearance: none; text-align: left; cursor: pointer; font: inherit; padding: 8px 10px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, .25); background: rgba(255, 255, 255, .1); color: #fff; display: flex; flex-direction: column; }
+.pre-item:hover { background: rgba(255, 255, 255, .2); }
+.pre-item small { opacity: .8; }
+@media (max-width: 1024px) { .medico-linha { grid-template-columns: 1fr; } }
+
+/* Cura mediúnica: salas, vagas e rota */
+.etapas-grade { grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); }
+.sala-box { background: #fff; border-radius: var(--radius-sm); padding: 10px; display: flex; flex-direction: column; gap: 8px; box-shadow: 0 2px 8px rgba(0, 0, 0, .06); }
+.sala-box.inativa { opacity: .55; }
+.sala-topo { display: flex; align-items: center; justify-content: space-between; gap: 8px; color: var(--gelf-blue-dark); }
+.vagas-chip { background: #dcfce7; color: #166534; font-size: .72rem; font-weight: 800; padding: 3px 10px; border-radius: 20px; white-space: nowrap; }
+.vagas-chip.cheia { background: #fee2e2; color: #991b1b; }
+.sala-acoes { display: flex; gap: 6px; align-items: center; }
+.sala-acoes .btn-mini { flex: 1; }
+.sala-acoes .icone { flex: 0 0 36px; }
+.preparo { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 6px 10px; border-radius: 8px; background: #fef3c7; color: #92400e; font-size: .8rem; font-weight: 700; }
+.espera-titulo { font-size: .72rem; font-weight: 800; letter-spacing: .6px; text-transform: uppercase; color: #64748b; margin-top: 4px; }
+.rota-edicao { display: flex; flex-direction: column; gap: 6px; }
+.etapa-abertura { border-left: 5px solid var(--cor); background: #fff; border-radius: var(--radius-sm); padding: 10px 14px; display: flex; flex-direction: column; gap: 6px; }
+.etapa-abertura small { color: #64748b; margin-left: 8px; }
+.sala-linha { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.sala-linha .cap input { width: 64px; padding: 6px; border-radius: 8px; border: 1px solid #cbd5e1; font: inherit; margin-left: 6px; }
+.relatorio { background: #fff; border-radius: var(--radius-md); padding: 14px 18px; box-shadow: 0 2px 8px rgba(0, 0, 0, .06); max-width: 860px; }
+.relatorio table { width: 100%; border-collapse: collapse; margin: 10px 0; font-size: .9rem; }
+.relatorio th, .relatorio td { text-align: left; padding: 6px 10px; border-bottom: 1px solid #e2e8f0; }
+.relatorio th { font-size: .75rem; text-transform: uppercase; letter-spacing: .5px; color: #64748b; }
+.relatorio-nota { font-size: .78rem; color: #64748b; }

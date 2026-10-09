@@ -2,7 +2,6 @@ const fs = require('fs');
 const path = require('path');
 const { dataLocal, novoDia } = require('./regras');
 
-const PADRAO_ARQUIVO = /^fila-(\d{4}-\d{2}-\d{2})\.json(?:\.corrompido)?$/;
 
 // Armazenamento em arquivo JSON: um arquivo por dia (fila-AAAA-MM-DD.json).
 //  - Gravação segura: escreve num .tmp e só então renomeia sobre o oficial;
@@ -10,16 +9,19 @@ const PADRAO_ARQUIVO = /^fila-(\d{4}-\d{2}-\d{2})\.json(?:\.corrompido)?$/;
 //  - Recuperação: ao iniciar no mesmo dia, relê o arquivo do dia.
 //  - Limpeza: arquivos de outros dias são apagados (dados pessoais não ficam
 //    guardados além do dia de atendimento).
-function criarStore(pasta, relogio = () => new Date()) {
+//  - Parâmetros opcionais: prefixo do arquivo e fábrica do dia vazio (o módulo
+//    bioenergético usa "bio" e o seu próprio estado, na mesma pasta).
+function criarStore(pasta, relogio = () => new Date(), { prefixo = 'fila', novoDia: criarDia = novoDia } = {}) {
     fs.mkdirSync(pasta, { recursive: true });
 
-    const arquivoDoDia = (data) => path.join(pasta, `fila-${data}.json`);
+    const PADRAO_ARQUIVO = new RegExp(`^${prefixo}-(\\d{4}-\\d{2}-\\d{2})\\.json(?:\\.corrompido)?$`);
+    const arquivoDoDia = (data) => path.join(pasta, `${prefixo}-${data}.json`);
 
     function limparOutrosDias(dataAtual) {
         for (const nome of fs.readdirSync(pasta)) {
             const m = PADRAO_ARQUIVO.exec(nome);
             if (m && m[1] !== dataAtual) fs.rmSync(path.join(pasta, nome), { force: true });
-            else if (nome.endsWith('.tmp')) fs.rmSync(path.join(pasta, nome), { force: true });
+            else if (nome.startsWith(`${prefixo}-`) && nome.endsWith('.tmp')) fs.rmSync(path.join(pasta, nome), { force: true });
         }
     }
 
@@ -42,7 +44,7 @@ function criarStore(pasta, relogio = () => new Date()) {
         try {
             const lido = JSON.parse(fs.readFileSync(arquivoDoDia(hoje), 'utf8'));
             if (lido && lido.data === hoje && Array.isArray(lido.pacientes)) {
-                return { ...novoDia(hoje), ...lido, historicoChamadas: lido.historicoChamadas || [] };
+                return { ...criarDia(hoje), ...lido, historicoChamadas: lido.historicoChamadas || [] };
             }
         } catch (e) {
             if (e.code !== 'ENOENT') {
@@ -51,12 +53,12 @@ function criarStore(pasta, relogio = () => new Date()) {
                 try { fs.renameSync(arquivoDoDia(hoje), `${arquivoDoDia(hoje)}.corrompido`); } catch { /* sem problema */ }
             }
         }
-        const vazio = novoDia(hoje);
+        const vazio = criarDia(hoje);
         salvar(vazio);
         return vazio;
     }
 
-    return { carregar, salvar, arquivoDoDia, limparOutrosDias };
+    return { carregar, salvar, arquivoDoDia, limparOutrosDias, pasta };
 }
 
 module.exports = { criarStore };

@@ -14,6 +14,8 @@ export default defineConfig({
         painel: "painel.html",
         atendimento: "atendimento.html",
         recepcao: "recepcao.html",
+        "bio-controle": "bio-controle.html",
+        "bio-painel": "bio-painel.html",
       },
     },
   },

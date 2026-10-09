@@ -7,9 +7,10 @@ export const rede = $state({ online: false, config: null, estado: null });
 const ouvintesChamada = new Set();
 let socket = null;
 
-export function conectar() {
+// namespace: "" para as filas; "/bio" para o módulo bioenergético.
+export function conectar(namespace = "") {
   if (socket) return;
-  socket = io({ transports: ["websocket", "polling"] });
+  socket = io(namespace, { transports: ["websocket", "polling"] });
   socket.on("connect", () => (rede.online = true));
   socket.on("disconnect", () => (rede.online = false));
   socket.on("config", (c) => (rede.config = c));

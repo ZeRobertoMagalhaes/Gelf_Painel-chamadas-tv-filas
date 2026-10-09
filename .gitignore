@@ -4,3 +4,5 @@ dados/*.json
 dados/*.tmp
 *.zip
 logs/
+# Relatórios do dia (números sem nomes), gerados ao fechar o dia
+dados/relatorios/
