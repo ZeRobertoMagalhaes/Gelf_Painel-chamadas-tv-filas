@@ -13,12 +13,12 @@ Resumo para consulta rápida no [guia da Cura Mediúnica](../guias/bio.md).
 ## A rota e as salas
 
 ```mermaid
-flowchart LR
+flowchart TD
     A[Chegada] --> B[Captação<br/>2 salas · 1 vaga cada<br/>espera: térreo]
     B --> C[Doutores<br/>1 sala · 2 vagas<br/>espera: 1º andar]
     C --> D[Reiki<br/>1 sala · 2 macas<br/>espera: 1º andar]
     D --> F[Saída]
-    C -.->|se os doutores indicarem| E[Acupuntura<br/>1 sala · 1 vaga<br/>espera: 1º andar]
+    D -.->|se os doutores indicarem| E[Acupuntura<br/>1 sala · 1 vaga<br/>espera: 1º andar]
     E -.-> F
 ```
 

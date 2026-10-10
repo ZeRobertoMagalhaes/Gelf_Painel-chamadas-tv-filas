@@ -6,11 +6,11 @@ Complementa o [checklist de abertura](../guias/checklist-abertura.md).
 ## Visão geral
 
 ```mermaid
-flowchart LR
-    A[Servidor e TV ligados] --> B[Painel em tela cheia<br/>"Atendimento encerrado"]
+flowchart TD
+    A[Servidor e TV ligados] --> B["Painel em tela cheia<br/>Atendimento encerrado"]
     B --> C[Tocar em Ativar som]
     C --> D[Recepção: Abrir atendimento]
-    D --> E[Painel: "Aguardando próxima chamada"]
+    D --> E["Painel: Aguardando próxima chamada"]
     E --> F[Teste com paciente de teste]
     F --> G[Equipes abrem /atendimento<br/>e escolhem o tratamento]
 ```

@@ -5,7 +5,7 @@ Quem faz: a **recepção**. Endereço: `/recepcao`. Resumo para consulta rápida
 ## Visão geral
 
 ```mermaid
-flowchart LR
+flowchart TD
     A[Digitar nome e sobrenome] --> B[Tocar no tratamento]
     B --> C[Cadastrar]
     C -->|nome novo| D[Entra no fim da fila]
