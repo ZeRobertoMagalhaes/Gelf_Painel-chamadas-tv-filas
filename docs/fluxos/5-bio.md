@@ -17,11 +17,13 @@ flowchart LR
     A[Chegada] --> B[Captação<br/>2 salas · 1 vaga cada<br/>espera: térreo]
     B --> C[Doutores<br/>1 sala · 2 vagas<br/>espera: 1º andar]
     C --> D[Reiki<br/>1 sala · 2 macas<br/>espera: 1º andar]
-    D --> E[5ª sala<br/>1 vaga · a confirmar<br/>espera: 1º andar]
-    E --> F[Saída]
+    D --> F[Saída]
+    C -.->|se os doutores indicarem| E[Acupuntura<br/>1 sala · 1 vaga<br/>espera: 1º andar]
+    E -.-> F
 ```
 
-Etapas, salas, capacidades e locais de espera ficam em `config/bio.json` (a 5ª sala ainda é "a confirmar").
+Etapas, salas, capacidades e locais de espera ficam em `config/bio.json`. A **Acupuntura** é uma etapa
+**opcional**: não está na rota padrão e só entra para quem os doutores indicarem (veja o item 6).
 Para mudar o fluxo, edite o arquivo e reinicie o servidor; no dia a dia, vagas e salas se ajustam na própria tela.
 
 ## Passo a passo no controle
@@ -111,6 +113,12 @@ No cartão de quem aguarda:
 
 ![Edição da rota de um paciente](img/bio-8-alterar-rota.webp)
 
+**Incluir a acupuntura durante o atendimento dos doutores:** o cartão do paciente na sala também tem
+**Alterar rota**. As etapas que ainda faltam já vêm marcadas (aqui, Reiki); toque em **Acupuntura** para
+acrescentá-la, em ordem, e em **Salvar rota**. Ao concluir a etapa dos doutores, ele segue pela rota nova.
+
+![Incluindo a acupuntura na rota de quem está com os doutores](img/bio-8b-rota-durante-atendimento.webp)
+
 ### 7. Não compareceu e voltar à espera
 **Não compareceu** encerra o paciente: ele sai da TV e vai para **Finalizados hoje**. Se chegar atrasado,
 **Voltar à espera** nesse cartão o devolve ao fim da fila da mesma etapa.
@@ -169,7 +177,8 @@ stateDiagram-v2
 ```
 
 ## Pendências conhecidas
-- Função e capacidade da **5ª sala** ainda a confirmar com a equipe.
+- **Acupuntura:** confirmada como etapa de 1 vaga, opcional. Falta combinar com a equipe como o paciente é
+  avisado de que a acupuntura foi incluída (hoje, quem opera o controle informa).
 - Tela de sala para celular (a sala, como o reiki, avisaria pelo celular que está pronta) e orientações
   pós-atendimento do roteiro: fases seguintes.
 - Som e ajuste à TV Samsung 32" ainda precisam ser conferidos no equipamento real.

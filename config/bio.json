@@ -20,11 +20,11 @@
       "salas": [{ "id": "reiki", "nome": "Sala de reiki", "capacidade": 2 }]
     },
     {
-      "id": "quinta", "nome": "5ª sala (acupuntura?)", "cor": "#db2777", "esperaEm": "andar1",
-      "salas": [{ "id": "quinta", "nome": "5ª sala", "capacidade": 1 }]
+      "id": "quinta", "nome": "Acupuntura", "cor": "#db2777", "esperaEm": "andar1",
+      "salas": [{ "id": "quinta", "nome": "Sala de acupuntura", "capacidade": 1 }]
     }
   ],
-  "rotaPadrao": ["captacao", "doutores", "reiki", "quinta"],
+  "rotaPadrao": ["captacao", "doutores", "reiki"],
   "som": { "repeticoes": 1, "intervaloMs": 4000, "volume": 0.2 },
   "painel": { "destaqueMs": 15000, "exibirSobrenomeCompleto": true, "ultimasChamadas": 5 }
 }

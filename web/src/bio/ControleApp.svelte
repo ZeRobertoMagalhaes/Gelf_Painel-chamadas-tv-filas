@@ -171,6 +171,22 @@
   {/if}
 {/snippet}
 
+{#snippet editorRota()}
+  <div class="rota-edicao">
+    <span class="cartao-meta">Etapas que faltam (ordem do toque):</span>
+    <div class="trocar-lista">
+      {#each config.etapas as x (x.id)}
+        {@const pos = editRota.lista.indexOf(x.id)}
+        <button class="chip-trat pequeno" class:ativo={pos >= 0} style:--cor={x.cor} onclick={() => marcarEtapa(x.id)}>{pos >= 0 ? `${pos + 1}. ` : ""}{x.nome}</button>
+      {/each}
+    </div>
+    <div class="alerta-acoes">
+      <button class="btn-mini ouro" onclick={salvarRota}>Salvar rota</button>
+      <button class="btn-mini" onclick={() => (editRota = null)}>Cancelar</button>
+    </div>
+  </div>
+{/snippet}
+
 {#snippet tabela(rel)}
   <div class="relatorio">
     <p class="relatorio-resumo">
@@ -315,7 +331,9 @@
                       {:else}
                         <button class="btn-mini ouro" onclick={() => concluir(p)}>Concluir etapa</button>
                       {/if}
+                      <button class="btn-mini" onclick={() => abrirRota(p)}>Alterar rota</button>
                     </div>
+                    {#if editRota?.id === p.id}{@render editorRota()}{/if}
                     {@render historico(p)}
                   </div>
                 {/each}
@@ -347,19 +365,7 @@
                 </div>
 
                 {#if editRota?.id === p.id}
-                  <div class="rota-edicao">
-                    <span class="cartao-meta">Etapas que faltam (ordem do toque):</span>
-                    <div class="trocar-lista">
-                      {#each config.etapas as x (x.id)}
-                        {@const pos = editRota.lista.indexOf(x.id)}
-                        <button class="chip-trat pequeno" class:ativo={pos >= 0} style:--cor={x.cor} onclick={() => marcarEtapa(x.id)}>{pos >= 0 ? `${pos + 1}. ` : ""}{x.nome}</button>
-                      {/each}
-                    </div>
-                    <div class="alerta-acoes">
-                      <button class="btn-mini ouro" onclick={salvarRota}>Salvar rota</button>
-                      <button class="btn-mini" onclick={() => (editRota = null)}>Cancelar</button>
-                    </div>
-                  </div>
+                  {@render editorRota()}
                 {:else}
                   <div class="alerta-acoes">
                     {#each salas.filter((s) => s.ativa) as s (s.id)}

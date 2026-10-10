@@ -27,7 +27,7 @@ function diaAberto(salas) {
 }
 
 test('configuração: rota padrão, salas e capacidades válidas', () => {
-    assert.deepEqual(config.rotaPadrao, ['captacao', 'doutores', 'reiki', 'quinta']);
+    assert.deepEqual(config.rotaPadrao, ['captacao', 'doutores', 'reiki']);
     assert.equal(config.etapas.find((e) => e.id === 'doutores').salas[0].capacidade, 2);
     assert.throws(() => normalizarBio({ etapas: [{ id: 'a', nome: 'A', cor: '#000000', salas: [] }] }), /ao menos uma sala/);
 });
@@ -88,6 +88,17 @@ test('doutores recebem 2 por vez e escolhem a ordem; sala só chama quem espera 
     R.concluir(e, { id: c.id }, ctx());
     assert.equal(R.chamarProximo(e, { salaId: 'doutores' }, ctx()).paciente.id, b.id);
     assert.equal(c.rota[c.posicao], 'reiki');
+});
+
+test('acupuntura fora da rota padrão: os doutores a incluem durante o atendimento', () => {
+    const e = diaAberto();
+    const a = cheg(e, 'Ana', 'Lima', { rota: ['doutores'] });
+    R.chamarProximo(e, { salaId: 'doutores' }, ctx());
+    R.iniciar(e, { id: a.id }, ctx());
+    R.definirRota(e, { id: a.id, rota: ['reiki', 'quinta'] }, ctx());
+    assert.deepEqual(a.rota, ['doutores', 'reiki', 'quinta']);
+    R.concluir(e, { id: a.id }, ctx());
+    assert.equal(a.rota[a.posicao], 'reiki');
 });
 
 test('rota por paciente: pular etapa, alterar o que falta e terminar a rota', () => {

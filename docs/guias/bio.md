@@ -3,7 +3,8 @@
 Controle: `/bio/controle` (ex.: http://painel-gelf.local:3000/bio/controle)
 TVs: `/bio/painel` (as duas TVs, térreo e 1º andar, mostram a mesma tela)
 
-O paciente percorre uma **rota de etapas**: Captação › Doutores › Reiki › 5ª sala. Quem usa o controle
+O paciente percorre uma **rota de etapas**: Captação › Doutores › Reiki. A **Acupuntura** (1 vaga) não faz parte da rota padrão: os doutores
+decidem, paciente a paciente, quem passa por ela. Quem usa o controle
 acompanha cada um da chegada à saída.
 
 ## Abrir o dia
@@ -51,6 +52,10 @@ No cartão de quem aguarda:
 - **⇄ Alterar rota**: toque nas etapas que faltam, na ordem desejada (os números mostram a sequência), e em **Salvar rota**.
 - **⏭ Pular esta etapa**: segue direto para a próxima.
 - **✕ Remover do fluxo**: tira o paciente do fluxo.
+
+**Incluir a acupuntura (ou outra etapa) enquanto o paciente está com os doutores:** no cartão dele na sala,
+toque em **Alterar rota**, toque em **Acupuntura** (o Reiki já aparece marcado) e em **Salvar rota**.
+Ao concluir a etapa dos doutores, ele segue por Reiki e depois Acupuntura.
 
 **Ver histórico** (em cada cartão) lista todos os movimentos do paciente, com a hora.
 

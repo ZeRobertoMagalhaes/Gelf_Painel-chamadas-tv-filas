@@ -81,7 +81,7 @@ próprio do Socket.io (`/bio`) e arquivo diário próprio (`dados/bio-AAAA-MM-DD
 | Controle | `/bio/controle` | Responsável pelo fluxo: abre o dia (salas e capacidades, pré-inscritos), registra chegadas, chama cada paciente para uma sala, inicia, conclui, altera a rota, vê o relatório |
 | Painel TV | `/bio/painel` | As duas TVs (térreo e 1º andar) mostram o mesmo: etapa, nome, sala e status |
 
-- **Etapas, salas e capacidades** ficam em `config/bio.json` (captação 2 salas de 1 vaga; doutores 2 por vez; reiki 2 macas; 5ª sala a confirmar).
+- **Etapas, salas e capacidades** ficam em `config/bio.json` (captação 2 salas de 1 vaga; doutores 2 por vez; reiki 2 macas; acupuntura 1 vaga, fora da rota padrão: os doutores a incluem para quem precisar).
   Mudar o fluxo é editar esse arquivo e reiniciar. No dia, as vagas (macas) e salas em uso se ajustam na própria tela.
 - **Espera por local**: cada etapa tem o seu local de espera (térreo ou 1º andar), mostrado nas colunas.
 - **Quem chama**: o controle chama o próximo da espera ou escolhe quem entra (os doutores definem a ordem). Só chama se há vaga.
