@@ -52,6 +52,7 @@ mesmo dia; arquivos de dias anteriores são apagados ao iniciar e na virada do d
 ## Instalação, guias e checklist
 
 `instalacao/` (scripts do Windows) e `docs/guias/` (instalação, checklist de abertura, guia da recepção, das equipes e da Cura Mediúnica `bio.md`).
+Telas e transições de cada fluxo, com capturas: `docs/fluxos/` (1 abertura, 2 recepção, 3 atendimento, 4 painel, 5 Cura Mediúnica).
 
 ## Identidade visual
 

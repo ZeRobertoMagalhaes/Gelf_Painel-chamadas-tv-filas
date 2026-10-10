@@ -702,6 +702,7 @@ button:disabled { opacity: .5; cursor: not-allowed; filter: grayscale(.3); }
 .edicao input { background: #fff; color: var(--gelf-blue-dark); border: 1px solid #cbd5e1; padding: 8px 10px; font-size: .9rem; }
 .trocar-lista { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
 .trocar-lista .chip-trat { background: #fff; }
+.trocar-lista .chip-trat.ativo { background: var(--cor); color: #fff; }
 .confirma-texto { font-size: .8rem; font-weight: 700; color: #b91c1c; }
 
 /* ---------- Atendimento (celular) ---------- */
@@ -867,8 +868,9 @@ body.tv-only .hero { margin-bottom: 2.2vh; }
 .rota-edicao { display: flex; flex-direction: column; gap: 6px; }
 .etapa-abertura { border-left: 5px solid var(--cor); background: #fff; border-radius: var(--radius-sm); padding: 10px 14px; display: flex; flex-direction: column; gap: 6px; }
 .etapa-abertura small { color: #64748b; margin-left: 8px; }
+.sala-linha label { color: #1e293b; font-size: .95rem; }
 .sala-linha { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
-.sala-linha .cap input { width: 64px; padding: 6px; border-radius: 8px; border: 1px solid #cbd5e1; font: inherit; margin-left: 6px; }
+.sala-linha .cap input { background: #fff; color: #0f172a; width: 64px; padding: 6px; border-radius: 8px; border: 1px solid #cbd5e1; font: inherit; margin-left: 6px; }
 .relatorio { background: #fff; border-radius: var(--radius-md); padding: 14px 18px; box-shadow: 0 2px 8px rgba(0, 0, 0, .06); max-width: 860px; }
 .relatorio table { width: 100%; border-collapse: collapse; margin: 10px 0; font-size: .9rem; }
 .relatorio th, .relatorio td { text-align: left; padding: 6px 10px; border-bottom: 1px solid #e2e8f0; }
