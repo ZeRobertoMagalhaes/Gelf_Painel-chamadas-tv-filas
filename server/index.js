@@ -80,6 +80,8 @@ for (const tela of ['controle', 'painel', 'recepcao']) {
     expressApp.get(`/bio/${tela}`, (req, res) => res.sendFile(path.join(__dirname, '..', 'public', `bio-${tela}.html`)));
 }
 expressApp.get('/bio', (req, res) => res.redirect('/bio/controle'));
+// Atalhos: quem digita só o nome da tela cai na tela certa do módulo bioenergético.
+for (const tela of ['controle']) expressApp.get(`/${tela}`, (req, res) => res.redirect(`/bio/${tela}`));
 
 httpServer.listen(PORT, () => {
     iniciarRespondedorMdns();
