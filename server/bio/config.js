@@ -28,6 +28,8 @@ function normalizarBio(bruto) {
             ...t,
             esperaEm: locais.some((l) => l.id === e.esperaEm) ? e.esperaEm : locais[0].id,
             preparo: e.preparo === true,
+            opcional: e.opcional === true,
+            emiteProntuario: e.emiteProntuario === true,
             salas: salas.map((s) => ({ ...s, etapa: t.id })),
         };
     });

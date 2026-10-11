@@ -876,3 +876,7 @@ body.tv-only .hero { margin-bottom: 2.2vh; }
 .relatorio th, .relatorio td { text-align: left; padding: 6px 10px; border-bottom: 1px solid #e2e8f0; }
 .relatorio th { font-size: .75rem; text-transform: uppercase; letter-spacing: .5px; color: #64748b; }
 .relatorio-nota { font-size: .78rem; color: #64748b; }
+
+.cartao-meta.prontuario { color: #92400e; font-weight: 700; }
+.btn-mini.ligado { background: #dcfce7; border-color: #16a34a; color: #166534; }
+.alerta-prontuario { color: #fde68a; font-weight: 700; }

@@ -27,6 +27,7 @@ function criarAppBio({ config, store, io, relogio = () => new Date() }) {
         liberarSala: R.liberarSala,
         naoCompareceu: R.naoCompareceu,
         devolverEspera: R.devolverEspera,
+        registrarProntuario: R.registrarProntuario,
     };
 
     const configPublica = () => ({ locais: config.locais, etapas: config.etapas, rotaPadrao: config.rotaPadrao, som: config.som, painel: config.painel });

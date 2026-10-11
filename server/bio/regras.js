@@ -273,6 +273,7 @@ function registrarChegada(estado, args, ctx) {
         chamado: null,
         concluido: null,
         chamadas: 0,
+        prontuario: null,
         movimentos: [],
     };
     movimento(paciente, 'chegada', ctx);
@@ -382,8 +383,33 @@ function concluir(estado, args, ctx) {
     exigirSituacao(p, ['em_atendimento'], 'concluir');
     const sala = buscarSala(estado, p.salaId);
     movimento(p, 'etapa_concluida', ctx, { etapa: sala.etapa, sala: sala.nome });
+    // Última etapa da rota: quem controla recolhe e guarda o prontuário.
+    if (args.guardarProntuario === true && p.prontuario === 'recebido' && p.posicao === p.rota.length - 1) {
+        p.prontuario = 'guardado';
+        movimento(p, 'prontuario_guardado', ctx);
+    }
     if (etapaDe(ctx.config, sala.etapa).preparo) sala.emPreparo += 1;
     avancar(estado, p, ctx);
+    return { paciente: p };
+}
+
+// Prontuário do tratamento pedido pelos doutores: o controle o recebe ao
+// concluir a etapa deles ("recebido"), o paciente o leva às etapas seguintes e
+// o controle o recolhe e guarda ao final da rota ("guardado").
+function registrarProntuario(estado, args, ctx) {
+    exigirAberto(estado);
+    const p = buscar(estado, args.id);
+    exigirSituacao(p, ATIVAS, 'registrar o prontuário');
+    const novo = args.situacao === undefined ? 'recebido' : args.situacao;
+    if (![null, 'recebido', 'guardado'].includes(novo)) throw new ErroRegra('invalido', 'Situação de prontuário inválida.');
+    if (novo === 'guardado' && p.prontuario !== 'recebido') {
+        throw new ErroRegra('estado_invalido', 'Só é possível guardar um prontuário que foi recebido.');
+    }
+    if (novo === p.prontuario) return { paciente: p };
+    p.prontuario = novo;
+    if (novo === 'recebido') movimento(p, 'prontuario_recebido', ctx);
+    else if (novo === 'guardado') movimento(p, 'prontuario_guardado', ctx);
+    else movimento(p, 'prontuario_desfeito', ctx);
     return { paciente: p };
 }
 
@@ -496,4 +522,5 @@ module.exports = {
     liberarSala,
     naoCompareceu,
     devolverEspera,
+    registrarProntuario,
 };

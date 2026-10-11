@@ -23,8 +23,17 @@
   );
   // Status vem do estado dos pacientes: muda sem som, só a chamada toca o alarme.
   const STATUS_TV = { chamado: "Chamado", em_atendimento: "Em atendimento", aguardando: "Etapa concluída — aguarde", concluido: "Atendimento concluído" };
-  const situacaoPorId = $derived(new Map((rede.estado?.pacientes ?? []).map((p) => [p.id, p.situacao])));
-  const statusDe = (c) => situacaoPorId.get(c?.pacienteId);
+  const pacientePorId = $derived(new Map((rede.estado?.pacientes ?? []).map((p) => [p.id, p])));
+  const statusDe = (c) => pacientePorId.get(c?.pacienteId)?.situacao;
+  // Quem concluiu uma etapa é orientado a esperar no local da próxima (ex.: sala de espera do 1º andar).
+  function textoStatus(c) {
+    const p = pacientePorId.get(c?.pacienteId);
+    if (!p || !STATUS_TV[p.situacao]) return "";
+    if (p.situacao !== "aguardando") return STATUS_TV[p.situacao];
+    const proxima = rede.config?.etapas.find((e) => e.id === p.rota[p.posicao]);
+    const local = rede.config?.locais.find((l) => l.id === proxima?.esperaEm);
+    return local ? `Etapa concluída — aguarde: ${local.nome}` : STATUS_TV.aguardando;
+  }
   const tratamento = $derived(atual ? tratamentoPorId(rede.config, atual.etapa) : null);
 
   // Fila de exibição: se duas salas chamam ao mesmo tempo, as chamadas
@@ -94,8 +103,8 @@
           <div class="badge-therapy" style:background-color={tratamento.cor}>{tratamento.nome}</div>
           <div class="patient-name">{atual.nomeExibicao}</div>
           <div class="location-info">{atual.sala}</div>
-          {#if STATUS_TV[statusDe(atual)]}
-            <div class="status-tv" data-status={statusDe(atual)}>{STATUS_TV[statusDe(atual)]}</div>
+          {#if textoStatus(atual)}
+            <div class="status-tv" data-status={statusDe(atual)}>{textoStatus(atual)}</div>
           {/if}
         {:else if rede.estado && !rede.estado.atendimentoAberto}
           <div class="patient-name ocioso">Atendimento encerrado</div>
@@ -116,7 +125,7 @@
               style:animation-delay={`${i * 0.05}s`}
             >
               <div class="h-name">{item.nomeExibicao}</div>
-              <div class="h-type">{item.sala}{#if STATUS_TV[statusDe(item)]}{" "}• {STATUS_TV[statusDe(item)]}{/if}</div>
+              <div class="h-type">{item.sala}{#if textoStatus(item)}{" "}• {textoStatus(item)}{/if}</div>
             </div>
           {/each}
         </div>

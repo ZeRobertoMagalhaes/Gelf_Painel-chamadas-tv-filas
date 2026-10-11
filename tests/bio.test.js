@@ -101,6 +101,38 @@ test('acupuntura fora da rota padrão: os doutores a incluem durante o atendimen
     assert.equal(a.rota[a.posicao], 'reiki');
 });
 
+test('config oficial: Captação/Apometria › Doutores › Acupuntura (opcional) › Reiki/Cromoterapia', () => {
+    assert.deepEqual(config.etapas.map((e) => e.id), ['captacao', 'doutores', 'quinta', 'reiki']);
+    assert.equal(config.etapas.find((e) => e.id === 'quinta').opcional, true);
+    assert.equal(config.etapas.find((e) => e.id === 'doutores').emiteProntuario, true);
+    // sem acupuntura, o paciente vai direto dos doutores ao reiki
+    const e = diaAberto();
+    const a = cheg(e, 'Ana', 'Lima');
+    assert.deepEqual(a.rota, ['captacao', 'doutores', 'reiki']);
+});
+
+test('prontuário: recebido nos doutores, acompanha o paciente e é guardado ao fim da rota', () => {
+    const e = diaAberto();
+    const a = cheg(e, 'Ana', 'Lima', { rota: ['doutores', 'quinta', 'reiki'] });
+    assert.equal(a.prontuario, null);
+    assert.equal(codigo(() => R.registrarProntuario(e, { id: a.id, situacao: 'guardado' }, ctx())), 'estado_invalido');
+    R.chamarProximo(e, { salaId: 'doutores' }, ctx());
+    R.iniciar(e, { id: a.id }, ctx());
+    R.registrarProntuario(e, { id: a.id, situacao: 'recebido' }, ctx());
+    assert.equal(a.prontuario, 'recebido');
+    R.concluir(e, { id: a.id }, ctx());
+    R.chamarProximo(e, { salaId: 'quinta' }, ctx());
+    R.iniciar(e, { id: a.id }, ctx());
+    R.concluir(e, { id: a.id, guardarProntuario: true }, ctx()); // não é a última etapa: não guarda ainda
+    assert.equal(a.prontuario, 'recebido');
+    R.chamarProximo(e, { salaId: 'reiki' }, ctx());
+    R.iniciar(e, { id: a.id }, ctx());
+    R.concluir(e, { id: a.id, guardarProntuario: true }, ctx());
+    assert.equal(a.situacao, 'concluido');
+    assert.equal(a.prontuario, 'guardado');
+    assert.deepEqual(a.movimentos.filter((m) => m.acao.startsWith('prontuario')).map((m) => m.acao), ['prontuario_recebido', 'prontuario_guardado']);
+});
+
 test('rota por paciente: pular etapa, alterar o que falta e terminar a rota', () => {
     const e = diaAberto();
     const a = cheg(e, 'Ana', 'Lima', { rota: ['doutores', 'reiki'] });

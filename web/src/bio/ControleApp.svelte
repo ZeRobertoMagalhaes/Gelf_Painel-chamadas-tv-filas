@@ -23,6 +23,9 @@
     etapa_pulada: "Etapa pulada",
     rota_alterada: "Rota alterada",
     devolvido_espera: "Voltou para a espera",
+    prontuario_recebido: "Prontuário recebido",
+    prontuario_guardado: "Prontuário guardado",
+    prontuario_desfeito: "Registro de prontuário desfeito",
     nao_compareceu: "Não compareceu",
     concluido: "Fluxo concluído",
     removido: "Removido do fluxo",
@@ -48,6 +51,7 @@
   const porId = $derived(new Map(pacientes.map((p) => [p.id, p])));
   const etapa = (id) => config?.etapas.find((e) => e.id === id);
   const local = (id) => config?.locais.find((l) => l.id === id)?.nome ?? "";
+  const prontuariosAGuardar = $derived(pacientes.filter((p) => p.prontuario === "recebido").length);
   const faltamChegar = $derived((estado?.preinscritos ?? []).filter((i) => !i.pacienteId));
   const esperaDe = (id) => (estado?.espera?.[id] ?? []).map((x) => porId.get(x)).filter(Boolean);
   const salasDe = (id) => (estado?.salas ?? []).filter((s) => s.etapa === id);
@@ -102,7 +106,7 @@
   const chamarProximo = (s) => acao("chamarProximo", { salaId: s.id });
   const rechamar = (p) => acao("rechamar", { id: p.id }, "Chamada repetida na TV");
   const iniciar = (p) => acao("iniciar", { id: p.id });
-  const concluir = (p) => acao("concluir", { id: p.id });
+  const concluir = (p, guardarProntuario = false) => acao("concluir", { id: p.id, guardarProntuario });
   const faltou = (p) => acao("naoCompareceu", { id: p.id });
   const devolver = (p) => acao("devolverEspera", { id: p.id });
   const pular = (p) => acao("pularEtapa", { id: p.id });
@@ -114,10 +118,27 @@
   function abrirRota(p) {
     editRota = { id: p.id, lista: p.rota.slice(p.posicao + (p.situacao === "aguardando" ? 0 : 1)) };
   }
+  // A ordem das etapas segue o fluxo oficial (config/bio.json), seja qual for a ordem dos toques.
+  const ordemFluxo = (lista) => (config?.etapas ?? []).map((e) => e.id).filter((id) => lista.includes(id));
   function marcarEtapa(id) {
     const l = editRota.lista;
-    editRota.lista = l.includes(id) ? l.filter((x) => x !== id) : [...l, id];
+    editRota.lista = ordemFluxo(l.includes(id) ? l.filter((x) => x !== id) : [...l, id]);
   }
+  const restante = (p) => p.rota.slice(p.posicao + (p.situacao === "aguardando" ? 0 : 1));
+  const etapaDoPaciente = (p) => etapa(p.rota[p.posicao]);
+  // Etapas opcionais (ex.: acupuntura) que os doutores podem incluir ou retirar enquanto atendem.
+  const opcionaisAdiante = (p) => {
+    if (!etapaDoPaciente(p)?.emiteProntuario) return [];
+    const i = config.etapas.findIndex((e) => e.id === p.rota[p.posicao]);
+    return config.etapas.filter((e, j) => e.opcional && j > i);
+  };
+  function alternarOpcional(p, e) {
+    const r = restante(p);
+    return acao("definirRota", { id: p.id, rota: r.includes(e.id) ? r.filter((x) => x !== e.id) : ordemFluxo([...r, e.id]) });
+  }
+  const ultimaEtapa = (p) => p.posicao === p.rota.length - 1;
+  const alternarProntuario = (p) => acao("registrarProntuario", { id: p.id, situacao: p.prontuario === "recebido" ? null : "recebido" });
+  const textoProntuario = (p) => (p.prontuario === "recebido" ? "Prontuário com o paciente" : p.prontuario === "guardado" ? "Prontuário guardado" : "");
   async function salvarRota() {
     const r = await acao("definirRota", { id: editRota.id, rota: editRota.lista });
     if (r.ok) editRota = null;
@@ -173,7 +194,7 @@
 
 {#snippet editorRota()}
   <div class="rota-edicao">
-    <span class="cartao-meta">Etapas que faltam (ordem do toque):</span>
+    <span class="cartao-meta">Etapas que faltam (na ordem do fluxo):</span>
     <div class="trocar-lista">
       {#each config.etapas as x (x.id)}
         {@const pos = editRota.lista.indexOf(x.id)}
@@ -260,6 +281,9 @@
       {#if estado && aberto}
         <button class="btn-mini perigo" onclick={fecharDia}>{confirmandoFechar ? "Confirmar: apagar tudo" : "Fechar o dia"}</button>
       {/if}
+      {#if estado && aberto && prontuariosAGuardar > 0}
+        <p class="estado-dica alerta-prontuario">📋 {prontuariosAGuardar} prontuário(s) ainda não guardado(s).</p>
+      {/if}
       {#if confirmandoFechar}
         <p class="estado-dica">
           Fechar apaga pacientes e pré-inscritos; só o relatório (sem nomes) fica salvo.
@@ -322,6 +346,7 @@
                   <div class="cartao-paciente em-curso">
                     <div class="cartao-nome">{p.nomeExibicao}</div>
                     <div class="cartao-meta">{ROTULO_SITUACAO[p.situacao]}{faltaDaRota(p).length ? ` • depois: ${faltaDaRota(p).join(" › ")}` : ""}</div>
+                    {#if textoProntuario(p)}<div class="cartao-meta prontuario">📋 {textoProntuario(p)}{p.situacao === "chamado" && p.prontuario === "recebido" ? " — o paciente deve entregá-lo na sala" : ""}</div>{/if}
                     <div class="alerta-acoes">
                       {#if p.situacao === "chamado"}
                         <button class="btn-mini ouro" onclick={() => iniciar(p)}>Iniciar</button>
@@ -329,8 +354,20 @@
                         <button class="btn-mini" onclick={() => devolver(p)}>Voltar à espera</button>
                         <button class="btn-mini perigo" onclick={() => faltou(p)}>Não compareceu</button>
                       {:else}
-                        <button class="btn-mini ouro" onclick={() => concluir(p)}>Concluir etapa</button>
+                        {#if ultimaEtapa(p) && p.prontuario === "recebido"}
+                          <button class="btn-mini ouro" onclick={() => concluir(p, true)}>Concluir e guardar prontuário</button>
+                        {:else}
+                          <button class="btn-mini ouro" onclick={() => concluir(p)}>Concluir etapa</button>
+                        {/if}
+                        {#if etapaDoPaciente(p)?.emiteProntuario}
+                          <button class="btn-mini" class:ligado={p.prontuario === "recebido"} aria-pressed={p.prontuario === "recebido"} onclick={() => alternarProntuario(p)}>
+                            {p.prontuario === "recebido" ? "✔ Prontuário recebido" : "Prontuário recebido"}
+                          </button>
+                        {/if}
                       {/if}
+                      {#each opcionaisAdiante(p) as o (o.id)}
+                        <button class="btn-mini" onclick={() => alternarOpcional(p, o)}>{restante(p).includes(o.id) ? "Retirar" : "Incluir"} {o.nome}</button>
+                      {/each}
                       <button class="btn-mini" onclick={() => abrirRota(p)}>Alterar rota</button>
                     </div>
                     {#if editRota?.id === p.id}{@render editorRota()}{/if}
@@ -361,6 +398,7 @@
                     <div class="cartao-nome">{p.nomeExibicao}</div>
                     <div class="cartao-meta">chegou {horaCurta(p.chegada)}{p.descricao ? ` • ${p.descricao}` : ""}</div>
                     {#if faltaDaRota(p).length > 1}<div class="cartao-meta">depois: {faltaDaRota(p).slice(1).join(" › ")}</div>{/if}
+                    {#if textoProntuario(p)}<div class="cartao-meta prontuario">📋 {textoProntuario(p)}</div>{/if}
                   </div>
                 </div>
 

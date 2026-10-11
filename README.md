@@ -76,21 +76,27 @@ Tratamento em que o paciente percorre uma **rota de etapas** (esboço em `docs/C
 complementado por `docs/Roteiro para tratamento bioenergetico.pdf`). Independente das filas por tratamento: namespace
 próprio do Socket.io (`/bio`) e arquivo diário próprio (`dados/bio-AAAA-MM-DD.json`, apagado na virada do dia e em "Fechar o dia").
 
+Fluxo oficial do processo: `docs/fluxos/fluxo-operacional-bio.md` (referência para qualquer ajuste do módulo).
+
 | Tela | Endereço | Quem usa |
 |---|---|---|
-| Controle | `/bio/controle` | Responsável pelo fluxo: abre o dia (salas e capacidades, pré-inscritos), registra chegadas, chama cada paciente para uma sala, inicia, conclui, altera a rota, vê o relatório |
-| Painel TV | `/bio/painel` | As duas TVs (térreo e 1º andar) mostram o mesmo: etapa, nome, sala e status |
+| Recepção | `/bio/recepcao` | A recepção: cadastra os pacientes (nome e sobrenome ou pré-inscritos) e orienta onde aguardar |
+| Controle | `/bio/controle` | Responsável pelo controle: abre o dia (salas e capacidades, pré-inscritos), chama cada paciente para uma sala, inicia, conclui, cuida do prontuário, altera a rota, vê o relatório e fecha o dia |
+| Painel TV | `/bio/painel` | As duas TVs (térreo e 1º andar) mostram o mesmo: etapa, nome, sala, status e onde aguardar a próxima etapa |
 
-- **Etapas, salas e capacidades** ficam em `config/bio.json` (captação 2 salas de 1 vaga; doutores 2 por vez; reiki 2 macas; acupuntura 1 vaga, fora da rota padrão: os doutores a incluem para quem precisar).
+- **Rota oficial**: Captação/Apometria › Doutores › Acupuntura (opcional) › Reiki/Cromoterapia. Etapas, salas e capacidades ficam em `config/bio.json`
+  (captação 2 salas de 1 vaga; doutores 2 por vez; reiki 2 macas; acupuntura 1 vaga, `opcional`, fora da rota padrão).
   Mudar o fluxo é editar esse arquivo e reiniciar. No dia, as vagas (macas) e salas em uso se ajustam na própria tela.
-- **Espera por local**: cada etapa tem o seu local de espera (térreo ou 1º andar), mostrado nas colunas.
+- **Acupuntura**: só quando os doutores pedem ("Incluir Acupuntura" no cartão do paciente); entra sempre antes do Reiki/Cromoterapia.
+- **Prontuário**: "Prontuário recebido" nos doutores (`emiteProntuario`), acompanha o paciente e é guardado em "Concluir e guardar prontuário" na última etapa; o controle avisa os que ficaram sem guardar.
+- **Espera por local**: cada etapa tem o seu local de espera (Sala de Evangelhoterapia no térreo, sala de espera do 1º andar), mostrado nas colunas e na TV.
 - **Quem chama**: o controle chama o próximo da espera ou escolhe quem entra (os doutores definem a ordem). Só chama se há vaga.
 - **Preparo**: na captação, a sala só volta a ter vaga depois de "Sala pronta" (fechamento das energias).
-- **Rota por paciente**: igual para a maioria; dá para pular etapa ou redefinir o que falta.
+- **Rota por paciente**: igual para a maioria; dá para pular etapa ou redefinir o que falta (sempre na ordem do fluxo).
 - **Não compareceu**: encerra o paciente; "Voltar à espera" o devolve ao fim da fila da etapa.
 - **Relatório do dia** (sem nomes): chegadas, concluídos, tempo médio total e, por etapa, atendidos, espera média e duração média.
   Ao fechar o dia fica salvo em `dados/relatorios/bio-AAAA-MM-DD.json` (fora do Git); os nomes são apagados.
 - Pré-inscritos: colar uma pessoa por linha, `Nome Sobrenome ; dia ; descrição`.
 
-Regras em `server/bio/regras.js` (testes em `tests/bio.test.js`). Fase seguinte: tela de sala para celular (reiki avisa pelo celular),
-orientações pós-atendimento do roteiro (o guia de uso já está em `docs/guias/bio.md`).
+Regras em `server/bio/regras.js` (testes em `tests/bio.test.js`). Fases seguintes: tela de sala para celular (a sala avisa pelo celular),
+orientações pós-atendimento do roteiro. Guia de uso em `docs/guias/bio.md`.

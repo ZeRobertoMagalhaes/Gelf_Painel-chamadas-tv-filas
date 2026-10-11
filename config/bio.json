@@ -1,30 +1,89 @@
 {
   "locais": [
-    { "id": "terreo", "nome": "Salão do térreo" },
-    { "id": "andar1", "nome": "1º andar" }
+    {
+      "id": "terreo",
+      "nome": "Sala de Evangelhoterapia (térreo)"
+    },
+    {
+      "id": "andar1",
+      "nome": "Sala de espera do 1º andar"
+    }
   ],
   "etapas": [
     {
-      "id": "captacao", "nome": "Captação", "cor": "#7c3aed", "esperaEm": "terreo", "preparo": true,
+      "id": "captacao",
+      "nome": "Captação/Apometria",
+      "cor": "#7c3aed",
+      "esperaEm": "terreo",
+      "preparo": true,
       "salas": [
-        { "id": "captacao1", "nome": "Captação 1", "capacidade": 1 },
-        { "id": "captacao2", "nome": "Captação 2", "capacidade": 1 }
+        {
+          "id": "captacao1",
+          "nome": "Captação 1",
+          "capacidade": 1
+        },
+        {
+          "id": "captacao2",
+          "nome": "Captação 2",
+          "capacidade": 1
+        }
       ]
     },
     {
-      "id": "doutores", "nome": "Doutores", "cor": "#ea580c", "esperaEm": "andar1",
-      "salas": [{ "id": "doutores", "nome": "Sala dos doutores", "capacidade": 2 }]
+      "id": "doutores",
+      "nome": "Doutores",
+      "cor": "#ea580c",
+      "esperaEm": "andar1",
+      "salas": [
+        {
+          "id": "doutores",
+          "nome": "Sala dos doutores",
+          "capacidade": 2
+        }
+      ],
+      "emiteProntuario": true
     },
     {
-      "id": "reiki", "nome": "Reiki", "cor": "#059669", "esperaEm": "andar1",
-      "salas": [{ "id": "reiki", "nome": "Sala de reiki", "capacidade": 2 }]
+      "id": "quinta",
+      "nome": "Acupuntura",
+      "cor": "#db2777",
+      "esperaEm": "andar1",
+      "salas": [
+        {
+          "id": "quinta",
+          "nome": "Sala de acupuntura",
+          "capacidade": 1
+        }
+      ],
+      "opcional": true
     },
     {
-      "id": "quinta", "nome": "Acupuntura", "cor": "#db2777", "esperaEm": "andar1",
-      "salas": [{ "id": "quinta", "nome": "Sala de acupuntura", "capacidade": 1 }]
+      "id": "reiki",
+      "nome": "Reiki/Cromoterapia",
+      "cor": "#059669",
+      "esperaEm": "andar1",
+      "salas": [
+        {
+          "id": "reiki",
+          "nome": "Sala de reiki",
+          "capacidade": 2
+        }
+      ]
     }
   ],
-  "rotaPadrao": ["captacao", "doutores", "reiki"],
-  "som": { "repeticoes": 1, "intervaloMs": 4000, "volume": 0.2 },
-  "painel": { "destaqueMs": 15000, "exibirSobrenomeCompleto": true, "ultimasChamadas": 5 }
+  "rotaPadrao": [
+    "captacao",
+    "doutores",
+    "reiki"
+  ],
+  "som": {
+    "repeticoes": 1,
+    "intervaloMs": 4000,
+    "volume": 0.2
+  },
+  "painel": {
+    "destaqueMs": 15000,
+    "exibirSobrenomeCompleto": true,
+    "ultimasChamadas": 5
+  }
 }
