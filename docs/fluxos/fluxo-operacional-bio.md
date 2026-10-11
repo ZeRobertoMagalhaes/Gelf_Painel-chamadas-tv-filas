@@ -28,9 +28,9 @@ flowchart TD
 | 4 | Conferir as filas já com todos os cadastrados | controle e orquestração | `/bio/controle`: colunas por etapa, com **Aguardando** |
 | 5 | Iniciar a chamada pelo sistema | controle | **Chamar próximo** (ou **→ sala** para escolher quem entra) |
 | 6–7 | Captação/Apometria: chamada pelo painel | controle, TV | A TV mostra etapa, nome, sala e toca o sinal |
-| 8 | Registrar a conclusão na Captação/Apometria | controle | **Concluir etapa**; a sala fica em preparo até **Sala pronta** |
+| 8 | Registrar a conclusão na Captação/Apometria | controle | **Concluir etapa**; a vaga da sala volta na hora, pronta para o próximo |
 | 9 | Orientar a ir à sala de espera do 1º andar | TV | A TV mostra "Etapa concluída — aguarde: Sala de espera do 1º andar" |
-| 10 | Chamada para a Sala dos Doutores | controle, TV | Igual ao passo 5 |
+| 10 | Chamada para os Doutores | controle, TV | Igual ao passo 5 |
 | 11 | Concluir os Doutores e receber o prontuário | controle | **Concluir etapa** e **Prontuário recebido** (marca que o prontuário está com o paciente) |
 | 12 | Orientar o retorno à espera do 1º andar | TV | Igual ao passo 9 |
 | 13 | **Acupuntura, só se os doutores pedirem** | controle, TV | **Incluir Acupuntura** no cartão do paciente; o cartão lembra que o paciente entrega o prontuário |
@@ -45,7 +45,7 @@ flowchart TD
 - **Ordem fixa:** Captação/Apometria › Doutores › Acupuntura (opcional) › Reiki/Cromoterapia. Ao incluir a
   Acupuntura, ela entra sempre **antes** do Reiki/Cromoterapia, seja qual for a ordem dos toques.
 - **Acupuntura condicional:** a rota padrão não a inclui, então o paciente avança dos Doutores direto ao
-  Reiki/Cromoterapia. Só entra quando os doutores pedem (1 vaga).
+  Reiki/Cromoterapia. Só entra quando os doutores pedem.
 - **Prontuário:** recebido ao concluir os Doutores; acompanha o paciente; guardado ao concluir a última etapa.
   O controle mostra "📋 Prontuário com o paciente" nos cartões e avisa, ao fechar o dia, se algum ficou sem guardar.
 - **Quem registra:** a recepção só cadastra; chamar, concluir e o prontuário são do responsável pelo
@@ -54,12 +54,14 @@ flowchart TD
 
 ## Nomes das etapas e locais
 
-| Etapa | Sala | Vagas | Espera |
+Toda etapa tem **duas salas de 1 vaga**, ou seja, **2 atendimentos simultâneos**.
+
+| Etapa | Salas | Atendimentos simultâneos | Espera |
 |---|---|---|---|
-| Captação/Apometria | Captação 1 e Captação 2 | 1 cada | Sala de Evangelhoterapia (térreo) |
-| Doutores | Sala dos doutores | 2 | Sala de espera do 1º andar |
-| Acupuntura (opcional) | Sala de acupuntura | 1 | Sala de espera do 1º andar |
-| Reiki/Cromoterapia | Sala de reiki | 2 | Sala de espera do 1º andar |
+| Captação/Apometria | Captação 1 e Captação 2 | 2 | Sala de Evangelhoterapia (térreo) |
+| Doutores | Doutores 1 e Doutores 2 | 2 | Sala de espera do 1º andar |
+| Acupuntura (opcional) | Acupuntura 1 e Acupuntura 2 | 2 | Sala de espera do 1º andar |
+| Reiki/Cromoterapia | Reiki 1 e Reiki 2 | 2 | Sala de espera do 1º andar |
 
 Tudo isso fica em `config/bio.json`.
 
@@ -69,3 +71,5 @@ Tudo isso fica em `config/bio.json`.
 - Controle do prontuário (recebido, com o paciente, guardado).
 - A TV passou a orientar o paciente sobre onde aguardar a próxima etapa.
 - Nomes e locais ajustados: Captação/Apometria, Reiki/Cromoterapia, Sala de Evangelhoterapia (térreo).
+- Retirada a opção **Sala pronta**: a vaga da Captação/Apometria volta assim que a etapa é concluída.
+- Todas as etapas passaram a ter 2 atendimentos simultâneos (duas salas de 1 vaga), como a Captação/Apometria.

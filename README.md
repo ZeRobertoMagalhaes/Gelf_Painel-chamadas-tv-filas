@@ -85,13 +85,14 @@ Fluxo oficial do processo: `docs/fluxos/fluxo-operacional-bio.md` (referência p
 | Painel TV | `/bio/painel` | As duas TVs (térreo e 1º andar) mostram o mesmo: etapa, nome, sala, status e onde aguardar a próxima etapa |
 
 - **Rota oficial**: Captação/Apometria › Doutores › Acupuntura (opcional) › Reiki/Cromoterapia. Etapas, salas e capacidades ficam em `config/bio.json`
-  (captação 2 salas de 1 vaga; doutores 2 por vez; reiki 2 macas; acupuntura 1 vaga, `opcional`, fora da rota padrão).
+  (todas as etapas com 2 salas de 1 vaga, ou seja, 2 atendimentos simultâneos: Captação 1 e 2, Doutores 1 e 2, Acupuntura 1 e 2, Reiki 1 e 2;
+  a acupuntura é `opcional`, fora da rota padrão).
   Mudar o fluxo é editar esse arquivo e reiniciar. No dia, as vagas (macas) e salas em uso se ajustam na própria tela.
 - **Acupuntura**: só quando os doutores pedem ("Incluir Acupuntura" no cartão do paciente); entra sempre antes do Reiki/Cromoterapia.
 - **Prontuário**: "Prontuário recebido" nos doutores (`emiteProntuario`), acompanha o paciente e é guardado em "Concluir e guardar prontuário" na última etapa; o controle avisa os que ficaram sem guardar.
 - **Espera por local**: cada etapa tem o seu local de espera (Sala de Evangelhoterapia no térreo, sala de espera do 1º andar), mostrado nas colunas e na TV.
 - **Quem chama**: o controle chama o próximo da espera ou escolhe quem entra (os doutores definem a ordem). Só chama se há vaga.
-- **Preparo**: na captação, a sala só volta a ter vaga depois de "Sala pronta" (fechamento das energias).
+- **Sem "sala pronta"**: ao concluir a etapa, a vaga da sala volta na hora. O mecanismo de preparo continua disponível por configuração (`"preparo": true` na etapa em `config/bio.json`), mas está desligado.
 - **Rota por paciente**: igual para a maioria; dá para pular etapa ou redefinir o que falta (sempre na ordem do fluxo).
 - **Não compareceu**: encerra o paciente; "Voltar à espera" o devolve ao fim da fila da etapa.
 - **Relatório do dia** (sem nomes): chegadas, concluídos, tempo médio total e, por etapa, atendidos, espera média e duração média.

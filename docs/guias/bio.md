@@ -5,7 +5,7 @@ Controle: `/bio/controle`
 TVs: `/bio/painel` (as duas TVs, térreo e 1º andar, mostram a mesma tela)
 
 O paciente percorre uma **rota de etapas**: Captação/Apometria › Doutores › Reiki/Cromoterapia. A **Acupuntura**
-(1 vaga) não faz parte da rota padrão: os doutores decidem, paciente a paciente, quem passa por ela, e ela
+não faz parte da rota padrão: os doutores decidem, paciente a paciente, quem passa por ela, e ela
 sempre vem **antes** do Reiki/Cromoterapia. O processo oficial completo está em
 [docs/fluxos/fluxo-operacional-bio.md](../fluxos/fluxo-operacional-bio.md).
 
@@ -29,7 +29,7 @@ sempre vem **antes** do Reiki/Cromoterapia. O processo oficial completo está em
 - ✎ corrige o nome; ✕ remove (pede confirmação).
 
 ## Chamar para uma sala (controle)
-Cada etapa é uma coluna, com suas salas e a lista **Aguardando**. As salas mostram as vagas (ex.: `1/2 vagas`).
+Cada etapa é uma coluna, com suas salas e a lista **Aguardando**. Cada etapa tem **duas salas** (ex.: Captação 1 e 2), então atendem **2 pacientes ao mesmo tempo**. As salas mostram as vagas (ex.: `1/1 vagas`).
 
 - **Chamar próximo** (na sala): chama o primeiro da espera.
 - **→ nome da sala** (no cartão do paciente): escolhe quem entra (os doutores definem a ordem).
@@ -49,11 +49,10 @@ Paciente **Em atendimento**:
 Quem foi marcado **Não compareceu** aparece em **Finalizados hoje**. Se chegar atrasado, toque em
 **Voltar à espera**: ele entra no fim da fila da mesma etapa.
 
-**Captação/Apometria:** depois de concluir, a sala fica **Em preparo** (fechamento das energias). Ela só volta a
-ter vaga quando você toca em **Sala pronta**.
+Ao concluir a etapa, a **vaga da sala volta na hora**: dá para chamar o próximo em seguida.
 
 ## Doutores: prontuário e Acupuntura
-No cartão do paciente na **Sala dos doutores**:
+No cartão do paciente na sala dos **Doutores**:
 - **Prontuário recebido**: marca que o controle recebeu o prontuário do tratamento pedido. O cartão passa a
   mostrar "📋 Prontuário com o paciente" e, nas salas seguintes, lembra que o paciente deve entregá-lo.
 - **Incluir Acupuntura** (só se os doutores pedirem): acrescenta a Acupuntura à rota, antes do

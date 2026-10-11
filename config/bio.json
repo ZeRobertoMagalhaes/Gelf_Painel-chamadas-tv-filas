@@ -15,7 +15,6 @@
       "nome": "Captação/Apometria",
       "cor": "#7c3aed",
       "esperaEm": "terreo",
-      "preparo": true,
       "salas": [
         {
           "id": "captacao1",
@@ -37,8 +36,13 @@
       "salas": [
         {
           "id": "doutores",
-          "nome": "Sala dos doutores",
-          "capacidade": 2
+          "nome": "Doutores 1",
+          "capacidade": 1
+        },
+        {
+          "id": "doutores2",
+          "nome": "Doutores 2",
+          "capacidade": 1
         }
       ],
       "emiteProntuario": true
@@ -51,7 +55,12 @@
       "salas": [
         {
           "id": "quinta",
-          "nome": "Sala de acupuntura",
+          "nome": "Acupuntura 1",
+          "capacidade": 1
+        },
+        {
+          "id": "quinta2",
+          "nome": "Acupuntura 2",
           "capacidade": 1
         }
       ],
@@ -65,8 +74,13 @@
       "salas": [
         {
           "id": "reiki",
-          "nome": "Sala de reiki",
-          "capacidade": 2
+          "nome": "Reiki 1",
+          "capacidade": 1
+        },
+        {
+          "id": "reiki2",
+          "nome": "Reiki 2",
+          "capacidade": 1
         }
       ]
     }

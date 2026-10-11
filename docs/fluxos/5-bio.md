@@ -16,10 +16,10 @@ Resumo para consulta rápida no [guia da Cura Mediúnica](../guias/bio.md).
 
 ```mermaid
 flowchart TD
-    A[Chegada] --> B[Captação/Apometria<br/>2 salas · 1 vaga cada<br/>espera: Sala de Evangelhoterapia, térreo]
-    B --> C[Doutores<br/>1 sala · 2 vagas<br/>espera: 1º andar]
-    C -.->|se os doutores pedirem| E[Acupuntura<br/>1 sala · 1 vaga<br/>espera: 1º andar]
-    C --> D[Reiki/Cromoterapia<br/>1 sala · 2 macas<br/>espera: 1º andar]
+    A[Chegada] --> B[Captação/Apometria<br/>2 atendimentos simultâneos<br/>espera: Sala de Evangelhoterapia, térreo]
+    B --> C[Doutores<br/>2 atendimentos simultâneos<br/>espera: 1º andar]
+    C -.->|se os doutores pedirem| E[Acupuntura<br/>2 atendimentos simultâneos<br/>espera: 1º andar]
+    C --> D[Reiki/Cromoterapia<br/>2 atendimentos simultâneos<br/>espera: 1º andar]
     E -.-> D
     D --> F[Fluxo encerrado]
 ```
@@ -73,7 +73,7 @@ O controle vê as filas já com todos os cadastrados.
 
 ![Filas no controle](img/bio-3-chegadas.webp)
 
-Cada coluna tem as suas salas, com as vagas (ex.: `1/1 vagas`) e a lista **Aguardando**. Duas formas de chamar:
+Cada coluna tem as suas **duas salas** (ex.: Captação 1 e Captação 2, ou Doutores 1 e Doutores 2), com as vagas (ex.: `1/1 vagas`), e a lista **Aguardando**. Assim, **cada etapa atende 2 pacientes ao mesmo tempo**. Duas formas de chamar:
 
 | Forma | Quando usar |
 |---|---|
@@ -106,13 +106,12 @@ rota** (o cartão mostra "depois: Doutores › Reiki/Cromoterapia").
 
 ![TV: etapa concluída, com a orientação de onde aguardar](img/bio-painel-5-etapa-concluida.webp)
 
-**Captação/Apometria:** depois de concluir, a sala **não** volta a ter vaga na hora: aparece **Em preparo (1)** e a
-vaga fica em `0/1` (fechamento das energias). Só depois de tocar em **Sala pronta** a vaga é liberada.
+**Sem "sala pronta":** ao concluir a etapa, a vaga da sala volta na hora, e o controle já pode chamar o próximo.
 
-![Sala de captação em preparo](img/bio-6-sala-em-preparo.webp)
+![Etapa concluída: a vaga volta na hora](img/bio-6-etapa-concluida.webp)
 
 ### 5. Doutores: prontuário e Acupuntura (opcional)
-No cartão do paciente na **Sala dos doutores** há dois botões específicos:
+No cartão do paciente na sala dos **Doutores** há dois botões específicos:
 
 | Botão | O que faz |
 |---|---|
@@ -212,9 +211,7 @@ stateDiagram-v2
 stateDiagram-v2
     [*] --> Livre
     Livre --> Ocupada: chamar (vagas − 1)
-    Ocupada --> Livre: concluir etapa (vaga volta)
-    Ocupada --> EmPreparo: concluir na Captação/Apometria
-    EmPreparo --> Livre: Sala pronta
+    Ocupada --> Livre: concluir etapa (vaga volta na hora)
     Livre --> ForaDeUso: ⏻ tirar de uso
     ForaDeUso --> Livre: ▶ pôr em uso
 ```

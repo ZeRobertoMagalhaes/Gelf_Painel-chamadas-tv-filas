@@ -28,7 +28,12 @@ function diaAberto(salas) {
 
 test('configuração: rota padrão, salas e capacidades válidas', () => {
     assert.deepEqual(config.rotaPadrao, ['captacao', 'doutores', 'reiki']);
-    assert.equal(config.etapas.find((e) => e.id === 'doutores').salas[0].capacidade, 2);
+    // todas as etapas têm 2 atendimentos simultâneos (duas salas de 1 vaga) e nenhuma tem preparo ("sala pronta")
+    for (const e of config.etapas) {
+        assert.equal(e.salas.length, 2, e.id);
+        assert.deepEqual(e.salas.map((s) => s.capacidade), [1, 1], e.id);
+        assert.equal(e.preparo, false, e.id);
+    }
     assert.throws(() => normalizarBio({ etapas: [{ id: 'a', nome: 'A', cor: '#000000', salas: [] }] }), /ao menos uma sala/);
 });
 
@@ -45,7 +50,7 @@ test('abrir dia usa a configuração, aceita ajustes (macas) e exige uma sala at
     assert.deepEqual(p.rota, ['captacao', 'doutores', 'reiki']);
 });
 
-test('jornada completa pela rota, com captação em preparo antes de chamar o próximo', () => {
+test('jornada completa pela rota: ao concluir, a vaga da sala volta na hora (sem "sala pronta")', () => {
     const e = diaAberto();
     const a = cheg(e, 'Ana', 'Lima');
     const b = cheg(e, 'Beto', 'Dias');
@@ -61,29 +66,45 @@ test('jornada completa pela rota, com captação em preparo antes de chamar o pr
     R.concluir(e, { id: a.id }, ctx());
     assert.equal(a.situacao, 'aguardando');
     assert.equal(a.rota[a.posicao], 'doutores');
-    // captação 1 fica em preparo até ser liberada
-    assert.equal(e.salas.find((s) => s.id === 'captacao1').emPreparo, 1);
+    // sem preparo: a captação 1 já pode chamar o próximo
+    assert.equal(e.salas.find((s) => s.id === 'captacao1').emPreparo, 0);
     const c = cheg(e, 'Carla', 'Reis');
-    assert.equal(codigo(() => R.chamar(e, { pacienteId: c.id, salaId: 'captacao1' }, ctx())), 'sem_vaga');
-    R.liberarSala(e, { salaId: 'captacao1' });
     assert.equal(R.chamar(e, { pacienteId: c.id, salaId: 'captacao1' }, ctx()).paciente.situacao, 'chamado');
     assert.equal(codigo(() => R.liberarSala(e, { salaId: 'captacao1' })), 'estado_invalido');
 });
 
-test('doutores recebem 2 por vez e escolhem a ordem; sala só chama quem espera a sua etapa', () => {
+test('etapa com preparo (opção de configuração): a vaga só volta após "sala pronta"', () => {
+    const cfg = normalizarBio({
+        etapas: [{ id: 'a', nome: 'A', cor: '#000000', preparo: true, salas: [{ id: 's1', nome: 'S1', capacidade: 1 }] }],
+        rotaPadrao: ['a'],
+    });
+    const c = (min = 1) => ({ agora: new Date((t0 = new Date(t0.getTime() + min * 60000))), config: cfg });
+    const e = R.novoDiaBio('2026-10-10');
+    R.abrirDia(e, {}, c());
+    const p = R.registrarChegada(e, { nome: 'Ana', sobrenome: 'Lima' }, c()).paciente;
+    R.registrarChegada(e, { nome: 'Beto', sobrenome: 'Dias' }, c());
+    R.chamarProximo(e, { salaId: 's1' }, c());
+    R.iniciar(e, { id: p.id }, c());
+    R.concluir(e, { id: p.id }, c());
+    assert.equal(codigo(() => R.chamarProximo(e, { salaId: 's1' }, c())), 'sem_vaga');
+    R.liberarSala(e, { salaId: 's1' });
+    assert.equal(R.chamarProximo(e, { salaId: 's1' }, c()).paciente.nome, 'Beto');
+});
+
+test('doutores recebem 2 por vez (duas salas) e escolhem a ordem; sala só chama quem espera a sua etapa', () => {
     const e = diaAberto();
     const [a, b, c] = ['A', 'B', 'C'].map((n) => cheg(e, n, 'Silva'));
     for (const p of [a, b, c]) {
         R.chamar(e, { pacienteId: p.id, salaId: 'captacao1' }, ctx());
         R.iniciar(e, { id: p.id }, ctx());
         R.concluir(e, { id: p.id }, ctx());
-        R.liberarSala(e, { salaId: 'captacao1' });
     }
     assert.equal(codigo(() => R.chamar(e, { pacienteId: a.id, salaId: 'reiki' }, ctx())), 'etapa_errada');
     // doutores escolhem c e a (não a ordem de chegada)
     R.chamar(e, { pacienteId: c.id, salaId: 'doutores' }, ctx());
-    R.chamar(e, { pacienteId: a.id, salaId: 'doutores' }, ctx());
+    R.chamar(e, { pacienteId: a.id, salaId: 'doutores2' }, ctx());
     assert.equal(codigo(() => R.chamar(e, { pacienteId: b.id, salaId: 'doutores' }, ctx())), 'sem_vaga');
+    assert.equal(codigo(() => R.chamar(e, { pacienteId: b.id, salaId: 'doutores2' }, ctx())), 'sem_vaga');
     R.iniciar(e, { id: c.id }, ctx());
     R.concluir(e, { id: c.id }, ctx());
     assert.equal(R.chamarProximo(e, { salaId: 'doutores' }, ctx()).paciente.id, b.id);
