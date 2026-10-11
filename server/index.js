@@ -10,6 +10,7 @@ const { criarApp } = require('./app');
 const { carregarConfigBio } = require('./bio/config');
 const { novoDiaBio } = require('./bio/regras');
 const { criarAppBio } = require('./bio/app');
+const { renderizarInicio, enderecosParaExibir } = require('./inicio');
 
 const PORT = process.env.PORT || 3000;
 // Nome fixo na rede local (http://painel-gelf.local:3000), respondido pelo
@@ -75,6 +76,12 @@ io.of('/bio').on('connection', appBio.aoConectar);
 setInterval(app.verificarVirada, 60 * 1000).unref();
 setInterval(appBio.verificarVirada, 60 * 1000).unref();
 
+// Página inicial: links para todas as telas e QR code do endereço atual (muda com o IP).
+expressApp.get('/', (req, res) => {
+    res.set('Cache-Control', 'no-store');
+    res.type('html').send(renderizarInicio({ porta: PORT, nomeMdns: MDNS_HOST, ips: enderecosParaExibir(os.networkInterfaces()) }));
+});
+
 // Telas do módulo bioenergético.
 for (const tela of ['controle', 'painel', 'recepcao']) {
     expressApp.get(`/bio/${tela}`, (req, res) => res.sendFile(path.join(__dirname, '..', 'public', `bio-${tela}.html`)));
@@ -86,6 +93,7 @@ for (const tela of ['controle']) expressApp.get(`/${tela}`, (req, res) => res.re
 httpServer.listen(PORT, () => {
     iniciarRespondedorMdns();
     console.log(`Painel GELF (filas) em http://0.0.0.0:${PORT}`);
+    console.log(`  inicio      http://${MDNS_HOST}:${PORT}/   (links das telas e QR code)`);
     for (const tela of ['recepcao', 'atendimento', 'painel']) {
         console.log(`  ${tela.padEnd(11)} http://${MDNS_HOST}:${PORT}/${tela}   (ou http://<ip-do-servidor>:${PORT}/${tela})`);
     }

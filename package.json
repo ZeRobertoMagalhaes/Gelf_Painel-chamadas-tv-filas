@@ -12,6 +12,7 @@
   "dependencies": {
     "express": "^4.19.2",
     "multicast-dns": "^7.2.5",
+    "qrcode-generator": "^2.0.4",
     "socket.io": "^4.7.5"
   },
   "devDependencies": {

@@ -11,6 +11,7 @@ duplo. Especificação: `docs/Proposta de Solução — Sistema de Chamadas por 
 | Recepção | `/recepcao` | Cadastro, prioridade, correção, troca de fila, remoção, abrir/fechar atendimento |
 | Atendimento | `/atendimento` | Equipes no celular/tablet: chamar próximo, chamar novamente, iniciar, concluir, não compareceu |
 | Painel TV | `/painel` | Navegador em tela cheia no notebook ligado à TV |
+| Início | `/` | Links para todas as telas (filas e Bio) e **QR code do endereço atual**: o celular abre as telas sem digitar, mesmo se o IP mudou ou se o nome `.local` não resolve no aparelho |
 
 ## Rodar
 
