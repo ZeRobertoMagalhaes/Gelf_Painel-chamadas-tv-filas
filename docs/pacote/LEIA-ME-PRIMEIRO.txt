@@ -26,12 +26,12 @@ Anote o que funcionou, o que confundiu e o que esta diferente do dia a dia, e de
 
 DOCUMENTOS (pasta "documentos")
 -------------------------------
-1-Instalacao-e-uso.pdf          Passo a passo completo e solucao de problemas
+1-Instalacao-e-uso.pdf          Passo a passo para WINDOWS (Parte A) e LINUX (Parte B), uso e problemas
 2-Roteiro-de-validacao.pdf      O que testar, o que deve acontecer e perguntas para voce
 3-Fluxo-Cura-Mediunica-Bio.pdf  O processo oficial e as telas do sistema
 
 Os nomes dos pacientes ficam somente neste computador (pasta "dados") e sao apagados em "Fechar o dia".
-LINUX OU MAC: instale o Node.js (versao 18 ou mais nova) e, no Terminal, dentro desta pasta:
+LINUX (ou MAC): instale o Node.js (versao 18 ou mais nova) e, no Terminal, dentro desta pasta:
      chmod +x iniciar-mac-linux.sh
      ./iniciar-mac-linux.sh
-   (detalhes no item 5B do guia 1-Instalacao-e-uso.pdf)
+   (passo a passo da distribuicao, firewall e problemas: Parte B do guia 1-Instalacao-e-uso.pdf)

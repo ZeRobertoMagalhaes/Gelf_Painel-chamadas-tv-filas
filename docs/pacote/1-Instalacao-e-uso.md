@@ -1,30 +1,37 @@
 # Painel GELF — Cura Mediúnica (Bio)
-## Como instalar e colocar o sistema no ar
+## Instalação e uso: Windows e Linux
 
-Pacote de **teste e validação** do processo dos tratamentos bioenergéticos. Este guia leva uns 10 minutos
-na primeira vez e nenhum conhecimento técnico.
+Pacote de **teste e validação** do processo dos tratamentos bioenergéticos. Este guia tem uma parte para cada sistema:
+**Parte A — Windows** e **Parte B — Linux** (no Mac, siga a Parte B). Depois vem a **Parte C — Como usar**, igual para todos.
+A instalação leva uns 10 minutos na primeira vez e não exige conhecimento técnico.
 
 ## 1. O que vem no pacote
 
 | Item | Para que serve |
 |---|---|
-| `INICIAR-SISTEMA.bat` | **Liga o sistema no Windows** (duplo clique). É o único arquivo que você precisa abrir |
-| `iniciar-mac-linux.sh` | Liga o sistema no Linux ou no Mac (item 5B) |
+| `INICIAR-SISTEMA.bat` | **Liga o sistema no Windows** (duplo clique) |
+| `iniciar-mac-linux.sh` | **Liga o sistema no Linux ou no Mac** (no Terminal) |
 | `LEIA-ME-PRIMEIRO.txt` | Resumo de uma página |
-| `documentos/` | Este guia, o roteiro de validação e o fluxo do Bio em PDF |
+| `documentos/` | Este guia, o roteiro de validação e o fluxo do Bio, em PDF |
 | `server`, `public`, `config`, `node_modules` | O sistema em si (não precisa mexer) |
 | `dados/` | Onde o sistema guarda, só neste computador, os pacientes do dia |
 
 ## 2. O que você precisa
 
-- Um computador com **Windows 10 ou 11** (**Linux e Mac também funcionam**: veja o item 5B).
-- O navegador **Google Chrome** (ou Edge).
-- O programa **Node.js** (gratuito). Se ainda não tiver, o item 3 explica.
-- Para usar também **celulares ou outro computador**: todos na mesma rede Wi-Fi.
+| | Windows | Linux |
+|---|---|---|
+| Sistema | Windows 10 ou 11 | Qualquer distribuição recente (Ubuntu, Debian, Fedora, Mint, Arch…) |
+| Programa | **Node.js 18 ou mais novo** (gratuito) | **Node.js 18 ou mais novo** (gratuito) |
+| Navegador | Chrome ou Edge | Chrome, Chromium ou Firefox |
+| Outros aparelhos (opcional) | Celular, tablet ou outro computador na **mesma rede Wi-Fi** | O mesmo |
 
-Não precisa de internet para o sistema funcionar. Só para baixar o Node.js, uma única vez.
+O sistema **não precisa de internet** para funcionar. A internet é usada só para baixar o Node.js, uma única vez.
 
-## 3. Instalar o Node.js (uma única vez)
+---
+
+# Parte A — Windows
+
+## A1. Instalar o Node.js (uma única vez)
 
 1. Abra **https://nodejs.org** no navegador.
 2. Clique no botão verde **"LTS"** (versão recomendada) para baixar.
@@ -32,76 +39,147 @@ Não precisa de internet para o sistema funcionar. Só para baixar o Node.js, um
 
 Se o Node.js já estiver instalado, pule este passo.
 
-## 4. Colocar o sistema no computador
+## A2. Colocar o sistema no computador
 
 1. Salve o arquivo **Painel-GELF-Bio.zip** em uma pasta, por exemplo a Área de Trabalho.
 2. Clique com o botão direito no arquivo e escolha **Extrair tudo…**, depois **Extrair**.
-3. Para ficar fácil de achar, **mova a pasta extraída** para `C:\` (fica `C:\Painel-GELF-Bio`).
+3. **Mova a pasta extraída** para `C:\` (fica `C:\Painel-GELF-Bio`), para ficar fácil de achar.
 
 > Não abra o sistema de dentro do arquivo ZIP: extraia primeiro.
 
-## 5. Ligar o sistema
+## A3. Ligar o sistema
 
 1. Abra a pasta e dê **dois cliques em `INICIAR-SISTEMA.bat`**.
 2. Se o Windows mostrar **"O Windows protegeu o computador"**, clique em **Mais informações** e depois em
-   **Executar assim mesmo**.
-3. Aparece uma **janela preta** com os endereços do sistema. **Não feche essa janela**: ela é o sistema
-   funcionando. Para desligar o sistema, é só fechá-la.
-4. Se o Windows perguntar sobre o **Firewall** ("Permitir que o Node.js se comunique…"), marque
-   **Redes privadas** e clique em **Permitir acesso**. Isso é necessário para usar os celulares.
+   **Executar assim mesmo**. É normal para arquivos novos.
+3. Aparece uma **janela preta** com os endereços do sistema. **Não feche essa janela**: ela é o sistema funcionando.
+4. Se o Windows perguntar sobre o **Firewall** ("Permitir que o Node.js se comunique…"), marque **Redes privadas** e
+   clique em **Permitir acesso**. Isso é necessário para usar os celulares.
 5. Em alguns segundos o navegador abre sozinho na tela do **Controle**. Pronto: o sistema está no ar.
 
-## 5B. Se o computador for Linux ou Mac
+## A4. Desligar e ligar de novo
 
-Os passos 3, 4 e 5 mudam assim (o resto do guia vale igual):
+- **Desligar:** feche a janela preta.
+- **Ligar de novo:** dois cliques em `INICIAR-SISTEMA.bat`. Se o sistema foi desligado no meio do dia, os pacientes cadastrados continuam lá.
 
-1. **Node.js, versão 18 ou mais nova.** No Terminal, digite `node -v` para ver se já existe. Se não existir ou
-   for antigo, instale a versão **LTS**:
-   - Ubuntu/Debian: `sudo apt install nodejs` (se a versão ficar abaixo de 18, baixe o LTS em **https://nodejs.org**)
-   - Fedora: `sudo dnf install nodejs`
-   - Mac: baixe o instalador em **https://nodejs.org** (ou `brew install node`)
-2. **Extraia o ZIP** (`unzip Painel-GELF-Bio.zip` ou pelo gerenciador de arquivos) em uma pasta, por exemplo na sua pasta pessoal.
-3. **Ligue o sistema:** abra o Terminal dentro da pasta extraída e digite:
+## A5. Se algo não funcionar (Windows)
+
+| O que aconteceu | O que fazer |
+|---|---|
+| A janela preta abre e fecha na hora | O Node.js não está instalado ou foi instalado há pouco. Instale (A1), **reinicie o computador** e tente de novo |
+| Mensagem de erro com **EADDRINUSE** | O sistema já está ligado em outra janela, ou outro programa usa a porta 3000. Feche todas as janelas pretas e ligue de novo. Se persistir, reinicie o computador |
+| O navegador não abriu sozinho | Abra você mesmo `http://localhost:3000/bio/controle` |
+| Celular não abre o endereço | Mesma rede Wi-Fi? Firewall liberado para **Redes privadas** (A3, passo 4)? Use o QR code da página inicial (Parte C) |
+| Desconfia que o firewall bloqueou | Painel de Controle › Firewall do Windows › *Permitir um aplicativo* › marque **Node.js** em **Privada** |
+
+---
+
+# Parte B — Linux (e Mac)
+
+Os comandos abaixo são digitados no **Terminal** (no Linux, procure por "Terminal"; no Mac, "Terminal" em Utilitários).
+Digite cada linha e aperte **Enter**.
+
+## B1. Conferir e instalar o Node.js (uma única vez)
+
+1. Veja se já existe, e a versão: `node -v`. Precisa mostrar **v18** ou maior (por exemplo `v20.11.0`).
+2. Se não existir, ou for mais antigo, instale a versão **LTS**:
+
+| Distribuição | Comando |
+|---|---|
+| Ubuntu, Debian, Mint | `sudo apt update && sudo apt install nodejs npm` |
+| Fedora | `sudo dnf install nodejs` |
+| Arch, Manjaro | `sudo pacman -S nodejs npm` |
+| openSUSE | `sudo zypper install nodejs` |
+| Mac | baixe o instalador em **https://nodejs.org** (ou `brew install node`) |
+
+3. Se a versão instalada continuar abaixo de 18 (algumas distribuições trazem uma muito antiga), baixe o **LTS** em
+   **https://nodejs.org**. Depois, confira de novo com `node -v`.
+
+## B2. Colocar o sistema no computador
+
+1. Salve o arquivo **Painel-GELF-Bio.zip** na sua pasta pessoal (por exemplo em *Downloads*).
+2. Extraia: pelo gerenciador de arquivos (botão direito › *Extrair aqui*) ou no Terminal:
    ```
-   chmod +x iniciar-mac-linux.sh
-   ./iniciar-mac-linux.sh
+   cd ~/Downloads
+   unzip Painel-GELF-Bio.zip
    ```
-   O `chmod` só é necessário na primeira vez. O navegador abre sozinho no Controle; se não abrir, entre em
-   `http://localhost:3000/bio/controle`.
-4. **Não feche o Terminal:** ele é o sistema funcionando. Para desligar, pressione **Ctrl+C** (ou feche a janela).
-5. **Outros aparelhos (celular):** descubra o endereço do computador com `hostname -I` (Linux) ou
-   `ipconfig getifaddr en0` (Mac) e use `http://ENDEREÇO:3000/bio/controle`. Se houver firewall ativo no Linux,
-   libere a porta: `sudo ufw allow 3000/tcp`.
+   (se faltar o comando `unzip`: `sudo apt install unzip`, ou o equivalente da sua distribuição).
+3. Opcional: mova a pasta para a sua pasta pessoal: `mv Painel-GELF-Bio ~/`.
 
-## 6. As telas do sistema
+## B3. Ligar o sistema
+
+No Terminal, entre na pasta e execute o script:
+
+```
+cd ~/Painel-GELF-Bio
+chmod +x iniciar-mac-linux.sh
+./iniciar-mac-linux.sh
+```
+
+- O `chmod +x` só é necessário na primeira vez.
+- O Terminal mostra os endereços do sistema. **Não feche o Terminal**: ele é o sistema funcionando.
+- Em alguns segundos o navegador abre sozinho no **Controle**. Se não abrir, entre em `http://localhost:3000/bio/controle`.
+- Se aparecer "O Node.js é muito antigo", volte ao passo B1.
+
+## B4. Liberar o acesso dos celulares (se houver firewall)
+
+Se o computador tem firewall ativo e os celulares não conseguem abrir o sistema, libere a porta **3000**:
+
+| Firewall | Comando |
+|---|---|
+| UFW (Ubuntu, Mint) | `sudo ufw allow 3000/tcp` |
+| firewalld (Fedora, openSUSE) | `sudo firewall-cmd --add-port=3000/tcp --permanent && sudo firewall-cmd --reload` |
+
+Para descobrir o endereço do computador na rede: `hostname -I` (Linux) ou `ipconfig getifaddr en0` (Mac). O endereço do
+sistema fica `http://ENDEREÇO:3000`. A página inicial (Parte C) mostra isso também, com QR code.
+
+## B5. Desligar e ligar de novo
+
+- **Desligar:** no Terminal onde o sistema roda, pressione **Ctrl+C** (ou feche a janela).
+- **Ligar de novo:** repita `./iniciar-mac-linux.sh` dentro da pasta. Se o sistema foi desligado no meio do dia, os pacientes cadastrados continuam lá.
+
+## B6. Se algo não funcionar (Linux e Mac)
+
+| O que aconteceu | O que fazer |
+|---|---|
+| `Permission denied` ao rodar o script | Rode `chmod +x iniciar-mac-linux.sh` e tente de novo |
+| `node: command not found` | O Node.js não está instalado (B1) |
+| "O Node.js é muito antigo" | Instale o LTS em https://nodejs.org (B1, passo 3) |
+| Erro com **EADDRINUSE** | Algo já usa a porta 3000. Veja o quê: `ss -ltnp \| grep 3000` (Linux). Se for o próprio sistema em outro Terminal, feche-o (Ctrl+C) |
+| O navegador não abriu sozinho | Abra você mesmo `http://localhost:3000/bio/controle` |
+| Celular não abre o endereço | Mesma rede Wi-Fi? Porta 3000 liberada no firewall (B4)? Use o QR code da página inicial |
+| O Terminal fechou e o sistema parou | É assim mesmo: o sistema roda dentro do Terminal. Abra de novo e ligue (B3) |
+
+---
+
+# Parte C — Como usar (Windows e Linux)
+
+## C1. As telas do sistema
 
 Todas abrem no navegador. No computador onde o sistema está ligado, use `localhost`:
 
 | Tela | Endereço | Quem usa |
 |---|---|---|
-| **Página inicial** (links de todas as telas e QR code) | `http://localhost:3000/` | Qualquer pessoa: escolhe a tela e abre no celular pelo QR code |
+| **Página inicial** (links e QR code) | `http://localhost:3000/` | Qualquer pessoa: escolhe a tela e abre no celular pelo QR code |
 | **Recepção do Bio** | `http://localhost:3000/bio/recepcao` | Quem cadastra os pacientes |
-| **Controle do Bio** | `http://localhost:3000/bio/controle` (ou só `/controle`) | Quem faz o controle e a orquestração (você) |
+| **Controle do Bio** | `http://localhost:3000/bio/controle` (ou só `/controle`) | Quem faz o controle e a orquestração |
 | **Painel da TV do Bio** | `http://localhost:3000/bio/painel` | A TV: abra em tela cheia (tecla **F11**) |
 
 Na **TV**, toque uma vez em **Ativar som** (o navegador só libera o áudio depois de um clique).
 
-**Dica para testar sozinho:** abra as três telas em **abas ou janelas diferentes** do navegador. Você faz o papel
-da recepção, do controle e confere o painel da TV, tudo no mesmo computador.
+**Dica para testar sozinho:** abra as três telas em **abas ou janelas diferentes** do navegador. Você faz o papel da
+recepção e do controle e confere o painel da TV, tudo no mesmo computador.
 
-## 7. Usar em outros aparelhos (opcional)
+## C2. Usar em outros aparelhos (opcional)
 
-**O jeito mais fácil:** neste computador, abra a **página inicial** (`http://localhost:3000/`). Ela mostra os links das telas e
-um **QR code**. No celular (ligado na **mesma rede Wi-Fi**), abra a câmera e aponte para o QR code: a página inicial abre no
-celular, e é só tocar na tela que quiser. A página sempre mostra o endereço atual do computador: se o endereço mudar, abra a página inicial de novo
-neste computador e use o QR code novo.
+**O jeito mais fácil:** neste computador, abra a **página inicial** (`http://localhost:3000/`). Ela mostra os links das telas e um
+**QR code**. No celular (ligado na **mesma rede Wi-Fi**), abra a câmera e aponte para o QR code: a página inicial abre no
+celular, e é só tocar na tela que quiser. A página sempre mostra o endereço atual do computador: se o endereço mudar, abra a
+página inicial de novo neste computador e use o QR code novo.
 
-Se preferir digitar, na janela preta aparecem endereços parecidos com `http://192.168.0.15:3000/bio/controle`: digite-os
-no navegador do celular, trocando o final pela tela que quer (`/bio/recepcao`, `/bio/controle` ou `/bio/painel`).
+Se preferir digitar, use o endereço numérico mostrado na página inicial (algo como `http://192.168.0.15:3000/bio/controle`).
 
-Se não abrir: confira o Wi-Fi do aparelho e se, ao ligar o sistema, você marcou **Redes privadas** no aviso do Firewall.
-
-## 8. Primeiros passos em 2 minutos
+## C3. Primeiros passos em 2 minutos
 
 1. No **Controle**, em **Abertura dos trabalhos**, toque em **Abrir o dia**.
 2. Na **Recepção**, digite nome e sobrenome de um paciente de teste e toque em **Cadastrar**.
@@ -110,36 +188,35 @@ Se não abrir: confira o Wi-Fi do aparelho e se, ao ligar o sistema, você marco
 
 Para testar o processo inteiro, siga o **Roteiro de validação** (documento 2 deste pacote).
 
-## 9. Desligar, recomeçar e apagar os dados de teste
+## C4. Apagar os dados de teste e recomeçar
 
-- **Desligar o sistema:** feche a janela preta.
-- **Ligar de novo:** dois cliques em `INICIAR-SISTEMA.bat`. Se o sistema foi desligado no meio do dia, os
-  pacientes cadastrados continuam lá.
-- **Recomeçar do zero:** no Controle, toque em **Fechar o dia** e confirme em **Confirmar: apagar tudo**. Isso apaga
-  pacientes e pré-inscritos e guarda apenas o relatório do dia, **sem nomes**.
-- **Mac ou Linux:** veja o item 5B (arquivo `iniciar-mac-linux.sh`).
+No Controle, toque em **Fechar o dia** e confirme em **Confirmar: apagar tudo**. Isso apaga pacientes e pré-inscritos e guarda
+apenas o relatório do dia, **sem nomes**.
 
-## 10. Se algo não funcionar
+## C5. Receber uma versão nova do pacote
+
+1. No Controle, **Fechar o dia** (para não perder o relatório).
+2. Desligue o sistema (Windows: feche a janela preta; Linux: Ctrl+C).
+3. Extraia o novo ZIP **em uma pasta nova** (não por cima da antiga) e ligue por ela.
+4. Se quiser guardar os relatórios antigos, copie a pasta `dados\relatorios` da versão antiga para a nova.
+
+## C6. Se a tela mostrar "sem conexão"
 
 | O que aconteceu | O que fazer |
 |---|---|
-| Janela preta abre e fecha na hora | O Node.js não está instalado ou foi instalado há pouco. Instale (item 3), **reinicie o computador** e tente de novo |
-| "Mais informações / Executar assim mesmo" | É normal para arquivos novos. Clique nessas opções (item 5) |
-| Aparece uma mensagem de erro com **EADDRINUSE** | O sistema já está ligado em outra janela. Feche todas as janelas pretas e ligue de novo |
-| O navegador não abriu sozinho | Abra você mesmo `http://localhost:3000/bio/controle` |
-| Celular não abre o endereço | Mesma rede Wi-Fi? Firewall liberado para **Redes privadas** (item 5)? Use o QR code da página inicial ou o endereço numérico mostrado na janela preta |
-| Sem som na TV | Toque em **Ativar som** e confira o volume do computador |
-| Aviso **sem conexão** no topo da tela | A janela preta foi fechada ou o computador dormiu. Ligue de novo; a tela reconecta sozinha |
+| Aviso **sem conexão** no topo | O sistema foi desligado ou o computador dormiu. Ligue de novo; a tela reconecta sozinha |
 | A tela não atualiza | Aperte **F5** no navegador |
+| Sem som na TV | Toque em **Ativar som** e confira o volume do computador |
+| O computador entra em repouso e o sistema para | Desative a suspensão enquanto o sistema estiver em uso (Windows: Configurações › Sistema › Energia; Linux: Configurações › Energia) |
 
-Se nada resolver, tire uma **foto da tela** (incluindo a janela preta) e envie junto com os seus comentários.
+Se nada resolver, tire uma **foto da tela** (incluindo a janela preta ou o Terminal) e envie junto com os seus comentários.
 
-## 11. Privacidade
+## C7. Privacidade
 
-Os nomes dos pacientes ficam **só neste computador**, na pasta `dados`, e são apagados ao **Fechar o dia** (ou na
-virada do dia). Nada é enviado para a internet. Os relatórios do dia, sem nomes, ficam em `dados\relatorios`.
+Os nomes dos pacientes ficam **só neste computador**, na pasta `dados`, e são apagados ao **Fechar o dia** (ou na virada do dia).
+Nada é enviado para a internet. Os relatórios do dia, sem nomes, ficam em `dados/relatorios`.
 
-## 12. Instalação definitiva (somente equipe técnica)
+## C8. Instalação definitiva (somente equipe técnica)
 
-Para o uso real no notebook da sala da TV (início automático com o Windows, IP fixo, tela cheia), siga o
-procedimento da equipe técnica em `instalacao\instalar.ps1`. **Não é necessário para este teste.**
+Para o uso real no notebook da sala da TV (início automático com o Windows, IP fixo, tela cheia), siga o procedimento da equipe
+técnica em `instalacao\instalar.ps1`. **Não é necessário para este teste.**
