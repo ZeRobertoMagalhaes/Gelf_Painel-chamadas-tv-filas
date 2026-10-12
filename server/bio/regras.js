@@ -19,6 +19,7 @@ function novoDiaBio(data) {
         diaAberto: false,
         seq: 0,
         ordemEspera: 0,
+        prioridadeSeq: 0,
         chamadaSeq: 0,
         salas: [],
         preinscritos: [],
@@ -83,7 +84,8 @@ function filaEspera(estado, etapaId) {
     return estado.pacientes
         .filter((p) => p.situacao === 'aguardando' && etapaAtual(p) === etapaId)
         .sort((a, b) => {
-            if (a.prioridade !== b.prioridade) return a.prioridade ? -1 : 1;
+            // !! : estado gravado antes da prioridade existir não tem o campo.
+            if (!!a.prioridade !== !!b.prioridade) return a.prioridade ? -1 : 1;
             return a.prioridade ? a.prioridadeEm - b.prioridadeEm : a.ordemEspera - b.ordemEspera;
         });
 }
@@ -408,7 +410,8 @@ function priorizar(estado, args, ctx) {
     const quer = args.prioridade !== false;
     if (quer && !p.prioridade) {
         p.prioridade = true;
-        p.prioridadeEm = ++estado.seq;
+        estado.prioridadeSeq = (estado.prioridadeSeq || 0) + 1;
+        p.prioridadeEm = estado.prioridadeSeq;
         movimento(p, 'prioridade_ligada', ctx);
     } else if (!quer && p.prioridade) {
         p.prioridade = false;

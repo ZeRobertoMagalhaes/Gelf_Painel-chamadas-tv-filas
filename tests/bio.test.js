@@ -181,6 +181,16 @@ test('prioridade: passa na frente em cada espera, vale para a jornada toda e pod
     assert.equal(codigo(() => R.priorizar(e, { id: 'zzz' }, ctx())), 'nao_encontrado');
 });
 
+test('prioridade: estado gravado antes do campo existir mantém a ordem de chegada e aceita priorizar', () => {
+    const e = diaAberto();
+    const [a, b, c] = ['A', 'B', 'C'].map((n) => cheg(e, n, 'Silva'));
+    for (const p of [a, b]) { delete p.prioridade; delete p.prioridadeEm; }
+    delete e.prioridadeSeq;
+    assert.deepEqual(R.filaEspera(e, 'captacao').map((p) => p.id), [a.id, b.id, c.id]);
+    R.priorizar(e, { id: b.id }, ctx());
+    assert.deepEqual(R.filaEspera(e, 'captacao').map((p) => p.id), [b.id, a.id, c.id]);
+});
+
 test('rota por paciente: pular etapa, alterar o que falta e terminar a rota', () => {
     const e = diaAberto();
     const a = cheg(e, 'Ana', 'Lima', { rota: ['doutores', 'reiki'] });

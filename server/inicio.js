@@ -89,7 +89,7 @@ ${enderecos}
 // Endereços para mostrar na página: só placas reais (Wi-Fi/cabo), sem redes
 // virtuais (Docker, WSL, VPN, máquinas virtuais), da faixa doméstica mais
 // provável (192.168.x) para a menos provável, no máximo 3.
-const VIRTUAIS = /docker|^br-|veth|virbr|vmnet|vboxnet|vethernet|wsl|hyper-v|tailscale|zerotier|^zt|tun|tap|loopback/i;
+const VIRTUAIS = /docker|^br-|veth|virbr|vmnet|vboxnet|vethernet|wsl|hyper-v|tailscale|zerotier|^zt|^tun|^tap|loopback/i;
 const faixa = (ip) => (ip.startsWith('192.168.') ? 0 : ip.startsWith('10.') ? 1 : 2);
 
 function enderecosParaExibir(interfaces) {

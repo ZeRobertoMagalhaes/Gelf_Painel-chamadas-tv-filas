@@ -33,7 +33,7 @@
   // Mesma ordem da fila do controle: prioritários primeiro, depois a ordem de chegada.
   const aguardandoInicio = $derived(
     pacientes.filter((p) => p.situacao === "aguardando" && p.rota[p.posicao] === primeiraEtapa?.id && p.posicao === 0)
-      .sort((a, b) => (a.prioridade === b.prioridade ? (a.prioridade ? a.prioridadeEm - b.prioridadeEm : a.ordemEspera - b.ordemEspera) : a.prioridade ? -1 : 1)),
+      .sort((a, b) => (!!a.prioridade === !!b.prioridade ? (a.prioridade ? a.prioridadeEm - b.prioridadeEm : a.ordemEspera - b.ordemEspera) : a.prioridade ? -1 : 1)),
   );
   const noFluxo = $derived(pacientes.filter((p) => !aguardandoInicio.includes(p)));
   const faltamChegar = $derived((estado?.preinscritos ?? []).filter((i) => !i.pacienteId));
