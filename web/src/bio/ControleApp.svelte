@@ -23,6 +23,8 @@
     etapa_pulada: "Etapa pulada",
     rota_alterada: "Rota alterada",
     devolvido_espera: "Voltou para a espera",
+    prioridade_ligada: "Prioridade marcada",
+    prioridade_removida: "Prioridade removida",
     prontuario_recebido: "Prontuário recebido",
     prontuario_guardado: "Prontuário guardado",
     prontuario_desfeito: "Registro de prontuário desfeito",
@@ -106,6 +108,7 @@
   const chamarProximo = (s) => acao("chamarProximo", { salaId: s.id });
   const rechamar = (p) => acao("rechamar", { id: p.id }, "Chamada repetida na TV");
   const iniciar = (p) => acao("iniciar", { id: p.id });
+  const priorizar = (p) => acao("priorizar", { id: p.id, prioridade: !p.prioridade });
   const concluir = (p, guardarProntuario = false) => acao("concluir", { id: p.id, guardarProntuario });
   const faltou = (p) => acao("naoCompareceu", { id: p.id });
   const devolver = (p) => acao("devolverEspera", { id: p.id });
@@ -345,7 +348,7 @@
                 {#each naSala(s) as p (p.id)}
                   <div class="cartao-paciente em-curso">
                     <div class="cartao-nome">{p.nomeExibicao}</div>
-                    <div class="cartao-meta">{ROTULO_SITUACAO[p.situacao]}{faltaDaRota(p).length ? ` • depois: ${faltaDaRota(p).join(" › ")}` : ""}</div>
+                    <div class="cartao-meta">{ROTULO_SITUACAO[p.situacao]}{faltaDaRota(p).length ? ` • depois: ${faltaDaRota(p).join(" › ")}` : ""}{#if p.prioridade} • <strong>prioridade</strong>{/if}</div>
                     {#if textoProntuario(p)}<div class="cartao-meta prontuario">📋 {textoProntuario(p)}{p.situacao === "chamado" && p.prontuario === "recebido" ? " — o paciente deve entregá-lo na sala" : ""}</div>{/if}
                     <div class="alerta-acoes">
                       {#if p.situacao === "chamado"}
@@ -391,12 +394,12 @@
 
             <h4 class="espera-titulo">Aguardando</h4>
             {#each espera as p, i (p.id)}
-              <div class="cartao-paciente">
+              <div class="cartao-paciente" class:prioridade={p.prioridade}>
                 <div class="cartao-linha">
                   <span class="cartao-pos">{i + 1}</span>
                   <div class="cartao-info">
                     <div class="cartao-nome">{p.nomeExibicao}</div>
-                    <div class="cartao-meta">chegou {horaCurta(p.chegada)}{p.descricao ? ` • ${p.descricao}` : ""}</div>
+                    <div class="cartao-meta">chegou {horaCurta(p.chegada)}{p.descricao ? ` • ${p.descricao}` : ""}{#if p.prioridade} • <strong>prioridade</strong>{/if}</div>
                     {#if faltaDaRota(p).length > 1}<div class="cartao-meta">depois: {faltaDaRota(p).slice(1).join(" › ")}</div>{/if}
                     {#if textoProntuario(p)}<div class="cartao-meta prontuario">📋 {textoProntuario(p)}</div>{/if}
                   </div>
@@ -411,6 +414,7 @@
                     {/each}
                   </div>
                   <div class="cartao-acoes">
+                    <button class="icone" class:ligado={p.prioridade} title="Prioridade" aria-label="Prioridade" aria-pressed={p.prioridade} onclick={() => priorizar(p)}>★</button>
                     <button class="icone" title="Alterar rota" aria-label="Alterar rota" onclick={() => abrirRota(p)}>⇄</button>
                     <button class="icone" title="Pular esta etapa" aria-label="Pular esta etapa" onclick={() => pular(p)}>⏭</button>
                     <button class="icone perigo" title="Remover do fluxo" aria-label="Remover do fluxo" onclick={() => remover(p)}>✕</button>

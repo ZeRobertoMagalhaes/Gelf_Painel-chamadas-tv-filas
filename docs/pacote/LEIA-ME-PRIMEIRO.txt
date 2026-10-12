@@ -1,0 +1,37 @@
+PAINEL GELF - CURA MEDIUNICA (BIO)
+Pacote de teste e validacao do processo dos tratamentos bioenergeticos
+
+COMO COLOCAR NO AR (resumo)
+---------------------------
+1. Instale o Node.js (so uma vez): https://nodejs.org  -> botao verde "LTS" -> Next ate Install.
+2. Extraia este ZIP (botao direito > Extrair tudo) para uma pasta, por exemplo C:\Painel-GELF-Bio
+3. Duas vezes no arquivo  INICIAR-SISTEMA.bat
+   - Se o Windows avisar "protegeu o computador": Mais informacoes > Executar assim mesmo.
+   - Se perguntar sobre o Firewall: marque "Redes privadas" > Permitir acesso.
+4. NAO FECHE a janela preta: ela e o sistema funcionando. Para desligar, feche-a.
+5. O navegador abre sozinho no Controle. As telas sao:
+     Recepcao   http://localhost:3000/bio/recepcao
+     Controle   http://localhost:3000/bio/controle
+     Painel TV  http://localhost:3000/bio/painel   (tecla F11 para tela cheia; toque em "Ativar som")
+
+PARA USAR NO CELULAR
+--------------------
+Neste computador abra http://localhost:3000  (pagina inicial). Ela mostra um QR CODE:
+aponte a camera do celular (na mesma rede Wi-Fi) e escolha a tela. Funciona mesmo se o IP mudar.
+
+COMO TESTAR
+-----------
+Abra as tres telas em abas diferentes e siga o ROTEIRO DE VALIDACAO (pasta "documentos").
+Anote o que funcionou, o que confundiu e o que esta diferente do dia a dia, e devolva as anotacoes.
+
+DOCUMENTOS (pasta "documentos")
+-------------------------------
+1-Instalacao-e-uso.pdf          Passo a passo completo e solucao de problemas
+2-Roteiro-de-validacao.pdf      O que testar, o que deve acontecer e perguntas para voce
+3-Fluxo-Cura-Mediunica-Bio.pdf  O processo oficial e as telas do sistema
+
+Os nomes dos pacientes ficam somente neste computador (pasta "dados") e sao apagados em "Fechar o dia".
+LINUX OU MAC: instale o Node.js (versao 18 ou mais nova) e, no Terminal, dentro desta pasta:
+     chmod +x iniciar-mac-linux.sh
+     ./iniciar-mac-linux.sh
+   (detalhes no item 5B do guia 1-Instalacao-e-uso.pdf)

@@ -154,6 +154,33 @@ test('prontuário: recebido nos doutores, acompanha o paciente e é guardado ao 
     assert.deepEqual(a.movimentos.filter((m) => m.acao.startsWith('prontuario')).map((m) => m.acao), ['prontuario_recebido', 'prontuario_guardado']);
 });
 
+test('prioridade: passa na frente em cada espera, vale para a jornada toda e pode ser retirada', () => {
+    const e = diaAberto();
+    const [a, b, c] = ['A', 'B', 'C'].map((n) => cheg(e, n, 'Silva'));
+    R.priorizar(e, { id: c.id }, ctx());
+    assert.equal(c.prioridade, true);
+    assert.deepEqual(R.filaEspera(e, 'captacao').map((p) => p.id), [c.id, a.id, b.id]);
+    // dois prioritários: vale a ordem em que foram marcados
+    R.priorizar(e, { id: b.id }, ctx());
+    assert.deepEqual(R.filaEspera(e, 'captacao').map((p) => p.id), [c.id, b.id, a.id]);
+    // "chamar próximo" respeita a prioridade
+    assert.equal(R.chamarProximo(e, { salaId: 'captacao1' }, ctx()).paciente.id, c.id);
+    // a prioridade acompanha o paciente nas esperas seguintes
+    R.iniciar(e, { id: c.id }, ctx());
+    R.concluir(e, { id: c.id }, ctx());
+    R.chamarProximo(e, { salaId: 'captacao1' }, ctx()); // b
+    R.chamarProximo(e, { salaId: 'captacao2' }, ctx()); // a
+    R.iniciar(e, { id: a.id }, ctx());
+    R.concluir(e, { id: a.id }, ctx());
+    assert.deepEqual(R.filaEspera(e, 'doutores').map((p) => p.id), [c.id, a.id]); // c prioritário, a não
+    // retirar a prioridade devolve à ordem de chegada na espera
+    R.priorizar(e, { id: c.id, prioridade: false }, ctx());
+    assert.equal(c.prioridade, false);
+    assert.deepEqual(R.filaEspera(e, 'doutores').map((p) => p.id), [c.id, a.id]); // c entrou antes de a
+    assert.deepEqual(c.movimentos.filter((m) => m.acao.startsWith('prioridade')).map((m) => m.acao), ['prioridade_ligada', 'prioridade_removida']);
+    assert.equal(codigo(() => R.priorizar(e, { id: 'zzz' }, ctx())), 'nao_encontrado');
+});
+
 test('rota por paciente: pular etapa, alterar o que falta e terminar a rota', () => {
     const e = diaAberto();
     const a = cheg(e, 'Ana', 'Lima', { rota: ['doutores', 'reiki'] });

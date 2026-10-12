@@ -76,12 +76,16 @@ function vagas(estado, sala) {
 const salasDaEtapa = (estado, etapaId) => estado.salas.filter((s) => s.etapa === etapaId);
 const etapaAtiva = (estado, etapaId) => salasDaEtapa(estado, etapaId).some((s) => s.ativa);
 
-// Espera de uma etapa, por ordem de entrada na espera (quem escolhe a ordem
-// de chamada é o controle; esta é a ordem sugerida).
+// Espera de uma etapa: prioritários primeiro (na ordem em que receberam a
+// prioridade), depois os demais por ordem de entrada na espera. Quem escolhe a
+// ordem de chamada é o controle; esta é a ordem sugerida.
 function filaEspera(estado, etapaId) {
     return estado.pacientes
         .filter((p) => p.situacao === 'aguardando' && etapaAtual(p) === etapaId)
-        .sort((a, b) => a.ordemEspera - b.ordemEspera);
+        .sort((a, b) => {
+            if (a.prioridade !== b.prioridade) return a.prioridade ? -1 : 1;
+            return a.prioridade ? a.prioridadeEm - b.prioridadeEm : a.ordemEspera - b.ordemEspera;
+        });
 }
 
 // ---------------------------------------------------------------- dia
@@ -273,6 +277,8 @@ function registrarChegada(estado, args, ctx) {
         chamado: null,
         concluido: null,
         chamadas: 0,
+        prioridade: false,
+        prioridadeEm: null,
         prontuario: null,
         movimentos: [],
     };
@@ -390,6 +396,25 @@ function concluir(estado, args, ctx) {
     }
     if (etapaDe(ctx.config, sala.etapa).preparo) sala.emPreparo += 1;
     avancar(estado, p, ctx);
+    return { paciente: p };
+}
+
+// Prioridade (idosos, gestantes, pessoas com deficiência): vale para a jornada
+// toda, então o paciente passa na frente em cada espera por onde ainda for passar.
+function priorizar(estado, args, ctx) {
+    exigirAberto(estado);
+    const p = buscar(estado, args.id);
+    exigirSituacao(p, ATIVAS, 'priorizar');
+    const quer = args.prioridade !== false;
+    if (quer && !p.prioridade) {
+        p.prioridade = true;
+        p.prioridadeEm = ++estado.seq;
+        movimento(p, 'prioridade_ligada', ctx);
+    } else if (!quer && p.prioridade) {
+        p.prioridade = false;
+        p.prioridadeEm = null;
+        movimento(p, 'prioridade_removida', ctx);
+    }
     return { paciente: p };
 }
 
@@ -523,4 +548,5 @@ module.exports = {
     naoCompareceu,
     devolverEspera,
     registrarProntuario,
+    priorizar,
 };

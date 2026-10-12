@@ -30,8 +30,10 @@
   // Orientação ao paciente logo após o cadastro: onde aguardar o início dos tratamentos.
   const localInicial = $derived(local(etapa(config?.rotaPadrao?.[0])?.esperaEm));
   const primeiraEtapa = $derived(etapa(config?.rotaPadrao?.[0]));
+  // Mesma ordem da fila do controle: prioritários primeiro, depois a ordem de chegada.
   const aguardandoInicio = $derived(
-    pacientes.filter((p) => p.situacao === "aguardando" && p.rota[p.posicao] === primeiraEtapa?.id && p.posicao === 0),
+    pacientes.filter((p) => p.situacao === "aguardando" && p.rota[p.posicao] === primeiraEtapa?.id && p.posicao === 0)
+      .sort((a, b) => (a.prioridade === b.prioridade ? (a.prioridade ? a.prioridadeEm - b.prioridadeEm : a.ordemEspera - b.ordemEspera) : a.prioridade ? -1 : 1)),
   );
   const noFluxo = $derived(pacientes.filter((p) => !aguardandoInicio.includes(p)));
   const faltamChegar = $derived((estado?.preinscritos ?? []).filter((i) => !i.pacienteId));
@@ -51,6 +53,7 @@
     return r;
   }
 
+  const priorizar = (p) => acao("priorizar", { id: p.id, prioridade: !p.prioridade });
   const orientacao = (p) => `${p.nome} ${p.sobrenome} cadastrado(a). Orientar: aguardar na ${localInicial}.`;
 
   async function cadastrar(confirmarDuplicado = false) {
@@ -158,7 +161,7 @@
       <h3 class="etapa-titulo">Aguardando o início dos tratamentos <small>({aguardandoInicio.length})</small></h3>
       <div class="filas-grade">
         {#each aguardandoInicio as p, i (p.id)}
-          <div class="cartao-paciente">
+          <div class="cartao-paciente" class:prioridade={p.prioridade}>
             {#if editando?.id === p.id && editando.modo === "corrigir"}
               <div class="cartao-edicao">
                 <input bind:value={editando.nome} maxlength="40" aria-label="Nome" />
@@ -179,10 +182,11 @@
                 <span class="cartao-pos">{i + 1}</span>
                 <div class="cartao-info">
                   <div class="cartao-nome">{p.nomeExibicao}</div>
-                  <div class="cartao-meta">chegou {horaCurta(p.chegada)}{p.descricao ? ` • ${p.descricao}` : ""}</div>
+                  <div class="cartao-meta">chegou {horaCurta(p.chegada)}{p.descricao ? ` • ${p.descricao}` : ""}{#if p.prioridade} • <strong>prioridade</strong>{/if}</div>
                 </div>
               </div>
               <div class="cartao-acoes">
+                <button class="icone" class:ligado={p.prioridade} title="Prioridade" aria-label="Prioridade" aria-pressed={p.prioridade} onclick={() => priorizar(p)}>★</button>
                 <button class="icone" title="Corrigir nome" aria-label="Corrigir nome" onclick={() => (editando = { id: p.id, modo: "corrigir", nome: p.nome, sobrenome: p.sobrenome })}>✎</button>
                 <button class="icone perigo" title="Remover do fluxo" aria-label="Remover do fluxo" onclick={() => (editando = { id: p.id, modo: "remover" })}>✕</button>
               </div>

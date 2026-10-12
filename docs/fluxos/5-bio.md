@@ -59,7 +59,7 @@ Duas formas de cadastrar, ambas colocam o paciente no **fim da espera da primeir
 - tocar no nome na lista **Pré-inscritos** (o paciente leva a descrição junto, ex.: "dor nas costas").
 
 A cada cadastro, a tela diz o que fazer: **"Orientar: aguardar na Sala de Evangelhoterapia (térreo)"**.
-Cada cartão tem ✎ (corrigir o nome) e ✕ (remover, com confirmação).
+Cada cartão tem ★ (prioridade), ✎ (corrigir o nome) e ✕ (remover, com confirmação).
 
 ![Recepção: pacientes cadastrados e orientação](img/bio-recepcao-2-cadastro.webp)
 
@@ -68,10 +68,21 @@ assim** (é outra pessoa) ou **Cancelar** (limpa os campos).
 
 ![Aviso de nome repetido](img/bio-recepcao-3-duplicado.webp)
 
+**Prioridade ★** (idosos, gestantes, pessoas com deficiência): toque na ★ do cartão. O paciente **sobe para o início da
+fila**, o cartão fica destacado e aparece o selo **prioridade**. Com mais de um prioritário, vale a ordem em que foram
+marcados. A prioridade **acompanha o paciente por toda a jornada**: ele passa na frente em cada espera seguinte. Toque de
+novo na ★ para retirar. O mesmo botão existe no cartão do paciente no controle.
+
+![Recepção: paciente prioritário no início da fila](img/bio-recepcao-4-prioridade.webp)
+
 ### 3. Conferir as filas e chamar (controle)
 O controle vê as filas já com todos os cadastrados.
 
 ![Filas no controle](img/bio-3-chegadas.webp)
+
+No controle, o prioritário aparece primeiro na fila, com o selo **prioridade**, e **Chamar próximo** chama quem está no topo.
+
+![Controle: prioritário no topo da espera](img/bio-14-prioridade.webp)
 
 Cada coluna tem as suas **duas salas** (ex.: Captação 1 e Captação 2, ou Doutores 1 e Doutores 2), com as vagas (ex.: `1/1 vagas`), e a lista **Aguardando**. Assim, **cada etapa atende 2 pacientes ao mesmo tempo**. Duas formas de chamar:
 
@@ -188,7 +199,7 @@ stateDiagram-v2
     NaoCompareceu --> Aguardando: Voltar à espera
     EmAtendimento --> Aguardando: Concluir etapa (próxima etapa da rota)
     EmAtendimento --> Concluido: Concluir etapa (última etapa)
-    Aguardando --> Aguardando: Alterar rota / Pular etapa
+    Aguardando --> Aguardando: Alterar rota / Pular etapa / ★ prioridade
     EmAtendimento --> EmAtendimento: Incluir ou retirar Acupuntura / Prontuário recebido
     Aguardando --> Removido: Remover do fluxo
     Concluido --> [*]

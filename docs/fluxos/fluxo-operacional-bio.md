@@ -48,6 +48,8 @@ flowchart TD
   Reiki/Cromoterapia. Só entra quando os doutores pedem.
 - **Prontuário:** recebido ao concluir os Doutores; acompanha o paciente; guardado ao concluir a última etapa.
   O controle mostra "📋 Prontuário com o paciente" nos cartões e avisa, ao fechar o dia, se algum ficou sem guardar.
+- **Prioridade:** idosos, gestantes e pessoas com deficiência podem ser marcados com ★ (recepção ou controle). Passam na
+  frente em **todas** as esperas da jornada, na ordem em que foram marcados.
 - **Quem registra:** a recepção só cadastra; chamar, concluir e o prontuário são do responsável pelo
   controle e pela orquestração.
 - **Fim do fluxo:** o paciente só é dado como encerrado quando todos os tratamentos previstos para ele foram concluídos.

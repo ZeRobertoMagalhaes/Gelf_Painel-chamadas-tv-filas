@@ -92,7 +92,8 @@ Fluxo oficial do processo: `docs/fluxos/fluxo-operacional-bio.md` (referência p
 - **Acupuntura**: só quando os doutores pedem ("Incluir Acupuntura" no cartão do paciente); entra sempre antes do Reiki/Cromoterapia.
 - **Prontuário**: "Prontuário recebido" nos doutores (`emiteProntuario`), acompanha o paciente e é guardado em "Concluir e guardar prontuário" na última etapa; o controle avisa os que ficaram sem guardar.
 - **Espera por local**: cada etapa tem o seu local de espera (Sala de Evangelhoterapia no térreo, sala de espera do 1º andar), mostrado nas colunas e na TV.
-- **Quem chama**: o controle chama o próximo da espera ou escolhe quem entra (os doutores definem a ordem). Só chama se há vaga.
+- **Prioridade**: ★ na recepção ou no controle; o paciente passa na frente em todas as esperas da jornada (ordem em que foram marcados), como nas filas por tratamento.
+- **Quem chama**: o controle chama o próximo da espera (prioritários primeiro) ou escolhe quem entra (os doutores definem a ordem). Só chama se há vaga.
 - **Sem "sala pronta"**: ao concluir a etapa, a vaga da sala volta na hora. O mecanismo de preparo continua disponível por configuração (`"preparo": true` na etapa em `config/bio.json`), mas está desligado.
 - **Rota por paciente**: igual para a maioria; dá para pular etapa ou redefinir o que falta (sempre na ordem do fluxo).
 - **Não compareceu**: encerra o paciente; "Voltar à espera" o devolve ao fim da fila da etapa.

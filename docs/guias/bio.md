@@ -26,12 +26,14 @@ sempre vem **antes** do Reiki/Cromoterapia. O processo oficial completo está em
 - Digite **nome** e **sobrenome** e toque em **Cadastrar**; ou toque no nome em **Pré-inscritos**.
 - A tela mostra a orientação: *aguardar na Sala de Evangelhoterapia (térreo)*.
 - Se aparecer **"Já existe um paciente com este nome no fluxo"**: **Cadastrar mesmo assim** (é outra pessoa) ou **Cancelar**.
+- ★ marca como **prioridade** (idosos, gestantes, pessoas com deficiência): o paciente passa para o início da fila e fica com o
+  selo *prioridade*. Toque de novo para retirar.
 - ✎ corrige o nome; ✕ remove (pede confirmação).
 
 ## Chamar para uma sala (controle)
 Cada etapa é uma coluna, com suas salas e a lista **Aguardando**. Cada etapa tem **duas salas** (ex.: Captação 1 e 2), então atendem **2 pacientes ao mesmo tempo**. As salas mostram as vagas (ex.: `1/1 vagas`).
 
-- **Chamar próximo** (na sala): chama o primeiro da espera.
+- **Chamar próximo** (na sala): chama o primeiro da espera (os **prioritários ★ vêm primeiro**).
 - **→ nome da sala** (no cartão do paciente): escolhe quem entra (os doutores definem a ordem).
 - Só chama se há vaga. A TV mostra o nome, a sala e toca o sinal.
 
@@ -65,6 +67,7 @@ lado do botão de fechar o dia.
 
 ## Mudar a rota de um paciente
 No cartão de quem aguarda:
+- **★ Prioridade**: sobe para o início da fila; vale em todas as esperas da jornada.
 - **⇄ Alterar rota**: toque nas etapas que faltam e em **Salvar rota** (sempre na ordem do fluxo).
 - **⏭ Pular esta etapa**: segue direto para a próxima.
 - **✕ Remover do fluxo**: tira o paciente do fluxo.
