@@ -435,8 +435,12 @@
             <div class="cartao-paciente finalizado" class:faltou={p.situacao === "nao_compareceu"}>
               <div class="cartao-nome">{p.nomeExibicao}</div>
               <div class="cartao-meta">{ROTULO_SITUACAO[p.situacao]} às {horaCurta(p.concluido)}</div>
-              {#if p.situacao === "nao_compareceu"}
-                <div class="alerta-acoes"><button class="btn-mini ouro" onclick={() => devolver(p)}>Voltar à espera</button></div>
+              {#if p.prontuario === "recebido"}<div class="cartao-meta prontuario">📋 Prontuário com o paciente</div>{/if}
+              {#if p.situacao === "nao_compareceu" || p.prontuario === "recebido"}
+                <div class="alerta-acoes">
+                  {#if p.situacao === "nao_compareceu"}<button class="btn-mini ouro" onclick={() => devolver(p)}>Voltar à espera</button>{/if}
+                  {#if p.prontuario === "recebido"}<button class="btn-mini" onclick={() => acao("registrarProntuario", { id: p.id, situacao: "guardado" })}>Prontuário guardado</button>{/if}
+                </div>
               {/if}
               {@render historico(p)}
             </div>

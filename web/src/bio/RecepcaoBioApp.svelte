@@ -30,10 +30,9 @@
   // Orientação ao paciente logo após o cadastro: onde aguardar o início dos tratamentos.
   const localInicial = $derived(local(etapa(config?.rotaPadrao?.[0])?.esperaEm));
   const primeiraEtapa = $derived(etapa(config?.rotaPadrao?.[0]));
-  // Mesma ordem da fila do controle: prioritários primeiro, depois a ordem de chegada.
+  // Mesma ordem da fila do controle: a que o servidor já entrega (prioritários primeiro, depois a chegada).
   const aguardandoInicio = $derived(
-    pacientes.filter((p) => p.situacao === "aguardando" && p.rota[p.posicao] === primeiraEtapa?.id && p.posicao === 0)
-      .sort((a, b) => (!!a.prioridade === !!b.prioridade ? (a.prioridade ? a.prioridadeEm - b.prioridadeEm : a.ordemEspera - b.ordemEspera) : a.prioridade ? -1 : 1)),
+    (estado?.espera?.[primeiraEtapa?.id] ?? []).map((id) => pacientes.find((p) => p.id === id)).filter((p) => p && p.posicao === 0),
   );
   const noFluxo = $derived(pacientes.filter((p) => !aguardandoInicio.includes(p)));
   const faltamChegar = $derived((estado?.preinscritos ?? []).filter((i) => !i.pacienteId));

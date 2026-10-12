@@ -1,0 +1,3 @@
+# O .bat precisa de CRLF para o Windows; scripts de shell, LF.
+*.bat text eol=crlf
+*.sh text eol=lf

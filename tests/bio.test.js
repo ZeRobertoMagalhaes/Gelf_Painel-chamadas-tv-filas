@@ -117,9 +117,9 @@ test('acupuntura fora da rota padrão: os doutores a incluem durante o atendimen
     R.chamarProximo(e, { salaId: 'doutores' }, ctx());
     R.iniciar(e, { id: a.id }, ctx());
     R.definirRota(e, { id: a.id, rota: ['reiki', 'quinta'] }, ctx());
-    assert.deepEqual(a.rota, ['doutores', 'reiki', 'quinta']);
+    assert.deepEqual(a.rota, ['doutores', 'quinta', 'reiki']); // a ordem do fluxo vale, mesmo pedida ao contrário
     R.concluir(e, { id: a.id }, ctx());
-    assert.equal(a.rota[a.posicao], 'reiki');
+    assert.equal(a.rota[a.posicao], 'quinta');
 });
 
 test('config oficial: Captação/Apometria › Doutores › Acupuntura (opcional) › Reiki/Cromoterapia', () => {
@@ -189,6 +189,67 @@ test('prioridade: estado gravado antes do campo existir mantém a ordem de chega
     assert.deepEqual(R.filaEspera(e, 'captacao').map((p) => p.id), [a.id, b.id, c.id]);
     R.priorizar(e, { id: b.id }, ctx());
     assert.deepEqual(R.filaEspera(e, 'captacao').map((p) => p.id), [b.id, a.id, c.id]);
+});
+
+test('rota fora de ordem é reordenada pelo servidor (Acupuntura sempre antes do Reiki)', () => {
+    const e = diaAberto();
+    const a = cheg(e, 'Ana', 'Lima', { rota: ['reiki', 'quinta', 'doutores', 'reiki'] });
+    assert.deepEqual(a.rota, ['doutores', 'quinta', 'reiki']);
+    R.chamarProximo(e, { salaId: 'doutores' }, ctx());
+    R.definirRota(e, { id: a.id, rota: ['reiki', 'quinta'] }, ctx());
+    assert.deepEqual(a.rota, ['doutores', 'quinta', 'reiki']);
+});
+
+test('prontuário: pode ser guardado depois de concluído; estado antigo não gera "desfeito" espúrio', () => {
+    const e = diaAberto();
+    const a = cheg(e, 'Ana', 'Lima', { rota: ['doutores', 'reiki'] });
+    R.chamarProximo(e, { salaId: 'doutores' }, ctx());
+    R.iniciar(e, { id: a.id }, ctx());
+    R.registrarProntuario(e, { id: a.id, situacao: 'recebido' }, ctx());
+    R.concluir(e, { id: a.id }, ctx());
+    R.pularEtapa(e, { id: a.id }, ctx()); // pula o reiki: o fluxo termina sem passar pelo "concluir e guardar"
+    assert.equal(a.situacao, 'concluido');
+    assert.equal(a.prontuario, 'recebido');
+    assert.equal(codigo(() => R.registrarProntuario(e, { id: a.id, situacao: 'recebido' }, ctx())), 'estado_invalido'); // depois de concluído, só guardar
+    R.registrarProntuario(e, { id: a.id, situacao: 'guardado' }, ctx());
+    assert.equal(a.prontuario, 'guardado');
+    // paciente de estado gravado antes do campo existir
+    const b = cheg(e, 'Beto', 'Dias');
+    delete b.prontuario;
+    R.registrarProntuario(e, { id: b.id, situacao: null }, ctx());
+    assert.equal(b.movimentos.some((m) => m.acao === 'prontuario_desfeito'), false);
+});
+
+test('integração /bio: prioridade e prontuário pelo socket (o que as telas realmente chamam)', async () => {
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'gelf-bio-'));
+    const http = createServer();
+    const io = new Server(http);
+    const app = criarAppBio({ config, store: criarStore(dir, undefined, { prefixo: 'bio', novoDia: R.novoDiaBio }), io: io.of('/bio') });
+    io.of('/bio').on('connection', app.aoConectar);
+    await new Promise((r) => http.listen(0, r));
+    const s = await new Promise((res) => { const c = cliente(`http://localhost:${http.address().port}/bio`, { transports: ['websocket'] }); c.once('estado', () => res(c)); });
+    const agir = (t, p) => new Promise((res) => s.emit('acao', t, p, res));
+
+    await agir('abrirDia', {});
+    const a = (await agir('registrarChegada', { nome: 'Ana', sobrenome: 'Lima', rota: ['doutores', 'reiki'] })).paciente;
+    const b = (await agir('registrarChegada', { nome: 'Beto', sobrenome: 'Dias', rota: ['doutores', 'reiki'] })).paciente;
+    const mudou = new Promise((res) => s.once('estado', res));
+    assert.equal((await agir('priorizar', { id: b.id, prioridade: true })).ok, true);
+    const est = await mudou;
+    assert.equal(est.pacientes.find((p) => p.id === b.id).prioridade, true);
+    assert.deepEqual(est.espera.doutores, [b.id, a.id]); // prioritário primeiro
+    assert.equal((await agir('priorizar', { id: b.id, prioridade: false })).ok, true);
+
+    assert.equal((await agir('chamarProximo', { salaId: 'doutores' })).ok, true); // chama a (voltou à ordem de chegada)
+    await agir('iniciar', { id: a.id });
+    assert.equal((await agir('registrarProntuario', { id: a.id, situacao: 'recebido' })).paciente.prontuario, 'recebido');
+    await agir('concluir', { id: a.id });
+    await agir('chamarProximo', { salaId: 'reiki' });
+    await agir('iniciar', { id: a.id });
+    const fim = await agir('concluir', { id: a.id, guardarProntuario: true });
+    assert.equal(fim.paciente.situacao, 'concluido');
+    assert.equal(fim.paciente.prontuario, 'guardado');
+    s.close(); io.close(); http.close();
 });
 
 test('rota por paciente: pular etapa, alterar o que falta e terminar a rota', () => {

@@ -63,7 +63,7 @@ No cartão do paciente na sala dos **Doutores**:
 ## Reiki/Cromoterapia: guardar o prontuário e encerrar
 Na última etapa, o botão é **Concluir e guardar prontuário**: conclui a etapa, registra que o prontuário foi
 guardado e **encerra o fluxo do paciente no dia**. Se sobrar algum prontuário sem guardar, o controle avisa ao
-lado do botão de fechar o dia.
+lado do botão de fechar o dia; em **Finalizados hoje**, o botão **Prontuário guardado** resolve a pendência de quem já saiu do fluxo.
 
 ## Mudar a rota de um paciente
 No cartão de quem aguarda:

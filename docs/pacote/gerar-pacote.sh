@@ -18,6 +18,7 @@ FERRAMENTAS="${FERRAMENTAS:-/tmp/gelf-ferramentas-pdf}"
 VERSAO="${VERSAO:-$(date +%Y-%m-%d)}"
 PALCO="$(mktemp -d)"
 PACOTE="$PALCO/Painel-GELF-Bio"
+trap 'rm -rf "$PALCO"' EXIT
 export FERRAMENTAS
 
 echo "==> Montando $PACOTE (versão $VERSAO)"
@@ -41,11 +42,11 @@ if [ -z "${NAO_PDF:-}" ]; then
   node "$RAIZ/docs/pacote/ferramentas/md2pdf.mjs" "$RAIZ/docs/pacote/2-Roteiro-de-validacao.md" "$PACOTE/documentos/2-Roteiro-de-validacao.pdf" "Painel GELF Bio — Roteiro de validação" paisagem
   node "$RAIZ/docs/pacote/ferramentas/pdf-fluxos.mjs" "$RAIZ" Bio
 fi
+[ -f "$RAIZ/docs/fluxos/pdf/Fluxo-Cura-Mediunica-Bio.pdf" ] || { echo "PDF do Bio ausente: rode sem NAO_PDF=1 para gerá-lo." >&2; exit 1; }
 cp "$RAIZ/docs/fluxos/pdf/Fluxo-Cura-Mediunica-Bio.pdf" "$PACOTE/documentos/3-Fluxo-Cura-Mediunica-Bio.pdf"
 
 echo "==> Compactando"
 mkdir -p "$RAIZ/dist"
 rm -f "$RAIZ/dist/Painel-GELF-Bio.zip"
 (cd "$PALCO" && zip -qr "$RAIZ/dist/Painel-GELF-Bio.zip" Painel-GELF-Bio -x "*/dados/*.json")
-rm -rf "$PALCO"
 ls -la "$RAIZ/dist/Painel-GELF-Bio.zip"

@@ -180,7 +180,9 @@ function validarRota(estado, config, lista) {
         if (!etapaAtiva(estado, id)) throw new ErroRegra('invalido', `A etapa "${etapaDe(config, id).nome}" não tem sala ativa hoje.`);
         rota.push(id);
     }
-    return rota;
+    // As etapas seguem sempre a ordem do fluxo (config), seja qual for a ordem pedida.
+    const ordem = config.etapas.map((e) => e.id);
+    return rota.sort((a, b) => ordem.indexOf(a) - ordem.indexOf(b));
 }
 
 function entrarEspera(estado, p, ctx) {
@@ -427,13 +429,15 @@ function priorizar(estado, args, ctx) {
 function registrarProntuario(estado, args, ctx) {
     exigirAberto(estado);
     const p = buscar(estado, args.id);
-    exigirSituacao(p, ATIVAS, 'registrar o prontuário');
     const novo = args.situacao === undefined ? 'recebido' : args.situacao;
     if (![null, 'recebido', 'guardado'].includes(novo)) throw new ErroRegra('invalido', 'Situação de prontuário inválida.');
+    // Quem já saiu do fluxo (concluído, não compareceu) ainda pode ter o prontuário guardado depois.
+    exigirSituacao(p, novo === 'guardado' ? [...ATIVAS, 'concluido', 'nao_compareceu'] : ATIVAS, 'registrar o prontuário');
     if (novo === 'guardado' && p.prontuario !== 'recebido') {
         throw new ErroRegra('estado_invalido', 'Só é possível guardar um prontuário que foi recebido.');
     }
-    if (novo === p.prontuario) return { paciente: p };
+    // Estado gravado antes do campo existir: ausente equivale a "sem prontuário".
+    if (novo === (p.prontuario ?? null)) return { paciente: p };
     p.prontuario = novo;
     if (novo === 'recebido') movimento(p, 'prontuario_recebido', ctx);
     else if (novo === 'guardado') movimento(p, 'prontuario_guardado', ctx);

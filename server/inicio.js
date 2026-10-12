@@ -97,7 +97,8 @@ function enderecosParaExibir(interfaces) {
     for (const [nome, lista] of Object.entries(interfaces)) {
         if (VIRTUAIS.test(nome)) continue;
         for (const e of lista || []) {
-            if (e.family === 'IPv4' && !e.internal && !e.address.startsWith('169.254.')) ips.push(e.address);
+            // Node 18.0 a 18.3 devolve `family` como número (4); as demais versões, como 'IPv4'.
+            if ((e.family === 'IPv4' || e.family === 4) && !e.internal && !e.address.startsWith('169.254.')) ips.push(e.address);
         }
     }
     return [...new Set(ips)].sort((a, b) => faixa(a) - faixa(b)).slice(0, 3);

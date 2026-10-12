@@ -93,7 +93,8 @@ da recepção, do controle e confere o painel da TV, tudo no mesmo computador.
 
 **O jeito mais fácil:** neste computador, abra a **página inicial** (`http://localhost:3000/`). Ela mostra os links das telas e
 um **QR code**. No celular (ligado na **mesma rede Wi-Fi**), abra a câmera e aponte para o QR code: a página inicial abre no
-celular, e é só tocar na tela que quiser. Isso funciona mesmo que o endereço do computador mude.
+celular, e é só tocar na tela que quiser. A página sempre mostra o endereço atual do computador: se o endereço mudar, abra a página inicial de novo
+neste computador e use o QR code novo.
 
 Se preferir digitar, na janela preta aparecem endereços parecidos com `http://192.168.0.15:3000/bio/controle`: digite-os
 no navegador do celular, trocando o final pela tela que quer (`/bio/recepcao`, `/bio/controle` ou `/bio/painel`).

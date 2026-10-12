@@ -10,7 +10,7 @@ const { criarApp } = require('./app');
 const { carregarConfigBio } = require('./bio/config');
 const { novoDiaBio } = require('./bio/regras');
 const { criarAppBio } = require('./bio/app');
-const { renderizarInicio, enderecosParaExibir } = require('./inicio');
+const { registrarRotas } = require('./rotas');
 
 const PORT = process.env.PORT || 3000;
 // Nome fixo na rede local (http://painel-gelf.local:3000), respondido pelo
@@ -21,7 +21,7 @@ function enderecosIpv4Atuais() {
     const enderecos = [];
     for (const lista of Object.values(os.networkInterfaces())) {
         for (const e of lista || []) {
-            if (e.family === 'IPv4' && !e.internal) enderecos.push(e.address);
+            if ((e.family === 'IPv4' || e.family === 4) && !e.internal) enderecos.push(e.address);
         }
     }
     return enderecos;
@@ -60,35 +60,13 @@ const appBio = criarAppBio({
     io: io.of('/bio'),
 });
 
-expressApp.use(express.static(path.join(__dirname, '..', 'public')));
-expressApp.get('/status', (req, res) => {
-    const e = app.obterEstado();
-    res.json({ servico: 'painel-gelf-filas', data: e.data, atendimentoAberto: e.atendimentoAberto });
-});
-// Atalhos curtos para as três telas.
-for (const tela of ['recepcao', 'atendimento', 'painel']) {
-    expressApp.get(`/${tela}`, (req, res) => res.sendFile(path.join(__dirname, '..', 'public', `${tela}.html`)));
-}
+registrarRotas(expressApp, { publicDir: path.join(__dirname, '..', 'public'), porta: PORT, nomeMdns: MDNS_HOST, obterEstadoFilas: app.obterEstado });
 
 io.on('connection', app.aoConectar);
 io.of('/bio').on('connection', appBio.aoConectar);
 // Virada do dia com o servidor ligado (notebook que ficou ligado a noite toda).
 setInterval(app.verificarVirada, 60 * 1000).unref();
 setInterval(appBio.verificarVirada, 60 * 1000).unref();
-
-// Página inicial: links para todas as telas e QR code do endereço atual (muda com o IP).
-expressApp.get('/', (req, res) => {
-    res.set('Cache-Control', 'no-store');
-    res.type('html').send(renderizarInicio({ porta: PORT, nomeMdns: MDNS_HOST, ips: enderecosParaExibir(os.networkInterfaces()) }));
-});
-
-// Telas do módulo bioenergético.
-for (const tela of ['controle', 'painel', 'recepcao']) {
-    expressApp.get(`/bio/${tela}`, (req, res) => res.sendFile(path.join(__dirname, '..', 'public', `bio-${tela}.html`)));
-}
-expressApp.get('/bio', (req, res) => res.redirect('/bio/controle'));
-// Atalhos: quem digita só o nome da tela cai na tela certa do módulo bioenergético.
-expressApp.get('/controle', (req, res) => res.redirect('/bio/controle'));
 
 httpServer.listen(PORT, () => {
     iniciarRespondedorMdns();

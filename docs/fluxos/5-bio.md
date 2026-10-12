@@ -147,7 +147,8 @@ recolheu e guardou o prontuário. Ao concluir, o fluxo do paciente fica **encerr
 ![TV: fluxo concluído](img/bio-painel-6-fluxo-concluido.webp)
 
 Se algum prontuário recebido não foi guardado, o controle mostra "📋 N prontuário(s) ainda não guardado(s)" ao lado
-do botão de fechar o dia.
+do botão de fechar o dia. Quem já saiu do fluxo (por exemplo, teve a última etapa pulada) aparece em **Finalizados hoje** com o
+botão **Prontuário guardado**, que resolve a pendência.
 
 ### 7. Rota por paciente
 No cartão de quem aguarda:

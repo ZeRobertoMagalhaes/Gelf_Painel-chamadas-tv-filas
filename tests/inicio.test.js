@@ -32,3 +32,8 @@ test('endereços exibidos: ignora redes virtuais, locais e link-local; 192.168 p
     });
     assert.deepEqual(ips, ['192.168.0.103', '10.0.0.8']);
 });
+
+test('endereços exibidos: aceita family numérico (Node 18.0 a 18.3)', () => {
+    const ips = enderecosParaExibir({ 'Wi-Fi': [{ family: 4, address: '192.168.1.7', internal: false }, { family: 6, address: 'fe80::1', internal: false }] });
+    assert.deepEqual(ips, ['192.168.1.7']);
+});

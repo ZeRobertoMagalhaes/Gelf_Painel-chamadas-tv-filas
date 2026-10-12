@@ -18,13 +18,9 @@ if errorlevel 1 (
   exit /b 1
 )
 if not exist dados mkdir dados
-echo  Enderecos para usar em OUTROS aparelhos (celular, tablet, outro computador)
-echo  ligados na mesma rede / Wi-Fi:
-for /f "tokens=2 delims=:" %%a in ('ipconfig ^| findstr /c:"IPv4"') do call echo     http://%%a:3000/bio/controle
-echo  (se aparecer um espaco depois de http://, retire-o)
-echo.
 echo  PAGINA INICIAL (links de todas as telas e QR code para o celular):
 echo     http://localhost:3000
+echo  Abra-a neste computador e aponte a camera do celular para o QR code.
 echo.
 echo  Abrindo o controle neste computador em instantes...
 start "" /b cmd /c "timeout /t 4 /nobreak >nul && start http://localhost:3000/bio/controle"
