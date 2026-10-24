@@ -19,10 +19,10 @@ Faça uma vez, com o notebook ligado ao roteador do local.
    notebook em nível audível.
 7. **Windows Update:** pause as atualizações nos dias de atendimento (Configurações > Windows Update >
    Pausar) ou defina o horário de uso fora do atendimento.
-8. **Conferir:** reinicie o notebook e confirme que, sem abrir nada, `http://painel-gelf.local:3000/painel`
+8. **Conferir:** reinicie o notebook e confirme que, sem abrir nada, `http://painel-gelf-filas.local:3000/painel`
    responde (ou o IP numérico, se o aparelho não resolver `.local`).
 
-**Dica para celulares e tablets:** abra `http://painel-gelf.local:3000/` (página inicial). Ela lista as telas e mostra um
+**Dica para celulares e tablets:** abra `http://painel-gelf-filas.local:3000/` (página inicial). Ela lista as telas e mostra um
 QR code com o endereço numérico atual do notebook; se o nome `.local` não abrir no aparelho (comum em alguns Android),
 basta apontar a câmera para o QR code. Reserve o IP do notebook no roteador para que o endereço numérico não mude.
 

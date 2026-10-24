@@ -1,6 +1,6 @@
 # Guia das Equipes (celular ou tablet)
 
-Endereço: `/atendimento` (ex.: http://painel-gelf.local:3000/atendimento)
+Endereço: `/atendimento` (ex.: http://painel-gelf-filas.local:3000/atendimento)
 
 **Primeira vez:** escolha o **seu tratamento**. O aparelho lembra; para mudar, toque em *trocar*.
 

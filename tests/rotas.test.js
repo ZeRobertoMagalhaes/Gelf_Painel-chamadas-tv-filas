@@ -9,7 +9,7 @@ async function comServidor(fn) {
     registrarRotas(app, {
         publicDir: path.join(__dirname, '..', 'public'),
         porta: 3000,
-        nomeMdns: 'painel-gelf.local',
+        nomeMdns: 'painel-gelf-filas.local',
         obterEstadoFilas: () => ({ data: '2026-10-12', atendimentoAberto: true }),
         interfaces: () => ({ 'Wi-Fi': [{ family: 'IPv4', address: '192.168.0.50', internal: false }] }),
     });
@@ -34,6 +34,25 @@ test('rotas: página inicial com links das telas e QR code do IP atual', async (
             assert.ok(html.includes(`href="${href}"`), href);
         }
     });
+});
+
+test('rotas: painel simples e diagnóstico (TV Box), com JavaScript ES5 de verdade', async () => {
+    await comServidor(async (base) => {
+        for (const rota of ['/painel-simples', '/bio/painel-simples', '/diagnostico', '/legado/painel-simples.js', '/legado/diagnostico.js']) {
+            const r = await get(`${base}${rota}`);
+            assert.equal(r.status, 200, rota);
+        }
+        assert.match(await (await get(`${base}/bio/painel-simples`)).text(), /painel-simples\.js/);
+    });
+    // os arquivos antigos precisam ser ES5 (sem =>, let/const, crases, ?. ou ??), senão não servem à TV Box
+    let acorn = null;
+    try { acorn = require('../web/node_modules/acorn'); } catch { /* sem as dependências de desenvolvimento */ }
+    if (acorn) {
+        for (const f of ['painel-simples.js', 'diagnostico.js']) {
+            const codigo = require('fs').readFileSync(path.join(__dirname, '..', 'server', 'legado', f), 'utf8');
+            assert.doesNotThrow(() => acorn.parse(codigo, { ecmaVersion: 5 }), f);
+        }
+    }
 });
 
 test('rotas: todas as telas existem, e /controle e /bio levam ao controle do Bio', async () => {

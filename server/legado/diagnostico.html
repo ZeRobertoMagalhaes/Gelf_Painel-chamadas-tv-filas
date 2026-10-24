@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Diagnóstico da TV - GELF</title>
+<!-- Página em JavaScript antigo: abre até em navegador muito velho, para dizer o que ele consegue ou não fazer. -->
+<style>
+body { margin: 0; padding: 3vh 4vw; background: #f4f7fc; color: #16294a; font-family: Arial, Helvetica, sans-serif; font-size: 3.2vh; }
+h1 { font-size: 5vh; margin: 0 0 1vh; }
+.sub { color: #475569; font-size: 2.6vh; margin-bottom: 2vh; }
+table { border-collapse: collapse; width: 100%; background: #fff; }
+td { border: 1px solid #cbd5e1; padding: 1vh 1.4vw; vertical-align: top; }
+td.k { width: 46%; font-weight: bold; }
+.ok { color: #166534; font-weight: bold; }
+.no { color: #b91c1c; font-weight: bold; }
+.caixa { margin-top: 2.4vh; padding: 2vh 2vw; border-radius: 12px; font-size: 3.6vh; font-weight: bold; }
+.caixa.bom { background: #dcfce7; color: #166534; }
+.caixa.ruim { background: #fee2e2; color: #991b1b; }
+.caixa.meio { background: #fef3c7; color: #92400e; }
+a { display: inline-block; margin: 2vh 2vw 0 0; padding: 1.4vh 2.4vw; background: #1e40af; color: #fff; text-decoration: none; border-radius: 10px; font-weight: bold; }
+</style>
+</head>
+<body>
+<h1>Diagnóstico da TV</h1>
+<div class="sub">Tire uma foto desta tela e envie. Ela mostra o que este navegador consegue fazer.</div>
+<table id="tab"></table>
+<div id="veredito" class="caixa meio">Verificando…</div>
+<div id="links"></div>
+<script src="/legado/diagnostico.js"></script>
+</body>
+</html>

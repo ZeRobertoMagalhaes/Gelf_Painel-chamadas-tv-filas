@@ -1,7 +1,7 @@
 # Fluxo 3 — Atendimento (equipes, no celular)
 
 Quem faz: **cada equipe de tratamento**, no próprio celular ou tablet. Endereço: `/atendimento`
-(ex.: http://painel-gelf.local:3000/atendimento). Resumo no [guia das equipes](../guias/atendimento.md).
+(ex.: http://painel-gelf-filas.local:3000/atendimento). Resumo no [guia das equipes](../guias/atendimento.md).
 
 ## Visão geral
 

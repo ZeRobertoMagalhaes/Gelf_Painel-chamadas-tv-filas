@@ -110,7 +110,7 @@
           {#if textoStatus(atual)}
             <div class="status-tv" data-status={statusDe(atual)}>{textoStatus(atual)}</div>
           {/if}
-        {:else if rede.estado && !rede.estado.atendimentoAberto}
+        {:else if rede.estado && !rede.estado.diaAberto}
           <div class="patient-name ocioso">Atendimento encerrado</div>
         {:else}
           <div class="patient-name ocioso">Aguardando próxima chamada</div>

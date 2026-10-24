@@ -76,6 +76,14 @@ p { margin: 6px 0; }
 <section><h2>Cura Mediúnica (Bio)</h2><div class="telas">${links(BIO)}</div></section>
 <section><h2>Filas por tratamento</h2><div class="telas">${links(FILAS)}</div></section>
 <section>
+<h2>TV Box ou navegador antigo?</h2>
+<div class="telas">
+<a class="tela" href="/diagnostico"><strong>Diagnóstico da TV</strong><span>Mostra o que o navegador consegue fazer</span></a>
+<a class="tela" href="/bio/painel-simples"><strong>Painel simples (Bio)</strong><span>Funciona em navegador antigo</span></a>
+<a class="tela" href="/painel-simples"><strong>Painel simples (filas)</strong><span>Funciona em navegador antigo</span></a>
+</div>
+</section>
+<section>
 <h2>Endereço deste sistema</h2>
 <p>Pelo nome (acompanha mudanças de IP): <code>${esc(nome)}</code></p>
 <p class="dica">Salve nos favoritos o endereço com o nome. Se ele não abrir no seu aparelho (acontece em alguns Android e em redes de visitantes), use o endereço numérico abaixo ou o QR code.</p>

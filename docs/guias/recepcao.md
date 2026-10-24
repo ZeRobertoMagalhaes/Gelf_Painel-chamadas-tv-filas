@@ -1,6 +1,6 @@
 # Guia da Recepção
 
-Endereço: `/recepcao` (ex.: http://painel-gelf.local:3000/recepcao)
+Endereço: `/recepcao` (ex.: http://painel-gelf-filas.local:3000/recepcao)
 
 **Começar o dia:** toque em **Abrir atendimento** (no canto esquerdo, embaixo). Sem isso ninguém cadastra nem chama.
 

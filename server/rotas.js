@@ -5,7 +5,7 @@ const { renderizarInicio, enderecosParaExibir } = require('./inicio');
 
 // Rotas HTTP do sistema (arquivos das telas, atalhos e página inicial). Ficam
 // fora do index.js para poderem ser testadas sem subir o servidor completo.
-function registrarRotas(expressApp, { publicDir, porta, nomeMdns, obterEstadoFilas, interfaces = () => os.networkInterfaces() }) {
+function registrarRotas(expressApp, { publicDir, porta, nomeMdns, obterEstadoFilas, interfaces = () => os.networkInterfaces(), legadoDir = path.join(__dirname, 'legado') }) {
     const tela = (arquivo) => (req, res) => res.sendFile(path.join(publicDir, arquivo));
 
     expressApp.use(express.static(publicDir));
@@ -19,6 +19,11 @@ function registrarRotas(expressApp, { publicDir, porta, nomeMdns, obterEstadoFil
         res.set('Cache-Control', 'no-store');
         res.type('html').send(renderizarInicio({ porta, nomeMdns, ips: enderecosParaExibir(interfaces()) }));
     });
+
+    // Versão simples da TV e diagnóstico, em JavaScript antigo, para TV Box e navegadores velhos.
+    expressApp.use('/legado', express.static(legadoDir));
+    expressApp.get(['/painel-simples', '/bio/painel-simples'], (req, res) => res.sendFile(path.join(legadoDir, 'painel-simples.html')));
+    expressApp.get('/diagnostico', (req, res) => res.sendFile(path.join(legadoDir, 'diagnostico.html')));
 
     // Atalhos curtos para as três telas das filas.
     for (const nome of ['recepcao', 'atendimento', 'painel']) expressApp.get(`/${nome}`, tela(`${nome}.html`));

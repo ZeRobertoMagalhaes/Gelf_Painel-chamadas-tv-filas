@@ -3,11 +3,11 @@ const assert = require('node:assert/strict');
 const { renderizarInicio, enderecosParaExibir } = require('../server/inicio');
 
 test('página inicial: links de todas as telas, nome na rede e um QR code por IP', () => {
-    const html = renderizarInicio({ porta: 3000, nomeMdns: 'painel-gelf.local', ips: ['192.168.0.10', '10.0.0.5'] });
-    for (const href of ['/bio/recepcao', '/controle', '/bio/painel', '/bio/relatorio', '/recepcao', '/atendimento', '/painel']) {
+    const html = renderizarInicio({ porta: 3000, nomeMdns: 'painel-gelf-filas.local', ips: ['192.168.0.10', '10.0.0.5'] });
+    for (const href of ['/bio/recepcao', '/controle', '/bio/painel', '/bio/relatorio', '/recepcao', '/atendimento', '/painel', '/diagnostico', '/painel-simples', '/bio/painel-simples']) {
         assert.ok(html.includes(`href="${href}"`), href);
     }
-    assert.ok(html.includes('http://painel-gelf.local:3000/'));
+    assert.ok(html.includes('http://painel-gelf-filas.local:3000/'));
     assert.ok(html.includes('http://192.168.0.10:3000/') && html.includes('http://10.0.0.5:3000/'));
     assert.equal((html.match(/<svg /g) || []).length, 2); // um QR por endereço
 });

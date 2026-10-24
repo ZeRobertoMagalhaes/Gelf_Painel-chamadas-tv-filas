@@ -13,9 +13,9 @@ const { criarAppBio } = require('./bio/app');
 const { registrarRotas } = require('./rotas');
 
 const PORT = process.env.PORT || 3000;
-// Nome fixo na rede local (http://painel-gelf.local:3000), respondido pelo
+// Nome fixo na rede local (http://painel-gelf-filas.local:3000), respondido pelo
 // próprio servidor — não depende de Bonjour nem do nome do computador.
-const MDNS_HOST = `${(process.env.MDNS_HOST || 'painel-gelf').toLowerCase()}.local`;
+const MDNS_HOST = `${(process.env.MDNS_HOST || 'painel-gelf-filas').toLowerCase()}.local`;
 
 function enderecosIpv4Atuais() {
     const enderecos = [];

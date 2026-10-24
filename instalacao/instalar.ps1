@@ -6,7 +6,7 @@
       powershell -ExecutionPolicy Bypass -File .\instalacao\instalar.ps1
   O que faz:
     1. confere o Node.js e instala as dependências (sem as de desenvolvimento);
-    2. libera a porta 3000/TCP e a 5353/UDP (nome painel-gelf.local) só em redes PRIVADAS;
+    2. libera a porta 3000/TCP e a 5353/UDP (nome painel-gelf-filas.local) só em redes PRIVADAS;
     3. cria a tarefa "Painel GELF - Servidor": inicia com o Windows (mesmo sem ninguém
        logado) e reinicia sozinha se o servidor cair;
     4. desliga suspensão, hibernação e o desligar da tela na tomada, e a ação de fechar a tampa;
@@ -103,7 +103,7 @@ else {
     $ips = Get-NetIPAddress -AddressFamily IPv4 | Where-Object { $_.IPAddress -notlike '127.*' -and $_.IPAddress -notlike '169.254.*' } | Select-Object -ExpandProperty IPAddress
     Write-Host "`nServidor no ar. Endereços (use o IP numérico se .local não abrir no aparelho):" -ForegroundColor Green
     foreach ($tela in 'recepcao', 'atendimento', 'painel') {
-        Write-Host ("  {0,-12} http://painel-gelf.local:{1}/{0}   |   http://{2}:{1}/{0}" -f $tela, $Porta, ($ips | Select-Object -First 1))
+        Write-Host ("  {0,-12} http://painel-gelf-filas.local:{1}/{0}   |   http://{2}:{1}/{0}" -f $tela, $Porta, ($ips | Select-Object -First 1))
     }
 }
 Write-Host "`nLembrete: reserve/fixe o IP do notebook (veja docs/guias/instalacao.md) e pause o Windows Update nos dias de atendimento."

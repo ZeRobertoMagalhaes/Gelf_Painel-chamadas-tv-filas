@@ -1,6 +1,6 @@
 # Guia da Cura Mediúnica (Recepção, Controle e TVs)
 
-Recepção: `/bio/recepcao` (ex.: http://painel-gelf.local:3000/bio/recepcao)
+Recepção: `/bio/recepcao` (ex.: http://painel-gelf-filas.local:3000/bio/recepcao)
 Controle: `/bio/controle`
 TVs: `/bio/painel` (as duas TVs, térreo e 1º andar, mostram a mesma tela)
 
