@@ -283,6 +283,7 @@ function registrarChegada(estado, args, ctx) {
         chamadas: 0,
         prioridade: false,
         prioridadeEm: null,
+        salaDestino: null,
         prontuario: null,
         movimentos: [],
     };
@@ -420,6 +421,20 @@ function priorizar(estado, args, ctx) {
         p.prioridadeEm = null;
         movimento(p, 'prioridade_removida', ctx);
     }
+    return { paciente: p };
+}
+
+// Sala onde o paciente deve se dirigir, informada por quem controla o fluxo (texto livre,
+// ex.: "Sala 02 (térreo)"). Aparece no controle, na recepção e na TV no lugar da sala da
+// chamada; vazio apaga e volta a valer o nome da sala chamada.
+function informarSala(estado, args, ctx) {
+    exigirAberto(estado);
+    const p = buscar(estado, args.id);
+    exigirSituacao(p, ATIVAS, 'informar a sala');
+    const sala = limparTexto(args.sala, 40) || null;
+    if (sala === (p.salaDestino ?? null)) return { paciente: p };
+    p.salaDestino = sala;
+    movimento(p, 'sala_informada', ctx, { sala });
     return { paciente: p };
 }
 
@@ -574,6 +589,7 @@ function registroDoDia(estado, config) {
                 nome: p.nome,
                 sobrenome: p.sobrenome,
                 prioridade: p.prioridade === true,
+                salaDestino: p.salaDestino ?? null,
                 descricao: p.descricao,
                 chegada: p.chegada,
                 situacao: p.situacao,
@@ -618,4 +634,5 @@ module.exports = {
     devolverEspera,
     registrarProntuario,
     priorizar,
+    informarSala,
 };

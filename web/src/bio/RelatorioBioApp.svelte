@@ -106,6 +106,7 @@
                       <small>Chegada {hora(p.chegada)} • {SITUACAO[p.situacao] ?? p.situacao}{#if p.concluido} às {hora(p.concluido)}{/if}</small>
                       {#if p.tempoTotalMin !== null}<small>Tempo total: {p.tempoTotalMin} min</small>{/if}
                       {#if p.prontuario}<small>Prontuário: {PRONTUARIO[p.prontuario]}</small>{/if}
+                      {#if p.salaDestino}<small>Sala informada: {p.salaDestino}</small>{/if}
                       {#if p.descricao}<small>{p.descricao}</small>{/if}
                     </td>
                   {/if}

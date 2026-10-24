@@ -187,6 +187,7 @@
                 <div class="cartao-info">
                   <div class="cartao-nome">{p.nomeExibicao}</div>
                   <div class="cartao-meta">chegou {horaCurta(p.chegada)}{p.descricao ? ` • ${p.descricao}` : ""}{#if p.prioridade}{" "}• <strong>prioridade</strong>{/if}</div>
+                  {#if p.salaDestino}<div class="cartao-meta sala-destino">➜ Ir para: {p.salaDestino}</div>{/if}
                   {#if p.prioridade && avisoPrioridade}<div class="cartao-meta aviso-prioridade">★ {avisoPrioridade}</div>{/if}
                 </div>
               </div>
@@ -209,6 +210,7 @@
             <div class="cartao-paciente finalizado" class:faltou={p.situacao === "nao_compareceu"}>
               <div class="cartao-nome">{p.nomeExibicao}</div>
               <div class="cartao-meta">{situacaoDe(p)}</div>
+              {#if p.salaDestino}<div class="cartao-meta sala-destino">➜ Ir para: {p.salaDestino}</div>{/if}
             </div>
           {/each}
         </div>

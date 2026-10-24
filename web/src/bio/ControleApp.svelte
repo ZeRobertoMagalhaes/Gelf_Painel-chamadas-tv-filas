@@ -196,6 +196,19 @@
   {/if}
 {/snippet}
 
+{#snippet campoSala(p)}
+  <label class="campo-sala">
+    <span>Sala para onde o paciente deve ir</span>
+    <input
+      type="text"
+      maxlength="40"
+      value={p.salaDestino ?? ""}
+      placeholder={p.prioridade ? "Ex.: Sala 02 (térreo)" : "Ex.: Sala 02"}
+      onchange={(e) => acao("informarSala", { id: p.id, sala: e.currentTarget.value })}
+    />
+  </label>
+{/snippet}
+
 {#snippet editorRota()}
   <div class="rota-edicao">
     <span class="cartao-meta">Etapas que faltam (na ordem do fluxo):</span>
@@ -359,6 +372,7 @@
                     <div class="cartao-meta">{ROTULO_SITUACAO[p.situacao]}{faltaDaRota(p).length ? ` • depois: ${faltaDaRota(p).join(" › ")}` : ""}{#if p.prioridade}{" "}• <strong>prioridade</strong>{/if}</div>
                     {#if textoProntuario(p)}<div class="cartao-meta prontuario">📋 {textoProntuario(p)}{p.situacao === "chamado" && p.prontuario === "recebido" ? " — o paciente deve entregá-lo na sala" : ""}</div>{/if}
                     {#if p.prioridade && p.situacao === "chamado" && avisoPrioridade}<div class="cartao-meta aviso-prioridade">★ {avisoPrioridade}</div>{/if}
+                    {@render campoSala(p)}
                     <div class="alerta-acoes">
                       {#if p.situacao === "chamado"}
                         <button class="btn-mini ouro" onclick={() => iniciar(p)}>Iniciar</button>
@@ -414,6 +428,7 @@
                     {#if p.prioridade && avisoPrioridade}<div class="cartao-meta aviso-prioridade">★ {avisoPrioridade}</div>{/if}
                   </div>
                 </div>
+                {@render campoSala(p)}
 
                 {#if editRota?.id === p.id}
                   {@render editorRota()}

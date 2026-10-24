@@ -25,6 +25,22 @@
   const STATUS_TV = { chamado: "Chamado", em_atendimento: "Em atendimento", aguardando: "Etapa concluída — aguarde", concluido: "Atendimento concluído" };
   const pacientePorId = $derived(new Map((rede.estado?.pacientes ?? []).map((p) => [p.id, p])));
   const statusDe = (c) => pacientePorId.get(c?.pacienteId)?.situacao;
+  // Sala informada pelo controle vale mais que o nome da sala da chamada; muda na TV na hora.
+  const salaDe = (c) => pacientePorId.get(c?.pacienteId)?.salaDestino || c?.sala;
+  // Barra de progresso do dia do paciente: uma bolinha por etapa da rota.
+  function etapasDe(p) {
+    if (!p) return [];
+    const lista = p.rota.map((id, i) => {
+      const e = rede.config?.etapas.find((x) => x.id === id);
+      let estado = "pendente";
+      if (p.situacao === "concluido" || i < p.posicao) estado = "feita";
+      else if (i === p.posicao) estado = p.situacao === "em_atendimento" ? "atendendo" : p.situacao === "chamado" ? "chamado" : "espera";
+      return { id, nome: e?.nome ?? id, cor: e?.cor ?? "#1e40af", estado, ligada: false };
+    });
+    lista.forEach((x, i) => (x.ligada = i > 0 && lista[i - 1].estado === "feita"));
+    return lista;
+  }
+  const ROTULO_PASSO = { feita: "concluída", atendendo: "em atendimento", chamado: "chamado", espera: "aguardando", pendente: "a fazer" };
   // Quem concluiu uma etapa é orientado a esperar no local da próxima (ex.: sala de espera do 1º andar).
   function textoStatus(c) {
     const p = pacientePorId.get(c?.pacienteId);
@@ -95,6 +111,19 @@
   <button class="btn-som" onclick={ativar}>🔊 Ativar som</button>
 {/if}
 
+{#snippet passos(p, mini)}
+  {#if p}
+    <ol class="passos" class:mini aria-label="Etapas do atendimento de hoje">
+      {#each etapasDe(p) as x, i (x.id)}
+        <li class="passo" class:ligada={x.ligada} data-estado={x.estado} style:--cor={x.cor} title="{x.nome}: {ROTULO_PASSO[x.estado]}">
+          <span class="passo-bolinha">{x.estado === "feita" ? "✓" : i + 1}</span>
+          {#if !mini}<span class="passo-nome">{x.nome}</span>{/if}
+        </li>
+      {/each}
+    </ol>
+  {/if}
+{/snippet}
+
 <HeroHeader tagline="Painel de Chamada" subtitle="Cura Mediúnica" />
 
 <div class="app-body">
@@ -104,10 +133,11 @@
         {#if atual}
           <div class="badge-therapy" style:background-color={tratamento.cor}>{tratamento.nome}</div>
           <div class="patient-name">{atual.nomeExibicao}</div>
-          <div class="location-info">{atual.sala}</div>
+          <div class="location-info">{salaDe(atual)}</div>
           {#if textoStatus(atual)}
             <div class="status-tv" data-status={statusDe(atual)}>{textoStatus(atual)}</div>
           {/if}
+          {@render passos(pacientePorId.get(atual.pacienteId), false)}
         {:else if rede.estado && !rede.estado.atendimentoAberto}
           <div class="patient-name ocioso">Atendimento encerrado</div>
         {:else}
@@ -127,7 +157,8 @@
               style:animation-delay={`${i * 0.05}s`}
             >
               <div class="h-name">{item.nomeExibicao}</div>
-              <div class="h-type">{item.sala}{#if textoStatus(item)}{" "}• {textoStatus(item)}{/if}</div>
+              <div class="h-type">{salaDe(item)}{#if textoStatus(item)}{" "}• {textoStatus(item)}{/if}</div>
+              {@render passos(pacientePorId.get(item.pacienteId), true)}
             </div>
           {/each}
         </div>

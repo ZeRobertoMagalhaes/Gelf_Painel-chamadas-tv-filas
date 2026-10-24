@@ -77,6 +77,10 @@ lembrete aparece no cartão do controle e, quando o prioritário conclui uma eta
 
 ![Recepção: paciente prioritário no início da fila](img/bio-recepcao-4-prioridade.webp)
 
+**Sala para onde ir:** quando o controle informa a sala do paciente (item 3), a recepção vê no cartão **"➜ Ir para: Sala X"**, para orientar o paciente.
+
+![Recepção: sala informada pelo controle](img/bio-recepcao-5-sala-destino.webp)
+
 ### 3. Conferir as filas e chamar (controle)
 O controle vê as filas já com todos os cadastrados.
 
@@ -99,6 +103,13 @@ Só chama se a sala tem vaga: sem vaga, o botão fica desativado. A chamada apar
 
 ![TV: paciente chamado](img/bio-painel-2-chamado.webp)
 
+**Informar a sala de destino.** Todo cartão de paciente (na espera ou na sala) tem o campo **"Sala para onde o paciente deve ir"**.
+Digite a sala (por exemplo, *Sala 02 (térreo)*) e aperte **Enter** (ou saia do campo): ela aparece na hora no cartão do controle, na
+recepção e na **TV**, no lugar do nome da sala chamada. Para prioritários, o campo sugere uma sala do térreo. Apagar o texto volta a
+valer o nome da sala da chamada.
+
+![Controle: campo da sala de destino no cartão do paciente](img/bio-16-sala-destino.webp)
+
 ### 4. Acompanhar o paciente
 Paciente **Chamado** (a caminho):
 
@@ -113,6 +124,12 @@ Paciente **Em atendimento**: **Concluir etapa** libera a vaga e leva o paciente 
 rota** (o cartão mostra "depois: Doutores › Reiki/Cromoterapia").
 
 ![TV: paciente em atendimento](img/bio-painel-3-em-atendimento.webp)
+
+**Barra de progresso por etapas na TV.** Abaixo da situação, a TV mostra uma barra com uma bolinha por etapa do dia do paciente:
+**verde com ✓** = concluída; **cor da etapa e preenchida** = em atendimento; **contorno pulsando** = chamado; **tracejada em âmbar**
+= aguardando a etapa; **cinza** = ainda por fazer. Os últimos chamados trazem a mesma barra em tamanho reduzido.
+
+![TV: barra de progresso por etapas e sala informada](img/bio-painel-7-progresso.webp)
 
 **A TV orienta o paciente.** Ao concluir uma etapa, o destaque passa a dizer onde aguardar:
 **"Etapa concluída — aguarde: Sala de espera do 1º andar"**.

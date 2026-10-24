@@ -294,6 +294,25 @@ test('registro do dia: passagens por etapa com sala, início, fim e duração, e
     assert.equal(reg.resumo.naoCompareceram, 0); // a voltou à espera e está em atendimento
 });
 
+test('sala informada pelo controle: texto livre, limpa ao esvaziar, aparece no registro do dia', () => {
+    const e = diaAberto();
+    const a = cheg(e, 'Ana', 'Lima', { rota: ['doutores', 'reiki'] });
+    assert.equal(a.salaDestino, null);
+    R.informarSala(e, { id: a.id, sala: '  Sala 02 (térreo)  ' }, ctx());
+    assert.equal(a.salaDestino, 'Sala 02 (térreo)');
+    R.informarSala(e, { id: a.id, sala: 'Sala 02 (térreo)' }, ctx()); // igual: sem novo movimento
+    assert.equal(a.movimentos.filter((m) => m.acao === 'sala_informada').length, 1);
+    assert.equal(R.registroDoDia(e, config).pacientes[0].salaDestino, 'Sala 02 (térreo)');
+    R.informarSala(e, { id: a.id, sala: '   ' }, ctx());
+    assert.equal(a.salaDestino, null);
+    R.informarSala(e, { id: a.id, sala: 'x'.repeat(100) }, ctx());
+    assert.equal(a.salaDestino.length, 40);
+    // quem já saiu do fluxo não recebe sala nova
+    R.pularEtapa(e, { id: a.id }, ctx());
+    R.pularEtapa(e, { id: a.id }, ctx());
+    assert.equal(codigo(() => R.informarSala(e, { id: a.id, sala: 'Sala 1' }, ctx())), 'estado_invalido');
+});
+
 test('rota por paciente: pular etapa, alterar o que falta e terminar a rota', () => {
     const e = diaAberto();
     const a = cheg(e, 'Ana', 'Lima', { rota: ['captacao', 'doutores', 'reiki'] });

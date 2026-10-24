@@ -31,6 +31,10 @@ O paciente percorre uma **rota de etapas**: Captação/Apometria › Doutores �
   **Sala de Evangelhoterapia (térreo)** até ser chamado. O sistema mostra esse aviso na recepção, no controle e na TV.
 - ✎ corrige o nome; ✕ remove (pede confirmação).
 
+## Informar a sala de destino (controle)
+Em todo cartão de paciente há o campo **"Sala para onde o paciente deve ir"**: digite a sala (ex.: *Sala 02 (térreo)*) e aperte **Enter**.
+A sala informada aparece na **recepção** ("➜ Ir para: …") e na **TV**, no lugar do nome da sala chamada. Apagar o texto desfaz.
+
 ## Chamar para uma sala (controle)
 Cada etapa é uma coluna, com suas salas e a lista **Aguardando**. Cada etapa tem **duas salas** (ex.: Captação 1 e 2), então atendem **2 pacientes ao mesmo tempo**. As salas mostram as vagas (ex.: `1/1 vagas`).
 
@@ -53,6 +57,10 @@ Quem foi marcado **Não compareceu** aparece em **Finalizados hoje**. Se chegar 
 **Voltar à espera**: ele entra no fim da fila da mesma etapa.
 
 Ao concluir a etapa, a **vaga da sala volta na hora**: dá para chamar o próximo em seguida.
+
+## O que a TV mostra
+Nome, etapa, sala (a informada pelo controle, se houver), situação e uma **barra de progresso por etapas**: ✓ verde = concluída,
+cor da etapa = em atendimento, contorno pulsando = chamado, tracejado âmbar = aguardando, cinza = ainda por fazer.
 
 ## Doutores: prontuário (e acupuntura)
 A **acupuntura** faz parte do atendimento dos **Doutores**: não é uma etapa nem uma sala separada.
