@@ -32,6 +32,7 @@ vagas e salas se ajustam na própria tela.
 Com o dia fechado, o controle mostra a **Abertura dos trabalhos**:
 
 - marque as **salas que funcionam hoje** e a **capacidade** de cada uma (ex.: número de macas do reiki);
+- em **sala/local**, informe **com antecedência onde cada tratamento acontece hoje** (ex.: *Sala 03 (térreo)*). Esse local **já vem preenchido para o paciente quando ele é chamado** para aquela sala, e dá para mudar depois. O navegador lembra os locais usados na última abertura;
 - se houver lista de pré-inscritos, cole **uma pessoa por linha**: `Nome Sobrenome ; dia ; descrição`;
 - o **relatório do último dia fechado** aparece embaixo, como referência.
 
@@ -110,8 +111,13 @@ Só chama se a sala tem vaga: sem vaga, o botão fica desativado. A chamada apar
 
 ![TV: paciente chamado](img/bio-painel-2-chamado.webp)
 
+**Sala/local de cada tratamento.** Cada sala tem um campo **"Sala/local onde acontece"**: o que foi informado na abertura do dia aparece
+ali e pode ser alterado a qualquer momento. Se o local mudar, quem está naquela sala com o local antigo passa a ver o novo (o que foi
+digitado à mão para um paciente fica como está). Ao concluir a etapa, a sala de destino do paciente é limpa, e a da próxima etapa vem
+preenchida quando ele for chamado.
+
 **Informar a sala de destino.** Todo cartão de paciente (na espera ou na sala) tem o campo **"Sala para onde o paciente deve ir"**.
-Digite a sala (por exemplo, *Sala 02 (térreo)*) e aperte **Enter** (ou saia do campo): ela aparece na hora no cartão do controle, na
+Ele **já vem preenchido com o local da sala chamada** (informado na abertura do dia); para um caso especial, como um prioritário, digite outra sala (por exemplo, *Sala 02 (térreo)*) e aperte **Enter** (ou saia do campo): ela aparece na hora no cartão do controle, na
 recepção e na **TV**, no lugar do nome da sala chamada. Para prioritários, o campo sugere uma sala do térreo. Apagar o texto volta a
 valer o nome da sala da chamada.
 

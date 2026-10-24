@@ -47,6 +47,7 @@ flowchart TD
   sistema avisa isso na recepção, no controle e na TV (o texto fica em `config/bio.json`, campo `prioridade`).
 - **Relatório do atendimento:** ao final do dia, o controle gera o registro completo (dados dos pacientes, etapa, sala, horários de
   início e fim, resumo geral) e o salva em **PDF** antes de fechar o dia (`/bio/relatorio`).
+- **Local das salas:** na abertura do dia o controle informa onde cada tratamento acontece hoje (sala/local); ele pré-preenche a sala de destino do paciente na chamada e pode ser mudado durante o dia.
 - **Sala de destino:** o controle pode informar, em qualquer cartão, a sala para onde o paciente deve ir (texto livre). Ela aparece na
   recepção e na TV no lugar da sala chamada.
 - **Progresso na recepção:** cada paciente na tela da recepção tem uma barra de progresso por etapas (concluída, em atendimento,
@@ -80,3 +81,4 @@ Tudo isso fica em `config/bio.json`.
 - 24/10/2026: prioritários passam a ter aviso de **atendimento em sala do térreo** e de espera na **Sala de Evangelhoterapia (térreo)** entre os atendimentos.
 - 24/10/2026: botão **Abrir o dia** movido para o menu da esquerda, abaixo de **Registrar chegada**; correção da barra de rolagem no controle e na recepção.
 - 24/10/2026: campo **Sala para onde o paciente deve ir** no controle (exibido na recepção e na TV) e **barra de progresso por etapas** nos cartões da recepção (não na TV).
+- 24/10/2026: na abertura do dia, **sala/local de cada tratamento** informado com antecedência; pré-preenche a sala de destino do paciente na chamada e continua editável.

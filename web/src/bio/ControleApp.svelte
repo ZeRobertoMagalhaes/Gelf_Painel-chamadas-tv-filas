@@ -1,7 +1,7 @@
 <script>
   import { onMount } from "svelte";
   import { rede, conectar, agir } from "../lib/conexao.svelte.js";
-  import { horaCurta } from "../lib/util.js";
+  import { horaCurta, lembrar } from "../lib/util.js";
   import HeroHeader from "../lib/HeroHeader.svelte";
   import ConnStatus from "../lib/ConnStatus.svelte";
 
@@ -65,10 +65,20 @@
 
   onMount(() => conectar("/bio"));
 
+  // Locais usados na última abertura neste navegador: já vêm preenchidos no dia seguinte.
+  function locaisLembrados() {
+    try {
+      return JSON.parse(lembrar("gelf.bio.locais") ?? "{}");
+    } catch {
+      return {};
+    }
+  }
+
   $effect(() => {
     if (!config) return;
+    const memoria = locaisLembrados();
     for (const s of config.etapas.flatMap((e) => e.salas)) {
-      if (!ajustesDia[s.id]) ajustesDia[s.id] = { ativa: true, capacidade: s.capacidade };
+      if (!ajustesDia[s.id]) ajustesDia[s.id] = { ativa: true, capacidade: s.capacidade, local: memoria[s.id] ?? s.local ?? "" };
     }
   });
 
@@ -117,6 +127,7 @@
   const remover = (p) => acao("remover", { id: p.id });
   const liberar = (s) => acao("liberarSala", { salaId: s.id });
   const capacidade = (s, delta) => acao("ajustarSala", { salaId: s.id, capacidade: s.capacidade + delta });
+  const informarLocal = (s, texto) => acao("ajustarSala", { salaId: s.id, local: texto });
   const alternarSala = (s) => acao("ajustarSala", { salaId: s.id, ativa: !s.ativa });
 
   function abrirRota(p) {
@@ -151,11 +162,12 @@
   // Só lê: gravar estado durante o desenho da tela quebra o Svelte (state_unsafe_mutation).
   // Os padrões são preenchidos em $effect assim que a configuração chega.
   function ajusteDe(s) {
-    return ajustesDia[s.id] ?? { ativa: true, capacidade: s.capacidade };
+    return ajustesDia[s.id] ?? { ativa: true, capacidade: s.capacidade, local: s.local ?? "" };
   }
   async function abrirDia() {
     const salas = config.etapas.flatMap((e) => e.salas).map((s) => ({ id: s.id, ...ajusteDe(s) }));
     const r = await acao("abrirDia", { salas });
+    if (r.ok) lembrar("gelf.bio.locais", JSON.stringify(Object.fromEntries(salas.map((s) => [s.id, s.local ?? ""]))));
     if (r.ok && textoPre.trim()) {
       const i = await acao("importarPreinscritos", { texto: textoPre });
       if (i.ok) mostrar(`${i.importados} pré-inscrito(s) importado(s).`);
@@ -326,7 +338,10 @@
     {:else if !aberto}
       <div class="abertura">
         <h2>Abertura dos trabalhos</h2>
-        <p class="abertura-dica">Confirme as salas que funcionam hoje e a capacidade de cada uma (ex.: macas do reiki).</p>
+        <p class="abertura-dica">
+          Confirme as salas que funcionam hoje e a capacidade de cada uma. Em <strong>sala/local</strong>, informe com antecedência onde cada
+          tratamento acontece hoje (ex.: <em>Sala 03 (térreo)</em>): o local já vem preenchido para o paciente quando ele é chamado, e dá para mudar depois.
+        </p>
         {#each config.etapas as e (e.id)}
           <div class="etapa-abertura" style:--cor={e.cor}>
             <strong>{e.nome}</strong> <small>espera: {local(e.esperaEm)}</small>
@@ -334,6 +349,7 @@
               {@const aj = ajusteDe(s)}
               <div class="sala-linha">
                 <label><input type="checkbox" bind:checked={aj.ativa} /> {s.nome}</label>
+                <label class="loc">sala/local <input type="text" maxlength="40" placeholder="Ex.: Sala 03 (térreo)" bind:value={aj.local} disabled={!aj.ativa} /></label>
                 <label class="cap">capacidade <input type="number" min="1" max="20" bind:value={aj.capacidade} disabled={!aj.ativa} /></label>
               </div>
             {/each}
@@ -366,6 +382,12 @@
                   <strong>{s.nome}</strong>
                   <span class="vagas-chip" class:cheia={s.vagas === 0}>{s.ativa ? `${s.vagas}/${s.capacidade} vagas` : "fora de uso"}</span>
                 </div>
+                {#if s.ativa}
+                  <label class="campo-sala campo-local">
+                    <span>Sala/local onde acontece</span>
+                    <input type="text" maxlength="40" value={s.local ?? ""} placeholder="Ex.: Sala 03 (térreo)" onchange={(e) => informarLocal(s, e.currentTarget.value)} />
+                  </label>
+                {/if}
                 {#each naSala(s) as p (p.id)}
                   <div class="cartao-paciente em-curso">
                     <div class="cartao-nome">{p.nomeExibicao}</div>

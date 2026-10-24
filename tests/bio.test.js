@@ -313,6 +313,34 @@ test('sala informada pelo controle: texto livre, limpa ao esvaziar, aparece no r
     assert.equal(codigo(() => R.informarSala(e, { id: a.id, sala: 'Sala 1' }, ctx())), 'estado_invalido');
 });
 
+test('local das salas: informado na abertura, pré-preenche o paciente na chamada e pode mudar durante o dia', () => {
+    const e = R.novoDiaBio('2026-10-10');
+    R.abrirDia(e, { salas: [{ id: 'doutores', local: '  Sala 04 (térreo)  ' }, { id: 'captacao1', local: 'Sala 01' }] }, ctx());
+    assert.equal(e.salas.find((s) => s.id === 'doutores').local, 'Sala 04 (térreo)');
+    assert.equal(e.salas.find((s) => s.id === 'reiki').local, null); // sem local informado
+    const a = cheg(e, 'Ana', 'Lima', { rota: ['captacao', 'doutores'] });
+    const b = cheg(e, 'Beto', 'Dias', { rota: ['doutores'] });
+    R.chamar(e, { pacienteId: a.id, salaId: 'captacao1' }, ctx());
+    assert.equal(a.salaDestino, 'Sala 01'); // pré-preenchido pelo local da sala
+    R.iniciar(e, { id: a.id }, ctx());
+    R.concluir(e, { id: a.id }, ctx());
+    assert.equal(a.salaDestino, null); // a sala de destino era da etapa que acabou
+    // o controle digitou outra sala antes de chamar: vale a digitada
+    R.informarSala(e, { id: b.id, sala: 'Sala 09 (térreo)' }, ctx());
+    R.chamar(e, { pacienteId: b.id, salaId: 'doutores' }, ctx());
+    assert.equal(b.salaDestino, 'Sala 09 (térreo)');
+    R.chamar(e, { pacienteId: a.id, salaId: 'doutores2' }, ctx()); // doutores2 sem local: nada a preencher
+    assert.equal(a.salaDestino, null);
+    // muda o local da sala durante o dia: quem está nela com o local antigo acompanha; a digitada à mão fica
+    R.ajustarSala(e, { salaId: 'doutores', local: 'Sala 05' }, ctx());
+    assert.equal(e.salas.find((s) => s.id === 'doutores').local, 'Sala 05');
+    assert.equal(b.salaDestino, 'Sala 09 (térreo)');
+    R.ajustarSala(e, { salaId: 'captacao1', local: '' }, ctx());
+    assert.equal(e.salas.find((s) => s.id === 'captacao1').local, null);
+    // aparece no registro do dia
+    assert.equal(R.registroDoDia(e, config).pacientes[0].passos[0].local, 'Sala 01');
+});
+
 test('rota por paciente: pular etapa, alterar o que falta e terminar a rota', () => {
     const e = diaAberto();
     const a = cheg(e, 'Ana', 'Lima', { rota: ['captacao', 'doutores', 'reiki'] });

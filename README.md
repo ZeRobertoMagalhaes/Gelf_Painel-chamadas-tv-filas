@@ -91,6 +91,7 @@ Fluxo oficial do processo: `docs/fluxos/fluxo-operacional-bio.md` (referência p
   A acupuntura faz parte do atendimento dos Doutores (não é etapa nem sala separada; o mecanismo de etapa `opcional` continua disponível por configuração).
   Mudar o fluxo é editar esse arquivo e reiniciar. No dia, as vagas (macas) e salas em uso se ajustam na própria tela.
 - **Relatório do atendimento (PDF)**: `/bio/relatorio` (botão no controle) reúne dados dos pacientes, sala, horários de início e fim de cada tratamento e resumo geral; o PDF sai da janela de impressão do navegador ("Salvar como PDF"). Salve antes de fechar o dia: os nomes são apagados no fechamento.
+- **Local das salas**: informado na abertura do dia (campo `local` de cada sala, também em `config/bio.json`) e editável durante o dia; pré-preenche a sala de destino do paciente na chamada.
 - **Sala de destino**: campo no cartão do controle (`informarSala`); aparece na recepção e na TV no lugar da sala chamada.
 - **Progresso na recepção**: barra de progresso por etapas (concluída / em atendimento / chamado / aguardando / a fazer) em cada paciente da tela da recepção (`web/src/lib/PassosPaciente.svelte`); a TV não mostra a barra.
 - **Prioritários**: tratamentos em sala do térreo e espera entre atendimentos na Sala de Evangelhoterapia (térreo); aviso na recepção, no controle e na TV (`prioridade` em `config/bio.json`).

@@ -107,6 +107,8 @@ function abrirDia(estado, args, ctx) {
                 nome: base.nome,
                 ativa: aj.ativa !== false,
                 capacidade: Number.isInteger(aj.capacidade) && aj.capacidade >= 1 && aj.capacidade <= 20 ? aj.capacidade : base.capacidade,
+                // Sala/local físico onde o tratamento acontece hoje (informado na abertura do dia; vale o padrão da config).
+                local: limparTexto(aj.local ?? base.local ?? '', 40) || null,
                 emPreparo: 0,
             });
         }
@@ -132,6 +134,13 @@ function ajustarSala(estado, args) {
             throw new ErroRegra('sala_ocupada', 'Conclua os atendimentos da sala antes de desativá-la.');
         }
         sala.ativa = args.ativa !== false;
+    }
+    if (args.local !== undefined) {
+        const antigo = sala.local ?? null;
+        const novo = limparTexto(args.local ?? '', 40) || null;
+        sala.local = novo;
+        // Quem está na sala com o local antigo acompanha a mudança (o que foi digitado à mão para o paciente fica).
+        for (const p of ocupantes(estado, sala)) if ((p.salaDestino ?? null) === antigo) p.salaDestino = novo;
     }
 }
 
@@ -202,6 +211,7 @@ function finalizar(p, ctx) {
 
 // Passa para a próxima etapa da rota (ou termina, se não há mais).
 function avancar(estado, p, ctx) {
+    p.salaDestino = null; // a sala de destino era da etapa que acabou
     p.posicao += 1;
     if (p.posicao >= p.rota.length) finalizar(p, ctx);
     else entrarEspera(estado, p, ctx);
@@ -321,7 +331,9 @@ function remover(estado, args, ctx) {
 function registrarChamada(estado, p, sala, ctx) {
     p.chamado = isoLocal(ctx.agora);
     p.chamadas += 1;
-    movimento(p, 'chamado', ctx, { etapa: sala.etapa, sala: sala.nome });
+    // O local da sala (informado na abertura do dia) já vem como sala de destino do paciente, salvo se o controle digitou outro.
+    if (!p.salaDestino && sala.local) p.salaDestino = sala.local;
+    movimento(p, 'chamado', ctx, { etapa: sala.etapa, sala: sala.nome, local: sala.local ?? null });
     const chamada = {
         seq: ++estado.chamadaSeq,
         pacienteId: p.id,
@@ -556,7 +568,7 @@ function registroDoDia(estado, config) {
             const passos = [];
             let atual = null;
             const abrir = (etapa, em) => {
-                atual = { etapa, nome: nomeEtapa(etapa), sala: null, entrouEspera: em, chamado: null, inicio: null, fim: null, resultado: null };
+                atual = { etapa, nome: nomeEtapa(etapa), sala: null, local: null, entrouEspera: em, chamado: null, inicio: null, fim: null, resultado: null };
                 passos.push(atual);
             };
             for (const m of p.movimentos) {
@@ -566,7 +578,10 @@ function registroDoDia(estado, config) {
                     continue;
                 } else if (m.acao === 'chamado' || m.acao === 'rechamado') {
                     atual.sala = m.sala ?? atual.sala;
-                    if (m.acao === 'chamado') atual.chamado = m.em;
+                    if (m.acao === 'chamado') {
+                        atual.chamado = m.em;
+                        atual.local = m.local ?? null;
+                    }
                 } else if (m.acao === 'atendimento_iniciado') {
                     atual.inicio = m.em;
                     atual.sala = m.sala ?? atual.sala;

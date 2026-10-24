@@ -22,7 +22,7 @@ function normalizarBio(bruto) {
         const e = etapasBrutas.find((x) => x.id === t.id);
         const salas = (Array.isArray(e.salas) ? e.salas : [])
             .filter((s) => s && ID.test(s.id) && texto(s.nome, 40))
-            .map((s) => ({ id: s.id, nome: texto(s.nome, 40), capacidade: inteiro(s.capacidade, 1, 20, 1) }));
+            .map((s) => ({ id: s.id, nome: texto(s.nome, 40), capacidade: inteiro(s.capacidade, 1, 20, 1), local: texto(s.local, 40) || null }));
         if (salas.length === 0) throw new Error(`bio.json: a etapa "${t.id}" precisa de ao menos uma sala.`);
         return {
             ...t,

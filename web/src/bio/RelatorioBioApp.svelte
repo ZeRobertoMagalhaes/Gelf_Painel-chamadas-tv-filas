@@ -111,7 +111,7 @@
                     </td>
                   {/if}
                   <td>{x.nome}</td>
-                  <td>{x.sala ?? "—"}</td>
+                  <td>{x.sala ?? "—"}{#if x.local}<small class="rel-local">{x.local}</small>{/if}</td>
                   <td>{hora(x.entrouEspera)}</td>
                   <td>{hora(x.inicio)}</td>
                   <td>{hora(x.fim)}</td>

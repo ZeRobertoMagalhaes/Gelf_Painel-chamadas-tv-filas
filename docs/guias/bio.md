@@ -17,9 +17,11 @@ O paciente percorre uma **rota de etapas**: Captação/Apometria › Doutores �
 ## Abrir o dia (controle)
 1. Em **Abertura dos trabalhos**, deixe marcadas as salas que funcionam hoje.
 2. Ajuste a **capacidade** de cada sala (ex.: número de macas do reiki).
-3. Se houver lista de pré-inscritos, cole no campo, **um por linha**: `Nome Sobrenome ; dia ; descrição`
+3. Em **sala/local**, informe com antecedência onde cada tratamento acontece hoje (ex.: *Sala 03 (térreo)*): o local vem preenchido
+   para o paciente quando ele é chamado, e dá para mudar depois (campo **Sala/local onde acontece**, em cada sala do controle).
+4. Se houver lista de pré-inscritos, cole no campo, **um por linha**: `Nome Sobrenome ; dia ; descrição`
    (ex.: `Maria Souza ; 10/10 ; dor nas costas`).
-4. Toque em **Abrir o dia**, no menu da esquerda, abaixo de **Registrar chegada**. O indicador no canto esquerdo passa a **Dia aberto**.
+5. Toque em **Abrir o dia**, no menu da esquerda, abaixo de **Registrar chegada**. O indicador no canto esquerdo passa a **Dia aberto**.
 
 ## Cadastrar os pacientes (recepção)
 - Digite **nome** e **sobrenome** e toque em **Cadastrar**; ou toque no nome em **Pré-inscritos**.
@@ -33,7 +35,7 @@ O paciente percorre uma **rota de etapas**: Captação/Apometria › Doutores �
 
 ## Informar a sala de destino (controle)
 Em todo cartão de paciente há o campo **"Sala para onde o paciente deve ir"**: digite a sala (ex.: *Sala 02 (térreo)*) e aperte **Enter**.
-A sala informada aparece na **recepção** ("➜ Ir para: …") e na **TV**, no lugar do nome da sala chamada. Apagar o texto desfaz.
+Ele já vem preenchido com o **local da sala chamada**; digite outro só em casos especiais. A sala informada aparece na **recepção** ("➜ Ir para: …") e na **TV**, no lugar do nome da sala chamada. Apagar o texto desfaz.
 
 ## Chamar para uma sala (controle)
 Cada etapa é uma coluna, com suas salas e a lista **Aguardando**. Cada etapa tem **duas salas** (ex.: Captação 1 e 2), então atendem **2 pacientes ao mesmo tempo**. As salas mostram as vagas (ex.: `1/1 vagas`).
