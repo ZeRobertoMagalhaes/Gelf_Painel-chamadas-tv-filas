@@ -30,7 +30,7 @@ test('rotas: página inicial com links das telas e QR code do IP atual', async (
         assert.equal(r.headers.get('cache-control'), 'no-store');
         const html = await r.text();
         assert.ok(html.includes('http://192.168.0.50:3000/') && html.includes('<svg '));
-        for (const href of ['/bio/recepcao', '/controle', '/bio/painel', '/recepcao', '/atendimento', '/painel']) {
+        for (const href of ['/bio/recepcao', '/controle', '/bio/painel', '/bio/relatorio', '/recepcao', '/atendimento', '/painel']) {
             assert.ok(html.includes(`href="${href}"`), href);
         }
     });
@@ -38,7 +38,7 @@ test('rotas: página inicial com links das telas e QR code do IP atual', async (
 
 test('rotas: todas as telas existem, e /controle e /bio levam ao controle do Bio', async () => {
     await comServidor(async (base) => {
-        for (const rota of ['/bio/recepcao', '/bio/controle', '/bio/painel', '/recepcao', '/atendimento', '/painel']) {
+        for (const rota of ['/bio/recepcao', '/bio/controle', '/bio/painel', '/bio/relatorio', '/recepcao', '/atendimento', '/painel']) {
             const r = await get(`${base}${rota}`);
             assert.equal(r.status, 200, rota);
             assert.match(await r.text(), /<div id="app">/, rota);

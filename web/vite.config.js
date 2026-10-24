@@ -17,6 +17,7 @@ export default defineConfig({
         "bio-controle": "bio-controle.html",
         "bio-painel": "bio-painel.html",
         "bio-recepcao": "bio-recepcao.html",
+        "bio-relatorio": "bio-relatorio.html",
       },
     },
   },

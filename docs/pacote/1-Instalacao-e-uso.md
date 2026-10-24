@@ -164,6 +164,7 @@ Todas abrem no navegador. No computador onde o sistema está ligado, use `localh
 | **Recepção do Bio** | `http://localhost:3000/bio/recepcao` | Quem cadastra os pacientes |
 | **Controle do Bio** | `http://localhost:3000/bio/controle` (ou só `/controle`) | Quem faz o controle e a orquestração |
 | **Painel da TV do Bio** | `http://localhost:3000/bio/painel` | A TV: abra em tela cheia (tecla **F11**) |
+| **Relatório do atendimento** | `http://localhost:3000/bio/relatorio` (ou pelo botão no Controle) | Registro completo do dia, para **salvar em PDF** antes de fechar o dia |
 
 Na **TV**, toque uma vez em **Ativar som** (o navegador só libera o áudio depois de um clique).
 
@@ -190,7 +191,7 @@ Para testar o processo inteiro, siga o **Roteiro de validação** (documento 2 d
 
 ## C4. Apagar os dados de teste e recomeçar
 
-No Controle, toque em **Fechar o dia** e confirme em **Confirmar: apagar tudo**. Isso apaga pacientes e pré-inscritos e guarda
+No Controle, **salve antes o relatório completo em PDF** (botão **Relatório do atendimento (PDF)**, depois **Salvar em PDF / Imprimir** e **Salvar como PDF**). Em seguida, toque em **Fechar o dia** e confirme em **Confirmar: apagar tudo**. Isso apaga pacientes e pré-inscritos e guarda
 apenas o relatório do dia, **sem nomes**.
 
 ## C5. Receber uma versão nova do pacote

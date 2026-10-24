@@ -84,12 +84,14 @@ Fluxo oficial do processo: `docs/fluxos/fluxo-operacional-bio.md` (referência p
 | Recepção | `/bio/recepcao` | A recepção: cadastra os pacientes (nome e sobrenome ou pré-inscritos) e orienta onde aguardar |
 | Controle | `/bio/controle` | Responsável pelo controle: abre o dia (salas e capacidades, pré-inscritos), chama cada paciente para uma sala, inicia, conclui, cuida do prontuário, altera a rota, vê o relatório e fecha o dia |
 | Painel TV | `/bio/painel` | As duas TVs (térreo e 1º andar) mostram o mesmo: etapa, nome, sala, status e onde aguardar a próxima etapa |
+| Relatório | `/bio/relatorio` | Registro completo do dia (pacientes, horários, resumo geral) para salvar em PDF |
 
-- **Rota oficial**: Captação/Apometria › Doutores › Acupuntura (opcional) › Reiki/Cromoterapia. Etapas, salas e capacidades ficam em `config/bio.json`
-  (todas as etapas com 2 salas de 1 vaga, ou seja, 2 atendimentos simultâneos: Captação 1 e 2, Doutores 1 e 2, Acupuntura 1 e 2, Reiki 1 e 2;
-  a acupuntura é `opcional`, fora da rota padrão).
+- **Rota oficial**: Captação/Apometria › Doutores › Reiki/Cromoterapia. Etapas, salas e capacidades ficam em `config/bio.json`
+  (todas as etapas com 2 salas de 1 vaga, ou seja, 2 atendimentos simultâneos: Captação 1 e 2, Doutores 1 e 2, Reiki 1 e 2).
+  A acupuntura faz parte do atendimento dos Doutores (não é etapa nem sala separada; o mecanismo de etapa `opcional` continua disponível por configuração).
   Mudar o fluxo é editar esse arquivo e reiniciar. No dia, as vagas (macas) e salas em uso se ajustam na própria tela.
-- **Acupuntura**: só quando os doutores pedem ("Incluir Acupuntura" no cartão do paciente); entra sempre antes do Reiki/Cromoterapia.
+- **Relatório do atendimento (PDF)**: `/bio/relatorio` (botão no controle) reúne dados dos pacientes, sala, horários de início e fim de cada tratamento e resumo geral; o PDF sai da janela de impressão do navegador ("Salvar como PDF"). Salve antes de fechar o dia: os nomes são apagados no fechamento.
+- **Prioritários**: tratamentos em sala do térreo e espera entre atendimentos na Sala de Evangelhoterapia (térreo); aviso na recepção, no controle e na TV (`prioridade` em `config/bio.json`).
 - **Prontuário**: "Prontuário recebido" nos doutores (`emiteProntuario`), acompanha o paciente e é guardado em "Concluir e guardar prontuário" na última etapa; o controle avisa os que ficaram sem guardar.
 - **Espera por local**: cada etapa tem o seu local de espera (Sala de Evangelhoterapia no térreo, sala de espera do 1º andar), mostrado nas colunas e na TV.
 - **Prioridade**: ★ na recepção ou no controle; o paciente passa na frente em todas as esperas da jornada (ordem em que foram marcados), como nas filas por tratamento.

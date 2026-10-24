@@ -48,25 +48,6 @@
       "emiteProntuario": true
     },
     {
-      "id": "quinta",
-      "nome": "Acupuntura",
-      "cor": "#db2777",
-      "esperaEm": "andar1",
-      "salas": [
-        {
-          "id": "quinta",
-          "nome": "Acupuntura 1",
-          "capacidade": 1
-        },
-        {
-          "id": "quinta2",
-          "nome": "Acupuntura 2",
-          "capacidade": 1
-        }
-      ],
-      "opcional": true
-    },
-    {
       "id": "reiki",
       "nome": "Reiki/Cromoterapia",
       "cor": "#059669",
@@ -99,5 +80,9 @@
     "destaqueMs": 15000,
     "exibirSobrenomeCompleto": true,
     "ultimasChamadas": 5
+  },
+  "prioridade": {
+    "localEspera": "terreo",
+    "aviso": "Prioritário: os tratamentos devem ser feitos em uma sala do térreo e, entre os atendimentos, o paciente aguarda na Sala de Evangelhoterapia (térreo) até ser chamado."
   }
 }

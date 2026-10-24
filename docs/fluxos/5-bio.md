@@ -17,17 +17,14 @@ Resumo para consulta rápida no [guia da Cura Mediúnica](../guias/bio.md).
 ```mermaid
 flowchart TD
     A[Chegada] --> B[Captação/Apometria<br/>2 atendimentos simultâneos<br/>espera: Sala de Evangelhoterapia, térreo]
-    B --> C[Doutores<br/>2 atendimentos simultâneos<br/>espera: 1º andar]
-    C -.->|se os doutores pedirem| E[Acupuntura<br/>2 atendimentos simultâneos<br/>espera: 1º andar]
+    B --> C["Doutores (inclui a acupuntura)<br/>2 atendimentos simultâneos<br/>espera: 1º andar"]
     C --> D[Reiki/Cromoterapia<br/>2 atendimentos simultâneos<br/>espera: 1º andar]
-    E -.-> D
     D --> F[Fluxo encerrado]
 ```
 
-Etapas, salas, capacidades e locais de espera ficam em `config/bio.json`. A **Acupuntura** é uma etapa
-**opcional**: não está na rota padrão e só entra para quem os doutores pedirem (veja o item 5). Quando entra,
-fica sempre **antes** do Reiki/Cromoterapia. Para mudar o fluxo, edite o arquivo e reinicie o servidor; no dia a
-dia, vagas e salas se ajustam na própria tela.
+Etapas, salas, capacidades e locais de espera ficam em `config/bio.json`. A **Acupuntura** faz parte do atendimento dos
+**Doutores**: não é uma etapa nem uma sala separada. Para mudar o fluxo, edite o arquivo e reinicie o servidor; no dia a dia,
+vagas e salas se ajustam na própria tela.
 
 ## Passo a passo
 
@@ -72,6 +69,11 @@ assim** (é outra pessoa) ou **Cancelar** (limpa os campos).
 fila**, o cartão fica destacado e aparece o selo **prioridade**. Com mais de um prioritário, vale a ordem em que foram
 marcados. A prioridade **acompanha o paciente por toda a jornada**: ele passa na frente em cada espera seguinte. Toque de
 novo na ★ para retirar. O mesmo botão existe no cartão do paciente no controle.
+
+**Aviso do prioritário:** ao marcar, a tela mostra (e o cartão mantém) o lembrete: *"Prioritário: os tratamentos devem ser feitos
+em uma sala do térreo e, entre os atendimentos, o paciente aguarda na Sala de Evangelhoterapia (térreo) até ser chamado."* O mesmo
+lembrete aparece no cartão do controle e, quando o prioritário conclui uma etapa, a **TV** diz *"aguarde: Sala de Evangelhoterapia
+(térreo)"* (os demais pacientes aguardam na sala de espera do 1º andar).
 
 ![Recepção: paciente prioritário no início da fila](img/bio-recepcao-4-prioridade.webp)
 
@@ -121,22 +123,19 @@ rota** (o cartão mostra "depois: Doutores › Reiki/Cromoterapia").
 
 ![Etapa concluída: a vaga volta na hora](img/bio-6-etapa-concluida.webp)
 
-### 5. Doutores: prontuário e Acupuntura (opcional)
-No cartão do paciente na sala dos **Doutores** há dois botões específicos:
+### 5. Doutores: prontuário (e acupuntura, quando indicada)
+A **acupuntura**, quando os doutores a indicam, é feita **dentro do atendimento dos Doutores**: não há chamada, sala nem espera
+separadas. No cartão do paciente na sala dos **Doutores** há um botão específico:
 
 | Botão | O que faz |
 |---|---|
 | **Prontuário recebido** | marca que o controle recebeu o prontuário do tratamento pedido; o cartão passa a mostrar "📋 Prontuário com o paciente" |
-| **Incluir Acupuntura** | acrescenta a Acupuntura à rota do paciente, **antes** do Reiki/Cromoterapia; vira **Retirar Acupuntura** se os doutores mudarem de ideia |
 
-Sem a Acupuntura, o paciente segue direto dos Doutores ao Reiki/Cromoterapia. O **Ver histórico** de cada cartão
-registra cada movimento, inclusive "Prontuário recebido" e "Rota alterada".
+O **Ver histórico** de cada cartão registra cada movimento, inclusive "Prontuário recebido".
 
 ![Paciente com os doutores: prontuário e histórico](img/bio-7-doutores-historico.webp)
 
 Nas etapas seguintes, o cartão da sala lembra que **o paciente deve entregar o prontuário** na sala.
-
-![Chamado para a Acupuntura, com o lembrete do prontuário](img/bio-12-acupuntura-prontuario.webp)
 
 ### 6. Reiki/Cromoterapia: guardar o prontuário e encerrar
 Na última etapa, o botão vira **Concluir e guardar prontuário**: conclui a etapa e registra que o controle
@@ -169,15 +168,27 @@ No cartão de quem aguarda:
 Em cada sala: **−** / **+** tiram ou acrescentam uma vaga (macas); **⏻ / ▶** tira a sala de uso ou a recoloca
 ("fora de uso"). Uma sala ocupada não pode ser desativada.
 
-### 10. Relatório do dia
-Em **Relatório do dia → Mostrar**: chegadas, concluídos, não compareceram, em andamento, tempo médio total e,
-por etapa, **atendidos, espera média, duração média e quem aguarda agora**. Não traz nomes.
-(Quem é removido do fluxo não conta como chegada.)
+### 10. Relatório do atendimento (PDF)
+O botão **Relatório do atendimento (PDF)**, no menu da esquerda (abaixo de **Fechar o dia**), abre o relatório completo em
+`/bio/relatorio`. Ele traz:
+
+- **Resumo geral:** pacientes atendidos, fluxos concluídos, em andamento, não compareceram, prioritários, tempo médio total e, por
+  etapa, atendidos, espera média, duração média e quem aguarda agora;
+- **Registro por paciente:** nome, se é prioritário, chegada, situação e tempo total, e cada passagem por etapa com **sala,
+  entrada na espera, início, fim, duração e situação**; prontuário (guardado ou não).
+
+![Relatório do atendimento, pronto para salvar em PDF](img/bio-15-relatorio-pdf.webp)
+
+**Para salvar em PDF:** toque em **Salvar em PDF / Imprimir** e, na janela que abrir, escolha **Salvar como PDF** como destino. Faça
+isso **antes de fechar o dia**: o relatório tem nomes, que são apagados no fechamento.
+
+Há também o resumo rápido sem nomes, em **Relatório do dia → Mostrar**, na parte de baixo do controle. Quem é removido do fluxo
+não conta como chegada.
 
 ![Relatório do dia e finalizados](img/bio-9-relatorio.webp)
 
 ### 11. Fechar o dia
-Toque em **Fechar o dia** e confirme em **Confirmar: apagar tudo**. Isso apaga pacientes e pré-inscritos; só o
+**Antes, salve o relatório completo em PDF** (item 10). Toque em **Fechar o dia** e confirme em **Confirmar: apagar tudo**. Isso apaga pacientes e pré-inscritos; só o
 relatório, **sem nomes**, fica salvo em `dados/relatorios/bio-AAAA-MM-DD.json`. O painel da TV volta a
 **Atendimento encerrado**.
 
@@ -201,7 +212,7 @@ stateDiagram-v2
     EmAtendimento --> Aguardando: Concluir etapa (próxima etapa da rota)
     EmAtendimento --> Concluido: Concluir etapa (última etapa)
     Aguardando --> Aguardando: Alterar rota / Pular etapa / ★ prioridade
-    EmAtendimento --> EmAtendimento: Incluir ou retirar Acupuntura / Prontuário recebido
+    EmAtendimento --> EmAtendimento: Prontuário recebido
     Aguardando --> Removido: Remover do fluxo
     Concluido --> [*]
 ```
@@ -232,4 +243,4 @@ stateDiagram-v2
 - Orientações pós-atendimento do roteiro e tela de sala para celular (a sala avisaria pelo celular que está pronta):
   fases seguintes.
 - Som e ajuste à TV Samsung 32" ainda precisam ser conferidos no equipamento real.
-- Combinar com a equipe como o paciente é avisado de que a Acupuntura foi incluída (hoje, quem opera o controle informa).
+- Salas do térreo para os prioritários: hoje o sistema só **avisa** (recepção, controle e TV); definir quais salas de Doutores e Reiki ficam no térreo permitiria indicá-las na chamada.

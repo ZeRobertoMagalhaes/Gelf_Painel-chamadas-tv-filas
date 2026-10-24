@@ -4,9 +4,8 @@ Recepção: `/bio/recepcao` (ex.: http://painel-gelf.local:3000/bio/recepcao)
 Controle: `/bio/controle`
 TVs: `/bio/painel` (as duas TVs, térreo e 1º andar, mostram a mesma tela)
 
-O paciente percorre uma **rota de etapas**: Captação/Apometria › Doutores › Reiki/Cromoterapia. A **Acupuntura**
-não faz parte da rota padrão: os doutores decidem, paciente a paciente, quem passa por ela, e ela
-sempre vem **antes** do Reiki/Cromoterapia. O processo oficial completo está em
+O paciente percorre uma **rota de etapas**: Captação/Apometria › Doutores › Reiki/Cromoterapia. A **acupuntura**
+é feita dentro do atendimento dos Doutores (não é uma etapa separada). O processo oficial completo está em
 [docs/fluxos/fluxo-operacional-bio.md](../fluxos/fluxo-operacional-bio.md).
 
 ## Quem faz o quê
@@ -28,6 +27,8 @@ sempre vem **antes** do Reiki/Cromoterapia. O processo oficial completo está em
 - Se aparecer **"Já existe um paciente com este nome no fluxo"**: **Cadastrar mesmo assim** (é outra pessoa) ou **Cancelar**.
 - ★ marca como **prioridade** (idosos, gestantes, pessoas com deficiência): o paciente passa para o início da fila e fica com o
   selo *prioridade*. Toque de novo para retirar.
+  **Prioritários:** os tratamentos devem ser feitos em uma sala do térreo e, entre os atendimentos, o paciente aguarda na
+  **Sala de Evangelhoterapia (térreo)** até ser chamado. O sistema mostra esse aviso na recepção, no controle e na TV.
 - ✎ corrige o nome; ✕ remove (pede confirmação).
 
 ## Chamar para uma sala (controle)
@@ -53,12 +54,11 @@ Quem foi marcado **Não compareceu** aparece em **Finalizados hoje**. Se chegar 
 
 Ao concluir a etapa, a **vaga da sala volta na hora**: dá para chamar o próximo em seguida.
 
-## Doutores: prontuário e Acupuntura
+## Doutores: prontuário (e acupuntura)
+A **acupuntura** faz parte do atendimento dos **Doutores**: não é uma etapa nem uma sala separada.
 No cartão do paciente na sala dos **Doutores**:
 - **Prontuário recebido**: marca que o controle recebeu o prontuário do tratamento pedido. O cartão passa a
-  mostrar "📋 Prontuário com o paciente" e, nas salas seguintes, lembra que o paciente deve entregá-lo.
-- **Incluir Acupuntura** (só se os doutores pedirem): acrescenta a Acupuntura à rota, antes do
-  Reiki/Cromoterapia. **Retirar Acupuntura** desfaz. Sem isso, o paciente segue direto ao Reiki/Cromoterapia.
+  mostrar "📋 Prontuário com o paciente" e, na sala seguinte, lembra que o paciente deve entregá-lo.
 
 ## Reiki/Cromoterapia: guardar o prontuário e encerrar
 Na última etapa, o botão é **Concluir e guardar prontuário**: conclui a etapa, registra que o prontuário foi
@@ -82,9 +82,13 @@ Em cada sala:
 - **⏻ / ▶**: tira a sala de uso ou a recoloca. Sala fora de uso mostra "fora de uso".
 
 ## Relatório e fechar o dia
-- **Relatório do dia** (embaixo, **Mostrar / Ocultar**): chegadas, concluídos, não compareceram, em andamento,
-  tempo médio total e, por etapa, atendidos, espera média, duração média e quem aguarda agora. Não traz nomes.
-- Ao final, toque em **Fechar o dia** e confirme em **Confirmar: apagar tudo**. Isso apaga pacientes e
+- **Relatório do atendimento (PDF):** botão no menu da esquerda, abaixo de **Fechar o dia**. Abre o relatório completo, com
+  **dados dos pacientes, sala, horários de início e fim de cada tratamento e um resumo geral** (totais e tempos médios). Toque em
+  **Salvar em PDF / Imprimir** e, na janela, escolha **Salvar como PDF**. **Faça isso antes de fechar o dia**: os nomes são apagados
+  no fechamento.
+- **Relatório do dia** (embaixo, **Mostrar / Ocultar**): resumo rápido, sem nomes, com chegadas, concluídos, não compareceram,
+  em andamento, tempo médio total e, por etapa, atendidos, espera média, duração média e quem aguarda agora.
+- Ao final, **salve o PDF** e toque em **Fechar o dia** e confirme em **Confirmar: apagar tudo**. Isso apaga pacientes e
   pré-inscritos; só o relatório fica salvo (`dados/relatorios/bio-AAAA-MM-DD.json`).
 - O relatório do último dia fechado aparece na tela de abertura do dia seguinte.
 

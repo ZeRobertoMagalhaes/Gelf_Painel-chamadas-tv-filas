@@ -39,7 +39,13 @@ function normalizarBio(bruto) {
         ids.add(s.id);
     }
     const rotaPadrao = (Array.isArray(bruto.rotaPadrao) ? bruto.rotaPadrao : etapas.map((e) => e.id)).filter((id, i, a) => etapas.some((e) => e.id === id) && a.indexOf(id) === i);
-    return { locais, etapas, rotaPadrao, som: base.som, painel: base.painel };
+    // Prioritários: onde aguardam entre os atendimentos e o aviso mostrado nas telas.
+    const pr = bruto.prioridade && typeof bruto.prioridade === 'object' ? bruto.prioridade : {};
+    const prioridade = {
+        localEspera: locais.some((l) => l.id === pr.localEspera) ? pr.localEspera : null,
+        aviso: texto(pr.aviso, 300),
+    };
+    return { locais, etapas, rotaPadrao, prioridade, som: base.som, painel: base.painel };
 }
 
 function carregarConfigBio(arquivo = path.join(__dirname, '..', '..', 'config', 'bio.json')) {

@@ -52,7 +52,12 @@
     return r;
   }
 
-  const priorizar = (p) => acao("priorizar", { id: p.id, prioridade: !p.prioridade });
+  const avisoPrioridade = $derived(config?.prioridade?.aviso ?? "");
+  async function priorizar(p) {
+    const r = await acao("priorizar", { id: p.id, prioridade: !p.prioridade });
+    // Ao marcar, lembra a equipe de onde atender e onde esperar esse paciente.
+    if (r.ok && !p.prioridade && avisoPrioridade) mostrar(`${p.nome} ${p.sobrenome}: ${avisoPrioridade}`);
+  }
   const orientacao = (p) => `${p.nome} ${p.sobrenome} cadastrado(a). Orientar: aguardar na ${localInicial}.`;
 
   async function cadastrar(confirmarDuplicado = false) {
@@ -181,7 +186,8 @@
                 <span class="cartao-pos">{i + 1}</span>
                 <div class="cartao-info">
                   <div class="cartao-nome">{p.nomeExibicao}</div>
-                  <div class="cartao-meta">chegou {horaCurta(p.chegada)}{p.descricao ? ` • ${p.descricao}` : ""}{#if p.prioridade} • <strong>prioridade</strong>{/if}</div>
+                  <div class="cartao-meta">chegou {horaCurta(p.chegada)}{p.descricao ? ` • ${p.descricao}` : ""}{#if p.prioridade}{" "}• <strong>prioridade</strong>{/if}</div>
+                  {#if p.prioridade && avisoPrioridade}<div class="cartao-meta aviso-prioridade">★ {avisoPrioridade}</div>{/if}
                 </div>
               </div>
               <div class="cartao-acoes">

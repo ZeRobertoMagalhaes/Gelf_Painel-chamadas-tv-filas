@@ -4,7 +4,7 @@ const { renderizarInicio, enderecosParaExibir } = require('../server/inicio');
 
 test('página inicial: links de todas as telas, nome na rede e um QR code por IP', () => {
     const html = renderizarInicio({ porta: 3000, nomeMdns: 'painel-gelf.local', ips: ['192.168.0.10', '10.0.0.5'] });
-    for (const href of ['/bio/recepcao', '/controle', '/bio/painel', '/recepcao', '/atendimento', '/painel']) {
+    for (const href of ['/bio/recepcao', '/controle', '/bio/painel', '/bio/relatorio', '/recepcao', '/atendimento', '/painel']) {
         assert.ok(html.includes(`href="${href}"`), href);
     }
     assert.ok(html.includes('http://painel-gelf.local:3000/'));

@@ -38,9 +38,9 @@ test('configuração: rota padrão, salas e capacidades válidas', () => {
 });
 
 test('abrir dia usa a configuração, aceita ajustes (macas) e exige uma sala ativa', () => {
-    const e = diaAberto([{ id: 'reiki', capacidade: 3 }, { id: 'quinta', ativa: false }]);
+    const e = diaAberto([{ id: 'reiki', capacidade: 3 }, { id: 'doutores2', ativa: false }]);
     assert.equal(e.salas.find((s) => s.id === 'reiki').capacidade, 3);
-    assert.equal(e.salas.find((s) => s.id === 'quinta').ativa, false);
+    assert.equal(e.salas.find((s) => s.id === 'doutores2').ativa, false);
     assert.equal(codigo(() => R.abrirDia(e, {}, ctx())), 'ja_aberto');
     const f = R.novoDiaBio('2026-10-10');
     const todas = config.etapas.flatMap((x) => x.salas).map((s) => ({ id: s.id, ativa: false }));
@@ -111,22 +111,34 @@ test('doutores recebem 2 por vez (duas salas) e escolhem a ordem; sala só chama
     assert.equal(c.rota[c.posicao], 'reiki');
 });
 
-test('acupuntura fora da rota padrão: os doutores a incluem durante o atendimento', () => {
-    const e = diaAberto();
-    const a = cheg(e, 'Ana', 'Lima', { rota: ['doutores'] });
-    R.chamarProximo(e, { salaId: 'doutores' }, ctx());
-    R.iniciar(e, { id: a.id }, ctx());
-    R.definirRota(e, { id: a.id, rota: ['reiki', 'quinta'] }, ctx());
-    assert.deepEqual(a.rota, ['doutores', 'quinta', 'reiki']); // a ordem do fluxo vale, mesmo pedida ao contrário
-    R.concluir(e, { id: a.id }, ctx());
-    assert.equal(a.rota[a.posicao], 'quinta');
+test('etapa opcional (opção de configuração): incluída durante o atendimento, sempre na ordem do fluxo', () => {
+    const cfg = normalizarBio({
+        etapas: [
+            { id: 'a', nome: 'A', cor: '#000000', salas: [{ id: 'sa', nome: 'SA', capacidade: 1 }] },
+            { id: 'o', nome: 'O', cor: '#111111', opcional: true, salas: [{ id: 'so', nome: 'SO', capacidade: 1 }] },
+            { id: 'c', nome: 'C', cor: '#222222', salas: [{ id: 'sc', nome: 'SC', capacidade: 1 }] },
+        ],
+        rotaPadrao: ['a', 'c'],
+    });
+    const c = (min = 1) => ({ agora: new Date((t0 = new Date(t0.getTime() + min * 60000))), config: cfg });
+    const e = R.novoDiaBio('2026-10-10');
+    R.abrirDia(e, {}, c());
+    const p = R.registrarChegada(e, { nome: 'Ana', sobrenome: 'Lima' }, c()).paciente;
+    assert.deepEqual(p.rota, ['a', 'c']); // a opcional fica fora da rota padrão
+    R.chamarProximo(e, { salaId: 'sa' }, c());
+    R.iniciar(e, { id: p.id }, c());
+    R.definirRota(e, { id: p.id, rota: ['c', 'o'] }, c());
+    assert.deepEqual(p.rota, ['a', 'o', 'c']); // a ordem do fluxo vale, mesmo pedida ao contrário
+    R.concluir(e, { id: p.id }, c());
+    assert.equal(p.rota[p.posicao], 'o');
 });
 
-test('config oficial: Captação/Apometria › Doutores › Acupuntura (opcional) › Reiki/Cromoterapia', () => {
-    assert.deepEqual(config.etapas.map((e) => e.id), ['captacao', 'doutores', 'quinta', 'reiki']);
-    assert.equal(config.etapas.find((e) => e.id === 'quinta').opcional, true);
+test('config oficial: Captação/Apometria › Doutores (inclui a acupuntura) › Reiki/Cromoterapia', () => {
+    assert.deepEqual(config.etapas.map((e) => e.id), ['captacao', 'doutores', 'reiki']);
+    assert.equal(config.etapas.some((e) => e.opcional), false); // a acupuntura é feita no atendimento dos doutores
     assert.equal(config.etapas.find((e) => e.id === 'doutores').emiteProntuario, true);
-    // sem acupuntura, o paciente vai direto dos doutores ao reiki
+    assert.equal(config.prioridade.localEspera, 'terreo');
+    assert.match(config.prioridade.aviso, /térreo/);
     const e = diaAberto();
     const a = cheg(e, 'Ana', 'Lima');
     assert.deepEqual(a.rota, ['captacao', 'doutores', 'reiki']);
@@ -134,16 +146,13 @@ test('config oficial: Captação/Apometria › Doutores › Acupuntura (opcional
 
 test('prontuário: recebido nos doutores, acompanha o paciente e é guardado ao fim da rota', () => {
     const e = diaAberto();
-    const a = cheg(e, 'Ana', 'Lima', { rota: ['doutores', 'quinta', 'reiki'] });
+    const a = cheg(e, 'Ana', 'Lima', { rota: ['doutores', 'reiki'] });
     assert.equal(a.prontuario, null);
     assert.equal(codigo(() => R.registrarProntuario(e, { id: a.id, situacao: 'guardado' }, ctx())), 'estado_invalido');
     R.chamarProximo(e, { salaId: 'doutores' }, ctx());
     R.iniciar(e, { id: a.id }, ctx());
     R.registrarProntuario(e, { id: a.id, situacao: 'recebido' }, ctx());
     assert.equal(a.prontuario, 'recebido');
-    R.concluir(e, { id: a.id }, ctx());
-    R.chamarProximo(e, { salaId: 'quinta' }, ctx());
-    R.iniciar(e, { id: a.id }, ctx());
     R.concluir(e, { id: a.id, guardarProntuario: true }, ctx()); // não é a última etapa: não guarda ainda
     assert.equal(a.prontuario, 'recebido');
     R.chamarProximo(e, { salaId: 'reiki' }, ctx());
@@ -191,13 +200,13 @@ test('prioridade: estado gravado antes do campo existir mantém a ordem de chega
     assert.deepEqual(R.filaEspera(e, 'captacao').map((p) => p.id), [b.id, a.id, c.id]);
 });
 
-test('rota fora de ordem é reordenada pelo servidor (Acupuntura sempre antes do Reiki)', () => {
+test('rota fora de ordem é reordenada pelo servidor (a ordem do fluxo vale)', () => {
     const e = diaAberto();
-    const a = cheg(e, 'Ana', 'Lima', { rota: ['reiki', 'quinta', 'doutores', 'reiki'] });
-    assert.deepEqual(a.rota, ['doutores', 'quinta', 'reiki']);
-    R.chamarProximo(e, { salaId: 'doutores' }, ctx());
-    R.definirRota(e, { id: a.id, rota: ['reiki', 'quinta'] }, ctx());
-    assert.deepEqual(a.rota, ['doutores', 'quinta', 'reiki']);
+    const a = cheg(e, 'Ana', 'Lima', { rota: ['reiki', 'doutores', 'captacao', 'reiki'] });
+    assert.deepEqual(a.rota, ['captacao', 'doutores', 'reiki']);
+    R.chamarProximo(e, { salaId: 'captacao1' }, ctx());
+    R.definirRota(e, { id: a.id, rota: ['reiki', 'doutores'] }, ctx());
+    assert.deepEqual(a.rota, ['captacao', 'doutores', 'reiki']);
 });
 
 test('prontuário: pode ser guardado depois de concluído; estado antigo não gera "desfeito" espúrio', () => {
@@ -252,15 +261,48 @@ test('integração /bio: prioridade e prontuário pelo socket (o que as telas re
     s.close(); io.close(); http.close();
 });
 
+test('registro do dia: passagens por etapa com sala, início, fim e duração, e resumo geral', () => {
+    const e = diaAberto();
+    const a = cheg(e, 'Ana', 'Lima', { rota: ['captacao', 'doutores'] });
+    const b = cheg(e, 'Beto', 'Dias', { rota: ['captacao'] });
+    R.priorizar(e, { id: b.id }, ctx());
+    R.chamarProximo(e, { salaId: 'captacao1' }, ctx(5)); // b (prioritário), espera 5 min
+    R.iniciar(e, { id: b.id }, ctx(2));
+    R.concluir(e, { id: b.id }, ctx(30)); // 30 min de atendimento
+    R.chamarProximo(e, { salaId: 'captacao1' }, ctx(1)); // a
+    R.naoCompareceu(e, { id: a.id }, ctx(1));
+    R.devolverEspera(e, { id: a.id }, ctx(1));
+    R.chamarProximo(e, { salaId: 'captacao2' }, ctx(1));
+    R.iniciar(e, { id: a.id }, ctx(1));
+    const reg = R.registroDoDia(e, config);
+    assert.equal(reg.data, '2026-10-10');
+    assert.deepEqual(reg.pacientes.map((p) => p.nome), ['Ana', 'Beto']); // ordem de chegada
+    const pb = reg.pacientes[1];
+    assert.equal(pb.prioridade, true);
+    assert.equal(pb.situacao, 'concluido');
+    assert.equal(pb.passos.length, 1);
+    assert.deepEqual([pb.passos[0].nome, pb.passos[0].sala, pb.passos[0].resultado], ['Captação/Apometria', 'Captação 1', 'concluida']);
+    assert.ok(pb.passos[0].esperaMin >= 5);
+    assert.equal(pb.passos[0].duracaoMin, 30);
+    assert.ok(pb.tempoTotalMin > 30);
+    const pa = reg.pacientes[0];
+    assert.deepEqual(pa.passos.map((x) => x.resultado), ['nao_compareceu', 'em_atendimento']); // duas passagens pela captação
+    assert.equal(pa.passos[1].sala, 'Captação 2');
+    assert.equal(reg.resumo.chegadas, 2);
+    assert.equal(reg.resumo.prioritarios, 1);
+    assert.equal(reg.resumo.concluidos, 1);
+    assert.equal(reg.resumo.naoCompareceram, 0); // a voltou à espera e está em atendimento
+});
+
 test('rota por paciente: pular etapa, alterar o que falta e terminar a rota', () => {
     const e = diaAberto();
-    const a = cheg(e, 'Ana', 'Lima', { rota: ['doutores', 'reiki'] });
-    assert.equal(a.rota[0], 'doutores');
+    const a = cheg(e, 'Ana', 'Lima', { rota: ['captacao', 'doutores', 'reiki'] });
+    assert.equal(a.rota[0], 'captacao');
     R.pularEtapa(e, { id: a.id }, ctx());
+    assert.equal(a.rota[a.posicao], 'doutores');
+    R.definirRota(e, { id: a.id, rota: ['reiki'] }, ctx()); // dispensa os doutores
     assert.equal(a.rota[a.posicao], 'reiki');
-    R.definirRota(e, { id: a.id, rota: ['quinta'] }, ctx());
-    assert.equal(a.rota[a.posicao], 'quinta');
-    R.chamarProximo(e, { salaId: 'quinta' }, ctx());
+    R.chamarProximo(e, { salaId: 'reiki' }, ctx());
     R.iniciar(e, { id: a.id }, ctx());
     R.concluir(e, { id: a.id }, ctx());
     assert.equal(a.situacao, 'concluido');

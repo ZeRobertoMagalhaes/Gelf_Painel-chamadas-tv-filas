@@ -10,11 +10,8 @@ flowchart TD
     A[Abertura do sistema<br/>responsável pelo início] --> B[Recepção cadastra todos<br/>/bio/recepcao]
     B -->|aguarda na Sala de Evangelhoterapia, térreo| C[Controle confere as filas<br/>e chama pelo painel]
     C --> D[Captação/Apometria<br/>controle conclui a etapa]
-    D -->|aguarda na espera do 1º andar| E[Doutores<br/>controle conclui e recebe o prontuário]
-    E --> F{Doutores pediram<br/>Acupuntura?}
-    F -->|sim| G[Acupuntura<br/>paciente entrega o prontuário]
-    F -->|não| H
-    G -->|aguarda no 1º andar| H[Reiki/Cromoterapia<br/>paciente entrega o prontuário]
+    D -->|aguarda na espera do 1º andar| E["Doutores (inclui a acupuntura, quando indicada)<br/>controle conclui e recebe o prontuário"]
+    E -->|aguarda no 1º andar| H[Reiki/Cromoterapia<br/>paciente entrega o prontuário]
     H --> I[Controle conclui, guarda o prontuário<br/>e encerra o fluxo do paciente]
 ```
 
@@ -33,23 +30,23 @@ flowchart TD
 | 10 | Chamada para os Doutores | controle, TV | Igual ao passo 5 |
 | 11 | Concluir os Doutores e receber o prontuário | controle | **Concluir etapa** e **Prontuário recebido** (marca que o prontuário está com o paciente) |
 | 12 | Orientar o retorno à espera do 1º andar | TV | Igual ao passo 9 |
-| 13 | **Acupuntura, só se os doutores pedirem** | controle, TV | **Incluir Acupuntura** no cartão do paciente; o cartão lembra que o paciente entrega o prontuário |
-| 14 | Registrar a conclusão da Acupuntura | controle | **Concluir etapa** |
-| 15 | Voltar à espera; sem Acupuntura, segue direto ao Reiki/Cromoterapia | controle, TV | A rota padrão já vai dos Doutores ao Reiki/Cromoterapia |
+| 13–15 | Acupuntura (quando indicada) | doutores | **Faz parte do atendimento dos Doutores**: não é mais uma etapa nem uma sala separada, então não há chamada, conclusão ou espera próprias. O paciente segue dos Doutores direto ao Reiki/Cromoterapia |
 | 16 | Chamada para Reiki/Cromoterapia, levando o prontuário | controle, TV | Igual ao passo 5, com o lembrete no cartão de que o paciente entrega o prontuário |
 | 17 | Concluir o Reiki/Cromoterapia e guardar o prontuário | controle | **Concluir e guardar prontuário** |
 | 18 | Encerrar o fluxo do paciente no dia | sistema | Ao concluir a última etapa, o paciente fica **Concluído** ("Fluxo concluído" no histórico; "Atendimento concluído" na TV) |
 
 ## Regras que o sistema segue
 
-- **Ordem fixa:** Captação/Apometria › Doutores › Acupuntura (opcional) › Reiki/Cromoterapia. Ao incluir a
-  Acupuntura, ela entra sempre **antes** do Reiki/Cromoterapia, seja qual for a ordem dos toques.
-- **Acupuntura condicional:** a rota padrão não a inclui, então o paciente avança dos Doutores direto ao
-  Reiki/Cromoterapia. Só entra quando os doutores pedem.
+- **Ordem fixa:** Captação/Apometria › Doutores › Reiki/Cromoterapia. A ordem vale mesmo que outro cliente envie a rota fora de ordem.
+- **Acupuntura:** incorporada ao tratamento com os Doutores (decisão de 24/10/2026); não aparece como etapa nem sala.
 - **Prontuário:** recebido ao concluir os Doutores; acompanha o paciente; guardado ao concluir a última etapa.
   O controle mostra "📋 Prontuário com o paciente" nos cartões e avisa, ao fechar o dia, se algum ficou sem guardar.
 - **Prioridade:** idosos, gestantes e pessoas com deficiência podem ser marcados com ★ (recepção ou controle). Passam na
-  frente em **todas** as esperas da jornada, na ordem em que foram marcados.
+  frente em **todas** as esperas da jornada, na ordem em que foram marcados. **Os tratamentos dos prioritários devem ser feitos
+  em uma sala do térreo e, entre os atendimentos, eles aguardam na Sala de Evangelhoterapia (térreo) até serem chamados**: o
+  sistema avisa isso na recepção, no controle e na TV (o texto fica em `config/bio.json`, campo `prioridade`).
+- **Relatório do atendimento:** ao final do dia, o controle gera o registro completo (dados dos pacientes, etapa, sala, horários de
+  início e fim, resumo geral) e o salva em **PDF** antes de fechar o dia (`/bio/relatorio`).
 - **Quem registra:** a recepção só cadastra; chamar, concluir e o prontuário são do responsável pelo
   controle e pela orquestração.
 - **Fim do fluxo:** o paciente só é dado como encerrado quando todos os tratamentos previstos para ele foram concluídos.
@@ -62,7 +59,6 @@ Toda etapa tem **duas salas de 1 vaga**, ou seja, **2 atendimentos simultâneos*
 |---|---|---|---|
 | Captação/Apometria | Captação 1 e Captação 2 | 2 | Sala de Evangelhoterapia (térreo) |
 | Doutores | Doutores 1 e Doutores 2 | 2 | Sala de espera do 1º andar |
-| Acupuntura (opcional) | Acupuntura 1 e Acupuntura 2 | 2 | Sala de espera do 1º andar |
 | Reiki/Cromoterapia | Reiki 1 e Reiki 2 | 2 | Sala de espera do 1º andar |
 
 Tudo isso fica em `config/bio.json`.
@@ -75,3 +71,7 @@ Tudo isso fica em `config/bio.json`.
 - Nomes e locais ajustados: Captação/Apometria, Reiki/Cromoterapia, Sala de Evangelhoterapia (térreo).
 - Retirada a opção **Sala pronta**: a vaga da Captação/Apometria volta assim que a etapa é concluída.
 - Todas as etapas passaram a ter 2 atendimentos simultâneos (duas salas de 1 vaga), como a Captação/Apometria.
+- 24/10/2026: a Acupuntura foi **incorporada ao tratamento com os Doutores** (saiu como etapa e sala separadas).
+- 24/10/2026: criado o **Relatório do atendimento** (`/bio/relatorio`), com dados dos pacientes, horários de início e fim e resumo geral, para salvar em PDF.
+- 24/10/2026: prioritários passam a ter aviso de **atendimento em sala do térreo** e de espera na **Sala de Evangelhoterapia (térreo)** entre os atendimentos.
+- 24/10/2026: botão **Abrir o dia** movido para o menu da esquerda, abaixo de **Registrar chegada**; correção da barra de rolagem no controle e na recepção.

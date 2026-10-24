@@ -885,3 +885,38 @@ body.tv-only .hero { margin-bottom: 2.2vh; }
 .cartao-meta.prontuario { color: #92400e; font-weight: 700; }
 .btn-mini.ligado { background: #dcfce7; border-color: #16a34a; color: #166534; }
 .alerta-prontuario { color: #fde68a; font-weight: 700; }
+
+/* ========================= RELATÓRIO DO ATENDIMENTO (/bio/relatorio) ========================= */
+body.tela-relatorio { display: block; height: auto; min-height: 100%; overflow: auto; background: #fff; }
+.rel { max-width: 1200px; margin: 0 auto; padding: 18px 20px 40px; color: #1e293b; font-size: 14px; }
+.rel-topo { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; border-bottom: 3px solid var(--gelf-yellow-gold); padding-bottom: 10px; margin-bottom: 14px; }
+.rel h1 { font-size: 1.5rem; color: var(--gelf-blue-dark); margin: 0; }
+.rel h2 { font-size: 1.15rem; color: var(--gelf-blue-dark); margin: 18px 0 8px; }
+.rel p { margin: 4px 0; }
+.rel-acoes { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; }
+.rel-botao { background: var(--gelf-yellow-gold); color: #fff; border: 0; border-radius: 10px; padding: 10px 16px; font: inherit; font-weight: 700; cursor: pointer; }
+.rel-botao:disabled { opacity: .5; cursor: default; }
+.rel-link { color: var(--gelf-blue-main); font-weight: 600; }
+.rel-aviso, .rel-dica { background: #fffbeb; border-left: 4px solid var(--gelf-yellow-gold); padding: 10px 14px; border-radius: 4px; }
+.rel-totais { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin: 8px 0 12px; }
+.rel-totais div { border: 1px solid #cbd5e1; border-radius: 8px; padding: 8px 10px; text-align: center; }
+.rel-totais strong { display: block; font-size: 1.5rem; color: var(--gelf-blue-dark); }
+.rel-totais span { font-size: .8rem; color: #475569; }
+.rel-tabela { width: 100%; border-collapse: collapse; font-size: .85rem; }
+.rel-tabela th, .rel-tabela td { border: 1px solid #cbd5e1; padding: 5px 7px; text-align: left; vertical-align: top; }
+.rel-tabela th { background: #eef2ff; color: var(--gelf-blue-dark); }
+.rel-quem small { display: block; color: #475569; font-size: .75rem; }
+.rel-selo { margin-left: 6px; background: var(--gelf-yellow-gold); color: #fff; font-weight: 800; font-size: .65rem; padding: 2px 6px; border-radius: 10px; text-transform: uppercase; white-space: nowrap; }
+.rel-nota, .rel-rodape { color: #475569; font-size: .85rem; margin-top: 10px; }
+@media print {
+    @page { size: A4 landscape; margin: 10mm; }
+    body.tela-relatorio { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .sem-impressao { display: none !important; }
+    .rel { max-width: none; padding: 0; font-size: 11px; }
+    .rel-tabela thead { display: table-header-group; }
+    .rel-paciente { break-inside: avoid; }
+}
+
+/* ========================= PRIORITÁRIOS (aviso de local) ========================= */
+.cartao-meta.aviso-prioridade { color: #92400e; font-weight: 700; font-size: .72rem; line-height: 1.3; }
+.btn-relatorio { display: block; text-align: center; text-decoration: none; }

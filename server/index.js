@@ -75,7 +75,7 @@ httpServer.listen(PORT, () => {
     for (const tela of ['recepcao', 'atendimento', 'painel']) {
         console.log(`  ${tela.padEnd(11)} http://${MDNS_HOST}:${PORT}/${tela}   (ou http://<ip-do-servidor>:${PORT}/${tela})`);
     }
-    for (const tela of ['recepcao', 'controle', 'painel']) {
+    for (const tela of ['recepcao', 'controle', 'painel', 'relatorio']) {
         console.log(`  bio ${tela.padEnd(8)} http://${MDNS_HOST}:${PORT}/bio/${tela}`);
     }
 });

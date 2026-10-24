@@ -31,7 +31,9 @@
     if (!p || !STATUS_TV[p.situacao]) return "";
     if (p.situacao !== "aguardando") return STATUS_TV[p.situacao];
     const proxima = rede.config?.etapas.find((e) => e.id === p.rota[p.posicao]);
-    const local = rede.config?.locais.find((l) => l.id === proxima?.esperaEm);
+    // Prioritários esperam sempre no local definido para eles (Sala de Evangelhoterapia, no térreo).
+    const idLocal = p.prioridade && rede.config?.prioridade?.localEspera ? rede.config.prioridade.localEspera : proxima?.esperaEm;
+    const local = rede.config?.locais.find((l) => l.id === idLocal);
     return local ? `Etapa concluída — aguarde: ${local.nome}` : STATUS_TV.aguardando;
   }
   const tratamento = $derived(atual ? tratamentoPorId(rede.config, atual.etapa) : null);

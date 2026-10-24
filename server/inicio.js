@@ -18,6 +18,7 @@ const BIO = [
     ['/bio/recepcao', 'Recepção', 'Cadastro dos pacientes'],
     ['/controle', 'Controle', 'Chamar, concluir, prontuário'],
     ['/bio/painel', 'Painel da TV', 'Chamadas na TV'],
+    ['/bio/relatorio', 'Relatório', 'Registro do dia, salvar em PDF'],
 ];
 const FILAS = [
     ['/recepcao', 'Recepção', 'Cadastro e filas'],

@@ -108,6 +108,7 @@
   const chamarProximo = (s) => acao("chamarProximo", { salaId: s.id });
   const rechamar = (p) => acao("rechamar", { id: p.id }, "Chamada repetida na TV");
   const iniciar = (p) => acao("iniciar", { id: p.id });
+  const avisoPrioridade = $derived(config?.prioridade?.aviso ?? "");
   const priorizar = (p) => acao("priorizar", { id: p.id, prioridade: !p.prioridade });
   const concluir = (p, guardarProntuario = false) => acao("concluir", { id: p.id, guardarProntuario });
   const faltou = (p) => acao("naoCompareceu", { id: p.id });
@@ -288,12 +289,16 @@
       {#if estado && aberto}
         <button class="btn-mini perigo" onclick={fecharDia}>{confirmandoFechar ? "Confirmar: apagar tudo" : "Fechar o dia"}</button>
       {/if}
+      {#if estado && aberto}
+        <a class="btn-mini btn-relatorio" href="/bio/relatorio" target="_blank" rel="noopener">Relatório do atendimento (PDF)</a>
+      {/if}
       {#if estado && aberto && prontuariosAGuardar > 0}
         <p class="estado-dica alerta-prontuario">📋 {prontuariosAGuardar} prontuário(s) ainda não guardado(s).</p>
       {/if}
       {#if confirmandoFechar}
         <p class="estado-dica">
           Fechar apaga pacientes e pré-inscritos; só o relatório (sem nomes) fica salvo.
+          <strong>Salve antes o relatório completo em PDF</strong> (botão acima): os nomes não poderão ser recuperados.
           <button class="link-claro" onclick={() => (confirmandoFechar = false)}>Cancelar</button>
         </p>
       {/if}
@@ -351,8 +356,9 @@
                 {#each naSala(s) as p (p.id)}
                   <div class="cartao-paciente em-curso">
                     <div class="cartao-nome">{p.nomeExibicao}</div>
-                    <div class="cartao-meta">{ROTULO_SITUACAO[p.situacao]}{faltaDaRota(p).length ? ` • depois: ${faltaDaRota(p).join(" › ")}` : ""}{#if p.prioridade} • <strong>prioridade</strong>{/if}</div>
+                    <div class="cartao-meta">{ROTULO_SITUACAO[p.situacao]}{faltaDaRota(p).length ? ` • depois: ${faltaDaRota(p).join(" › ")}` : ""}{#if p.prioridade}{" "}• <strong>prioridade</strong>{/if}</div>
                     {#if textoProntuario(p)}<div class="cartao-meta prontuario">📋 {textoProntuario(p)}{p.situacao === "chamado" && p.prontuario === "recebido" ? " — o paciente deve entregá-lo na sala" : ""}</div>{/if}
+                    {#if p.prioridade && p.situacao === "chamado" && avisoPrioridade}<div class="cartao-meta aviso-prioridade">★ {avisoPrioridade}</div>{/if}
                     <div class="alerta-acoes">
                       {#if p.situacao === "chamado"}
                         <button class="btn-mini ouro" onclick={() => iniciar(p)}>Iniciar</button>
@@ -402,9 +408,10 @@
                   <span class="cartao-pos">{i + 1}</span>
                   <div class="cartao-info">
                     <div class="cartao-nome">{p.nomeExibicao}</div>
-                    <div class="cartao-meta">chegou {horaCurta(p.chegada)}{p.descricao ? ` • ${p.descricao}` : ""}{#if p.prioridade} • <strong>prioridade</strong>{/if}</div>
+                    <div class="cartao-meta">chegou {horaCurta(p.chegada)}{p.descricao ? ` • ${p.descricao}` : ""}{#if p.prioridade}{" "}• <strong>prioridade</strong>{/if}</div>
                     {#if faltaDaRota(p).length > 1}<div class="cartao-meta">depois: {faltaDaRota(p).slice(1).join(" › ")}</div>{/if}
                     {#if textoProntuario(p)}<div class="cartao-meta prontuario">📋 {textoProntuario(p)}</div>{/if}
+                    {#if p.prioridade && avisoPrioridade}<div class="cartao-meta aviso-prioridade">★ {avisoPrioridade}</div>{/if}
                   </div>
                 </div>
 

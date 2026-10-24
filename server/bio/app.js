@@ -31,7 +31,7 @@ function criarAppBio({ config, store, io, relogio = () => new Date() }) {
         priorizar: R.priorizar,
     };
 
-    const configPublica = () => ({ locais: config.locais, etapas: config.etapas, rotaPadrao: config.rotaPadrao, som: config.som, painel: config.painel });
+    const configPublica = () => ({ locais: config.locais, etapas: config.etapas, rotaPadrao: config.rotaPadrao, prioridade: config.prioridade, som: config.som, painel: config.painel });
 
     function visao() {
         const exibir = (x) => ({ ...x, nomeExibicao: nomeExibicao(config, x.nome, x.sobrenome) });
@@ -46,6 +46,7 @@ function criarAppBio({ config, store, io, relogio = () => new Date() }) {
             espera,
             historico: estado.historicoChamadas.map(exibir),
             relatorio: estado.diaAberto ? R.relatorio(estado, config) : estado.relatorioFinal,
+            registro: estado.diaAberto ? R.registroDoDia(estado, config) : null,
         };
     }
 

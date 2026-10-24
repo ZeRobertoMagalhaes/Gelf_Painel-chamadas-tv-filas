@@ -24,7 +24,7 @@ function registrarRotas(expressApp, { publicDir, porta, nomeMdns, obterEstadoFil
     for (const nome of ['recepcao', 'atendimento', 'painel']) expressApp.get(`/${nome}`, tela(`${nome}.html`));
 
     // Telas do módulo bioenergético.
-    for (const nome of ['controle', 'painel', 'recepcao']) expressApp.get(`/bio/${nome}`, tela(`bio-${nome}.html`));
+    for (const nome of ['controle', 'painel', 'recepcao', 'relatorio']) expressApp.get(`/bio/${nome}`, tela(`bio-${nome}.html`));
     expressApp.get('/bio', (req, res) => res.redirect('/bio/controle'));
     // Atalho: quem digita só "/controle" cai na tela de controle do módulo bioenergético.
     expressApp.get('/controle', (req, res) => res.redirect('/bio/controle'));

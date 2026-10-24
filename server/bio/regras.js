@@ -530,8 +530,70 @@ function relatorio(estado, config) {
     };
 }
 
+// Registro detalhado do dia (com nomes), para o relatório impresso/PDF: por paciente, cada
+// passagem por uma etapa com sala, entrada na espera, início, fim e duração; mais o resumo
+// geral. Montado só a partir dos movimentos já gravados.
+function registroDoDia(estado, config) {
+    const nomeEtapa = (id) => etapaDe(config, id)?.nome ?? id;
+    const pacientes = estado.pacientes
+        .filter((p) => p.situacao !== 'removido')
+        .map((p) => {
+            const passos = [];
+            let atual = null;
+            const abrir = (etapa, em) => {
+                atual = { etapa, nome: nomeEtapa(etapa), sala: null, entrouEspera: em, chamado: null, inicio: null, fim: null, resultado: null };
+                passos.push(atual);
+            };
+            for (const m of p.movimentos) {
+                if (m.acao === 'aguardando') {
+                    if (!atual || atual.etapa !== m.etapa) abrir(m.etapa, m.em);
+                } else if (!atual) {
+                    continue;
+                } else if (m.acao === 'chamado' || m.acao === 'rechamado') {
+                    atual.sala = m.sala ?? atual.sala;
+                    if (m.acao === 'chamado') atual.chamado = m.em;
+                } else if (m.acao === 'atendimento_iniciado') {
+                    atual.inicio = m.em;
+                    atual.sala = m.sala ?? atual.sala;
+                } else if (m.acao === 'devolvido_espera') {
+                    atual.chamado = null;
+                    atual.sala = null;
+                } else if (m.acao === 'etapa_concluida' || m.acao === 'nao_compareceu' || m.acao === 'etapa_pulada') {
+                    atual.fim = m.em;
+                    atual.resultado = { etapa_concluida: 'concluida', nao_compareceu: 'nao_compareceu', etapa_pulada: 'pulada' }[m.acao];
+                    atual = null;
+                }
+            }
+            if (atual) atual.resultado = { chamado: 'chamado', em_atendimento: 'em_atendimento' }[p.situacao] ?? 'aguardando';
+            for (const x of passos) {
+                x.esperaMin = x.chamado ? Math.round(minutos(x.entrouEspera, x.chamado)) : null;
+                x.duracaoMin = x.inicio && x.fim && x.resultado === 'concluida' ? Math.round(minutos(x.inicio, x.fim)) : null;
+            }
+            return {
+                id: p.id,
+                nome: p.nome,
+                sobrenome: p.sobrenome,
+                prioridade: p.prioridade === true,
+                descricao: p.descricao,
+                chegada: p.chegada,
+                situacao: p.situacao,
+                concluido: p.concluido,
+                prontuario: p.prontuario ?? null,
+                tempoTotalMin: p.situacao === 'concluido' && p.concluido ? Math.round(minutos(p.chegada, p.concluido)) : null,
+                passos,
+            };
+        })
+        .sort((a, b) => a.chegada.localeCompare(b.chegada));
+    return {
+        data: estado.data,
+        resumo: { ...relatorio(estado, config), prioritarios: pacientes.filter((p) => p.prioridade).length },
+        pacientes,
+    };
+}
+
 module.exports = {
     ErroRegra,
+    registroDoDia,
     dataLocal,
     novoDiaBio,
     filaEspera,
