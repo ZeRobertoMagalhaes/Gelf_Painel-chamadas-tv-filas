@@ -59,8 +59,9 @@ Quem foi marcado **Não compareceu** aparece em **Finalizados hoje**. Se chegar 
 Ao concluir a etapa, a **vaga da sala volta na hora**: dá para chamar o próximo em seguida.
 
 ## O que a TV mostra
-Nome, etapa, sala (a informada pelo controle, se houver), situação e uma **barra de progresso por etapas**: ✓ verde = concluída,
-cor da etapa = em atendimento, contorno pulsando = chamado, tracejado âmbar = aguardando, cinza = ainda por fazer.
+Nome, etapa, sala (a informada pelo controle, se houver) e a situação. A **barra de progresso por etapas** fica na **Recepção**, em cada
+paciente: ✓ verde = concluída, cor da etapa = em atendimento, contorno pulsando = chamado, tracejado âmbar = aguardando, cinza =
+ainda por fazer.
 
 ## Doutores: prontuário (e acupuntura)
 A **acupuntura** faz parte do atendimento dos **Doutores**: não é uma etapa nem uma sala separada.

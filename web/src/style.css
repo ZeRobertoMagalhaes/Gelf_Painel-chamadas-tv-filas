@@ -927,24 +927,20 @@ body.tela-relatorio { display: block; height: auto; min-height: 100%; overflow: 
 .campo-sala input { padding: 6px 8px; border-radius: 8px; border: 1px solid #cbd5e1; font: inherit; font-size: .85rem; background: #fff; color: #0f172a; }
 .cartao-meta.sala-destino { color: #1e40af; font-weight: 800; }
 
-/* ===== Barra de progresso por etapas (painel da TV) ===== */
-.passos { list-style: none; display: flex; justify-content: center; width: 100%; max-width: 94%; margin: 1.6vh auto 0; padding: 0; }
-.passo { flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: center; position: relative; text-align: center; --d: 4.2vh; }
-.passo::before { content: ""; position: absolute; top: calc(var(--d) / 2); left: -50%; width: 100%; height: .7vh; transform: translateY(-50%); background: #cbd5e1; border-radius: 1vh; }
-.passo:first-child::before { display: none; }
-.passo.ligada::before { background: #16a34a; }
-.passo-bolinha { position: relative; z-index: 1; width: var(--d); height: var(--d); border-radius: 50%; display: grid; place-items: center; font-weight: 800; font-size: calc(var(--d) * .55); background: #fff; color: #64748b; border: .5vh solid #cbd5e1; }
-.passo-nome { margin-top: .6vh; font-size: 2.2vh; font-weight: 700; color: #94a3b8; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.passo[data-estado="feita"] .passo-bolinha { background: #16a34a; border-color: #16a34a; color: #fff; }
-.passo[data-estado="feita"] .passo-nome { color: #166534; }
-.passo[data-estado="atendendo"] .passo-bolinha { background: var(--cor); border-color: var(--cor); color: #fff; }
-.passo[data-estado="atendendo"] .passo-nome { color: var(--cor); }
-.passo[data-estado="chamado"] .passo-bolinha { border-color: var(--cor); color: var(--cor); animation: passo-pulso 1.4s ease-in-out infinite; }
-.passo[data-estado="chamado"] .passo-nome { color: var(--cor); }
-.passo[data-estado="espera"] .passo-bolinha { border-color: #f59e0b; border-style: dashed; color: #b45309; }
-.passo[data-estado="espera"] .passo-nome { color: #b45309; }
-@keyframes passo-pulso { 0%, 100% { box-shadow: 0 0 0 0 rgba(0,0,0,0); } 50% { box-shadow: 0 0 0 1vh color-mix(in srgb, var(--cor) 30%, transparent); } }
-.passos.mini { margin: .8vh auto 0; max-width: 100%; }
-.passos.mini .passo { --d: 2.6vh; }
-.passos.mini .passo-bolinha { border-width: .35vh; }
-.passos.mini .passo::before { height: .45vh; }
+/* ===== Barra de progresso por etapas (cartões da recepção) ===== */
+.prog { list-style: none; display: flex; width: 100%; margin: 10px 0 4px; padding: 0; }
+.prog-passo { flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: center; position: relative; text-align: center; --d: 24px; }
+.prog-passo::before { content: ""; position: absolute; top: calc(var(--d) / 2); left: -50%; width: 100%; height: 4px; transform: translateY(-50%); background: #cbd5e1; border-radius: 4px; }
+.prog-passo:first-child::before { display: none; }
+.prog-passo.ligada::before { background: #16a34a; }
+.prog-bolinha { position: relative; z-index: 1; width: var(--d); height: var(--d); border-radius: 50%; display: grid; place-items: center; font-weight: 800; font-size: .72rem; background: #fff; color: #64748b; border: 3px solid #cbd5e1; }
+.prog-nome { margin-top: 3px; font-size: .68rem; font-weight: 700; line-height: 1.15; color: #94a3b8; max-width: 100%; overflow-wrap: anywhere; }
+.prog-passo[data-estado="feita"] .prog-bolinha { background: #16a34a; border-color: #16a34a; color: #fff; }
+.prog-passo[data-estado="feita"] .prog-nome { color: #166534; }
+.prog-passo[data-estado="atendendo"] .prog-bolinha { background: var(--cor); border-color: var(--cor); color: #fff; }
+.prog-passo[data-estado="atendendo"] .prog-nome { color: var(--cor); }
+.prog-passo[data-estado="chamado"] .prog-bolinha { border-color: var(--cor); color: var(--cor); animation: prog-pulso 1.4s ease-in-out infinite; }
+.prog-passo[data-estado="chamado"] .prog-nome { color: var(--cor); }
+.prog-passo[data-estado="espera"] .prog-bolinha { border-color: #f59e0b; border-style: dashed; color: #b45309; }
+.prog-passo[data-estado="espera"] .prog-nome { color: #b45309; }
+@keyframes prog-pulso { 0%, 100% { box-shadow: 0 0 0 0 rgba(0,0,0,0); } 50% { box-shadow: 0 0 0 5px color-mix(in srgb, var(--cor) 28%, transparent); } }

@@ -28,7 +28,7 @@ Cada linha segue um passo do processo oficial.
 | 4 | **Controle:** confira as filas | Os 4 pacientes estão em **Aguardando**, na coluna **Captação/Apometria** | | |
 | 5 | **Controle:** toque em **Chamar próximo** na *Captação 1* | A TV mostra a etapa, o nome, a sala e toca o sinal. O cartão mostra **Chamado** | | |
 | 6 | **Controle:** no cartão do paciente chamado, digite a **Sala para onde o paciente deve ir** (ex.: *Sala 02*) e aperte Enter | A sala aparece na **TV** (no lugar do nome da sala chamada) e, na Recepção, o cartão mostra *➜ Ir para: Sala 02* | | |
-| 7 | **TV:** olhe a barra abaixo da situação | Uma bolinha por etapa: ✓ verde = concluída; cor da etapa = em atendimento; contorno pulsando = chamado; tracejada = aguardando; cinza = a fazer | | |
+| 7 | **Recepção:** olhe a barra abaixo do nome de cada paciente | Uma bolinha por etapa: ✓ verde = concluída; cor da etapa = em atendimento; contorno pulsando = chamado; tracejada = aguardando; cinza = a fazer. A TV não mostra a barra | | |
 | 8 | **Controle:** toque em **Iniciar** | A TV muda para **Em atendimento** (sem som) | | |
 | 9 | **Controle:** toque em **Concluir etapa** | A TV diz *Etapa concluída — aguarde: Sala de espera do 1º andar*. A vaga da sala volta na hora | | |
 | 10 | **Controle:** chame outro paciente para a **Captação 2** e confira que **cada etapa tem duas salas**, atendendo 2 pacientes ao mesmo tempo | Captação 1 e 2 funcionam ao mesmo tempo; o mesmo vale para Doutores e Reiki | | |
@@ -78,7 +78,7 @@ Responda com o que vê no dia a dia. Pode escrever à vontade.
 3. **Prontuário:** os doutores pedem prontuário em **todos** os casos ou só às vezes? O botão **Prontuário recebido** deveria ser obrigatório?
 4. **Acupuntura:** hoje ela é feita dentro do atendimento dos Doutores, sem etapa nem sala próprias. Precisa ser registrada de algum modo (por exemplo, uma marca no cartão e no relatório)?
 5. **Prioritários:** quais salas de Doutores e de Reiki ficam no térreo? O sistema hoje só avisa (recepção, controle e TV); indicar a sala certa na chamada ajudaria?
-6. **Texto e barra da TV:** as frases (*Chamado*, *Em atendimento*, *Etapa concluída — aguarde: Sala de espera do 1º andar*) e a **barra de progresso por etapas** são claras para o paciente? Falta algum dado na TV? Letras e som estão bons para o salão?
+6. **Texto da TV e barra da recepção:** as frases da TV (*Chamado*, *Em atendimento*, *Etapa concluída — aguarde: Sala de espera do 1º andar*) são claras para o paciente? A **barra de progresso por etapas** da recepção ajuda? Falta algum dado na TV ou na recepção? Letras e som estão bons para o salão?
 7. **Troca de paciente na sala:** ao concluir uma etapa a vaga volta na hora. Isso combina com o tempo que a sala leva para receber o próximo paciente? Falta alguma pausa ou aviso?
 8. **Quem faz o quê:** a recepção só cadastra, e o controle chama e conclui. Está de acordo? Quem opera o controle, e em qual aparelho (computador, tablet, celular)?
 9. **Prioridade:** quem decide e quando marcar? A prioridade deve valer em todas as etapas, como está? Deve aparecer na TV?

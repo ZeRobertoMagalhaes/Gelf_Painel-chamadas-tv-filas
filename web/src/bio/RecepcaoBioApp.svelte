@@ -4,6 +4,7 @@
   import { horaCurta } from "../lib/util.js";
   import HeroHeader from "../lib/HeroHeader.svelte";
   import ConnStatus from "../lib/ConnStatus.svelte";
+  import PassosPaciente from "../lib/PassosPaciente.svelte";
 
   const ROTULO_SITUACAO = {
     aguardando: "Aguardando",
@@ -191,6 +192,7 @@
                   {#if p.prioridade && avisoPrioridade}<div class="cartao-meta aviso-prioridade">★ {avisoPrioridade}</div>{/if}
                 </div>
               </div>
+              <PassosPaciente {p} etapas={config.etapas} />
               <div class="cartao-acoes">
                 <button class="icone" class:ligado={p.prioridade} title="Prioridade" aria-label="Prioridade" aria-pressed={p.prioridade} onclick={() => priorizar(p)}>★</button>
                 <button class="icone" title="Corrigir nome" aria-label="Corrigir nome" onclick={() => (editando = { id: p.id, modo: "corrigir", nome: p.nome, sobrenome: p.sobrenome })}>✎</button>
@@ -211,6 +213,7 @@
               <div class="cartao-nome">{p.nomeExibicao}</div>
               <div class="cartao-meta">{situacaoDe(p)}</div>
               {#if p.salaDestino}<div class="cartao-meta sala-destino">➜ Ir para: {p.salaDestino}</div>{/if}
+              <PassosPaciente {p} etapas={config.etapas} />
             </div>
           {/each}
         </div>

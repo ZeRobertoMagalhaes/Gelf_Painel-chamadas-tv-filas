@@ -49,8 +49,8 @@ flowchart TD
   início e fim, resumo geral) e o salva em **PDF** antes de fechar o dia (`/bio/relatorio`).
 - **Sala de destino:** o controle pode informar, em qualquer cartão, a sala para onde o paciente deve ir (texto livre). Ela aparece na
   recepção e na TV no lugar da sala chamada.
-- **Progresso na TV:** a TV mostra, para o paciente em destaque e para os últimos chamados, uma barra de progresso por etapas
-  (concluída, em atendimento, chamado, aguardando, a fazer).
+- **Progresso na recepção:** cada paciente na tela da recepção tem uma barra de progresso por etapas (concluída, em atendimento,
+  chamado, aguardando, a fazer). A TV não mostra a barra.
 - **Quem registra:** a recepção só cadastra; chamar, concluir e o prontuário são do responsável pelo
   controle e pela orquestração.
 - **Fim do fluxo:** o paciente só é dado como encerrado quando todos os tratamentos previstos para ele foram concluídos.
@@ -79,4 +79,4 @@ Tudo isso fica em `config/bio.json`.
 - 24/10/2026: criado o **Relatório do atendimento** (`/bio/relatorio`), com dados dos pacientes, horários de início e fim e resumo geral, para salvar em PDF.
 - 24/10/2026: prioritários passam a ter aviso de **atendimento em sala do térreo** e de espera na **Sala de Evangelhoterapia (térreo)** entre os atendimentos.
 - 24/10/2026: botão **Abrir o dia** movido para o menu da esquerda, abaixo de **Registrar chegada**; correção da barra de rolagem no controle e na recepção.
-- 24/10/2026: campo **Sala para onde o paciente deve ir** no controle (exibido na recepção e na TV) e **barra de progresso por etapas** no painel da TV.
+- 24/10/2026: campo **Sala para onde o paciente deve ir** no controle (exibido na recepção e na TV) e **barra de progresso por etapas** nos cartões da recepção (não na TV).

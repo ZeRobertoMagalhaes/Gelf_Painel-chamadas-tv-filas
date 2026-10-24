@@ -92,7 +92,7 @@ Fluxo oficial do processo: `docs/fluxos/fluxo-operacional-bio.md` (referência p
   Mudar o fluxo é editar esse arquivo e reiniciar. No dia, as vagas (macas) e salas em uso se ajustam na própria tela.
 - **Relatório do atendimento (PDF)**: `/bio/relatorio` (botão no controle) reúne dados dos pacientes, sala, horários de início e fim de cada tratamento e resumo geral; o PDF sai da janela de impressão do navegador ("Salvar como PDF"). Salve antes de fechar o dia: os nomes são apagados no fechamento.
 - **Sala de destino**: campo no cartão do controle (`informarSala`); aparece na recepção e na TV no lugar da sala chamada.
-- **TV com progresso**: barra de progresso por etapas (concluída / em atendimento / chamado / aguardando / a fazer) para o paciente em destaque e nos últimos chamados.
+- **Progresso na recepção**: barra de progresso por etapas (concluída / em atendimento / chamado / aguardando / a fazer) em cada paciente da tela da recepção (`web/src/lib/PassosPaciente.svelte`); a TV não mostra a barra.
 - **Prioritários**: tratamentos em sala do térreo e espera entre atendimentos na Sala de Evangelhoterapia (térreo); aviso na recepção, no controle e na TV (`prioridade` em `config/bio.json`).
 - **Prontuário**: "Prontuário recebido" nos doutores (`emiteProntuario`), acompanha o paciente e é guardado em "Concluir e guardar prontuário" na última etapa; o controle avisa os que ficaram sem guardar.
 - **Espera por local**: cada etapa tem o seu local de espera (Sala de Evangelhoterapia no térreo, sala de espera do 1º andar), mostrado nas colunas e na TV.

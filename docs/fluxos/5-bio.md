@@ -77,6 +77,13 @@ lembrete aparece no cartão do controle e, quando o prioritário conclui uma eta
 
 ![Recepção: paciente prioritário no início da fila](img/bio-recepcao-4-prioridade.webp)
 
+**Barra de progresso por etapas (recepção).** Cada cartão de paciente na recepção mostra uma barra com uma bolinha por etapa do
+dia dele: **verde com ✓** = concluída; **cor da etapa e preenchida** = em atendimento; **contorno pulsando** = chamado; **tracejada em
+âmbar** = aguardando a etapa; **cinza** = ainda por fazer. Assim a recepção vê onde cada paciente está, sem precisar do controle.
+A TV **não** mostra essa barra.
+
+![Recepção: barra de progresso por etapas em cada paciente](img/bio-recepcao-6-progresso.webp)
+
 **Sala para onde ir:** quando o controle informa a sala do paciente (item 3), a recepção vê no cartão **"➜ Ir para: Sala X"**, para orientar o paciente.
 
 ![Recepção: sala informada pelo controle](img/bio-recepcao-5-sala-destino.webp)
@@ -124,12 +131,6 @@ Paciente **Em atendimento**: **Concluir etapa** libera a vaga e leva o paciente 
 rota** (o cartão mostra "depois: Doutores › Reiki/Cromoterapia").
 
 ![TV: paciente em atendimento](img/bio-painel-3-em-atendimento.webp)
-
-**Barra de progresso por etapas na TV.** Abaixo da situação, a TV mostra uma barra com uma bolinha por etapa do dia do paciente:
-**verde com ✓** = concluída; **cor da etapa e preenchida** = em atendimento; **contorno pulsando** = chamado; **tracejada em âmbar**
-= aguardando a etapa; **cinza** = ainda por fazer. Os últimos chamados trazem a mesma barra em tamanho reduzido.
-
-![TV: barra de progresso por etapas e sala informada](img/bio-painel-7-progresso.webp)
 
 **A TV orienta o paciente.** Ao concluir uma etapa, o destaque passa a dizer onde aguardar:
 **"Etapa concluída — aguarde: Sala de espera do 1º andar"**.
