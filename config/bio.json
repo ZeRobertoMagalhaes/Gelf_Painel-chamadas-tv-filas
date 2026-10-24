@@ -36,12 +36,12 @@
       "salas": [
         {
           "id": "doutores",
-          "nome": "Doutores 1",
+          "nome": "Doutor 1",
           "capacidade": 1
         },
         {
           "id": "doutores2",
-          "nome": "Doutores 2",
+          "nome": "Doutor 2",
           "capacidade": 1
         }
       ],

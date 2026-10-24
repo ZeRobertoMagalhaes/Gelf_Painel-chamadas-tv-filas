@@ -63,7 +63,7 @@ Toda etapa tem **duas salas de 1 vaga**, ou seja, **2 atendimentos simultâneos*
 | Etapa | Salas | Atendimentos simultâneos | Espera |
 |---|---|---|---|
 | Captação/Apometria | Captação 1 e Captação 2 | 2 | Sala de Evangelhoterapia (térreo) |
-| Doutores | Doutores 1 e Doutores 2 | 2 | Sala de espera do 1º andar |
+| Doutores | Doutor 1 e Doutor 2 | 2 | Sala de espera do 1º andar |
 | Reiki/Cromoterapia | Reiki 1 e Reiki 2 | 2 | Sala de espera do 1º andar |
 
 Tudo isso fica em `config/bio.json`.

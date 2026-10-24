@@ -87,7 +87,7 @@ Fluxo oficial do processo: `docs/fluxos/fluxo-operacional-bio.md` (referência p
 | Relatório | `/bio/relatorio` | Registro completo do dia (pacientes, horários, resumo geral) para salvar em PDF |
 
 - **Rota oficial**: Captação/Apometria › Doutores › Reiki/Cromoterapia. Etapas, salas e capacidades ficam em `config/bio.json`
-  (todas as etapas com 2 salas de 1 vaga, ou seja, 2 atendimentos simultâneos: Captação 1 e 2, Doutores 1 e 2, Reiki 1 e 2).
+  (todas as etapas com 2 salas de 1 vaga, ou seja, 2 atendimentos simultâneos: Captação 1 e 2, Doutor 1 e 2, Reiki 1 e 2).
   A acupuntura faz parte do atendimento dos Doutores (não é etapa nem sala separada; o mecanismo de etapa `opcional` continua disponível por configuração).
   Mudar o fluxo é editar esse arquivo e reiniciar. No dia, as vagas (macas) e salas em uso se ajustam na própria tela.
 - **Relatório do atendimento (PDF)**: `/bio/relatorio` (botão no controle) reúne dados dos pacientes, sala, horários de início e fim de cada tratamento e resumo geral; o PDF sai da janela de impressão do navegador ("Salvar como PDF"). Salve antes de fechar o dia: os nomes são apagados no fechamento.

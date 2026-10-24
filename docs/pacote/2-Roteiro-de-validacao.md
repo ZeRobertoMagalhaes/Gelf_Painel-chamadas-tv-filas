@@ -33,7 +33,7 @@ Cada linha segue um passo do processo oficial.
 | 9 | **Controle:** toque em **Iniciar** | A TV muda para **Em atendimento** (sem som) | | |
 | 10 | **Controle:** toque em **Concluir etapa** | A TV diz *Etapa concluída — aguarde: Sala de espera do 1º andar*. A vaga da sala volta na hora | | |
 | 11 | **Controle:** chame outro paciente para a **Captação 2** e confira que **cada etapa tem duas salas**, atendendo 2 pacientes ao mesmo tempo | Captação 1 e 2 funcionam ao mesmo tempo; o mesmo vale para Doutores e Reiki | | |
-| 12 | **Controle:** na coluna **Doutores**, chame o paciente (**Chamar próximo** em *Doutores 1* ou *Doutores 2*, ou **→ Doutores 1** no cartão para escolher quem entra) | A TV chama para *Doutores 1* (ou *Doutores 2*) | | |
+| 12 | **Controle:** na coluna **Doutores**, chame o paciente (**Chamar próximo** em *Doutor 1* ou *Doutor 2*, ou **→ Doutor 1** no cartão para escolher quem entra) | A TV chama para *Doutor 1* (ou *Doutor 2*) | | |
 | 13 | **Controle:** toque em **Iniciar**, depois em **Prontuário recebido** | O cartão mostra *📋 Prontuário com o paciente* | | |
 | 14 | **Controle:** toque em **Concluir etapa** (a acupuntura, quando indicada, é feita **dentro** do atendimento dos Doutores; não há etapa separada) | O paciente vai direto para a espera do **Reiki/Cromoterapia**; a TV orienta o 1º andar | | |
 | 15 | **Controle:** chame para o **Reiki/Cromoterapia** e toque em **Iniciar** | O cartão lembra que o paciente deve entregar o prontuário; o botão de concluir vira **Concluir e guardar prontuário** | | |
@@ -74,7 +74,7 @@ Cada linha segue um passo do processo oficial.
 
 Responda com o que vê no dia a dia. Pode escrever à vontade.
 
-1. **Etapas e nomes:** os nomes *Captação/Apometria*, *Doutores* e *Reiki/Cromoterapia* estão como vocês falam? As salas (Captação 1 e 2, Doutores 1 e 2, Reiki 1 e 2) estão com os nomes certos?
+1. **Etapas e nomes:** os nomes *Captação/Apometria*, *Doutores* e *Reiki/Cromoterapia* estão como vocês falam? As salas (Captação 1 e 2, Doutor 1 e 2, Reiki 1 e 2) estão com os nomes certos?
 2. **Atendimentos simultâneos:** duas salas por etapa, cada uma com 1 paciente, está certo? Algum dia precisa de mais ou de menos? (O **+** e o **−** de cada sala ajustam na hora.)
 3. **Prontuário:** os doutores pedem prontuário em **todos** os casos ou só às vezes? O botão **Prontuário recebido** deveria ser obrigatório?
 4. **Acupuntura:** hoje ela é feita dentro do atendimento dos Doutores, sem etapa nem sala próprias. Precisa ser registrada de algum modo (por exemplo, uma marca no cartão e no relatório)?
@@ -84,7 +84,7 @@ Responda com o que vê no dia a dia. Pode escrever à vontade.
 8. **Quem faz o quê:** a recepção só cadastra, e o controle chama e conclui. Está de acordo? Quem opera o controle, e em qual aparelho (computador, tablet, celular)?
 9. **Prioridade:** quem decide e quando marcar? A prioridade deve valer em todas as etapas, como está? Deve aparecer na TV?
 10. **O que está faltando:** o que você faz no dia que o sistema ainda não permite? O que sobrou ou atrapalha?
-11. **Locais das salas:** informar o sala/local de cada tratamento na abertura do dia, com a possibilidade de mudar depois, atende? O nome da sala chamada (Doutores 1…) ainda precisa aparecer na TV junto com o local?
+11. **Locais das salas:** informar o sala/local de cada tratamento na abertura do dia, com a possibilidade de mudar depois, atende? O nome da sala chamada (Doutor 1…) ainda precisa aparecer na TV junto com o local?
 12. **Relatório do atendimento (PDF):** traz o que vocês precisam (dados dos pacientes, horários de início e fim, resumo geral)? Falta alguma coluna ou número? Quem guarda o PDF e onde?
 
 ## Como enviar seus comentários

@@ -98,7 +98,7 @@ No controle, o prioritário aparece primeiro na fila, com o selo **prioridade**,
 
 ![Controle: prioritário no topo da espera](img/bio-14-prioridade.webp)
 
-Cada coluna tem as suas **duas salas** (ex.: Captação 1 e Captação 2, ou Doutores 1 e Doutores 2), com as vagas (ex.: `1/1 vagas`), e a lista **Aguardando**. Assim, **cada etapa atende 2 pacientes ao mesmo tempo**. Duas formas de chamar:
+Cada coluna tem as suas **duas salas** (ex.: Captação 1 e Captação 2, ou Doutor 1 e Doutor 2), com as vagas (ex.: `1/1 vagas`), e a lista **Aguardando**. Assim, **cada etapa atende 2 pacientes ao mesmo tempo**. Duas formas de chamar:
 
 | Forma | Quando usar |
 |---|---|
