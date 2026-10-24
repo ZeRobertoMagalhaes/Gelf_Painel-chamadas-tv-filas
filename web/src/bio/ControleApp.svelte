@@ -262,6 +262,10 @@
         <button type="submit" class="btn-call" disabled={!aberto}>Registrar chegada</button>
         <div class="send-feedback" class:show={aviso.texto} class:erro={aviso.erro} role="status">{aviso.texto}</div>
       </form>
+
+      {#if estado && !aberto}
+        <button class="btn-call btn-abrir-dia" onclick={abrirDia}>Abrir o dia</button>
+      {/if}
     {/if}
 
     {#if aberto && faltamChegar.length > 0}
@@ -319,8 +323,7 @@
         {/each}
         <label for="pre" class="abertura-rotulo">Pré-inscritos (opcional): um por linha — Nome Sobrenome ; dia ; descrição</label>
         <textarea id="pre" rows="5" bind:value={textoPre} placeholder="Maria Souza ; 10/10 ; dor nas costas"></textarea>
-        <button class="btn-call" onclick={abrirDia}>Abrir o dia</button>
-        <div class="send-feedback" class:show={aviso.texto} class:erro={aviso.erro} role="status">{aviso.texto}</div>
+        <p class="abertura-dica">Depois de conferir as salas, toque em <strong>Abrir o dia</strong>, no menu à esquerda.</p>
 
         {#if estado.relatorio}
           <h3 class="etapa-titulo">Relatório do último dia fechado ({estado.relatorio.data})</h3>

@@ -40,7 +40,7 @@ Com o dia fechado, o controle mostra a **Abertura dos trabalhos**:
 
 ![Abertura dos trabalhos](img/bio-1-abertura.webp)
 
-Toque em **Abrir o dia**. O indicador passa a **Dia aberto** e as colunas de cada etapa aparecem.
+Toque em **Abrir o dia**, no menu da esquerda, logo abaixo de **Registrar chegada**. O indicador passa a **Dia aberto** e as colunas de cada etapa aparecem.
 Na TV, o painel muda de **Atendimento encerrado** para **Aguardando próxima chamada**.
 
 ![Painel da TV antes da abertura](img/bio-painel-1-aguardando.webp)

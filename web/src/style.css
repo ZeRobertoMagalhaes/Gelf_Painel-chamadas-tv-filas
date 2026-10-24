@@ -551,6 +551,11 @@ body.tv-only .tv-display {
 /* ========================= TELAS DE OPERAÇÃO ========================= */
 body.tela-atendimento { height: auto; min-height: 100%; overflow: auto; }
 body.tela-recepcao .hero { height: 110px; }
+/* O Svelte monta a tela dentro de #app: ele precisa ocupar a altura da janela para que a área das
+   filas (e o menu da esquerda) rolem por dentro, em vez de a página ficar cortada. */
+body.tela-recepcao #app { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+body.tela-recepcao .hero { flex-shrink: 0; }
+.btn-abrir-dia { width: 100%; }
 
 button:focus-visible, .chip-trat:focus-visible, .icone:focus-visible {
     outline: 3px solid var(--gelf-yellow-gold);

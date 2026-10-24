@@ -20,7 +20,7 @@ sempre vem **antes** do Reiki/Cromoterapia. O processo oficial completo está em
 2. Ajuste a **capacidade** de cada sala (ex.: número de macas do reiki).
 3. Se houver lista de pré-inscritos, cole no campo, **um por linha**: `Nome Sobrenome ; dia ; descrição`
    (ex.: `Maria Souza ; 10/10 ; dor nas costas`).
-4. Toque em **Abrir o dia**. O indicador no canto esquerdo passa a **Dia aberto**.
+4. Toque em **Abrir o dia**, no menu da esquerda, abaixo de **Registrar chegada**. O indicador no canto esquerdo passa a **Dia aberto**.
 
 ## Cadastrar os pacientes (recepção)
 - Digite **nome** e **sobrenome** e toque em **Cadastrar**; ou toque no nome em **Pré-inscritos**.
