@@ -1,0 +1,40 @@
+PAINEL GELF - CURA MEDIUNICA (BIO)  -  Pacote para LINUX MINT
+Pacote de teste e validacao do processo dos tratamentos bioenergeticos
+
+NAO PRECISA INSTALAR NADA E NAO PRECISA DE INTERNET: o Node.js ja vem dentro da pasta "node".
+Serve para Linux Mint de 64 bits (confira: no Terminal, "uname -m" mostra x86_64).
+
+COMO COLOCAR NO AR
+------------------
+1. Clique com o botao direito no ZIP > "Extrair aqui" e mova a pasta Painel-GELF-Bio para a sua Pasta pessoal.
+2. Dentro da pasta: botao direito num espaco vazio > "Abrir no terminal". Digite:
+     chmod +x iniciar-mint.sh instalar-atalho-mint.sh node/bin/node
+     ./instalar-atalho-mint.sh
+   (cria o icone "Painel GELF" na Area de Trabalho e no menu)
+3. Duas vezes no icone "Painel GELF"  (ou no Terminal:  ./iniciar-mint.sh ).
+4. NAO FECHE a janela do terminal: ela e o sistema funcionando. Para desligar, feche-a.
+5. O navegador abre sozinho no Controle. As telas sao:
+     Pagina inicial  http://localhost:3000        (links de tudo + QR code para o celular)
+     Recepcao        http://localhost:3000/bio/recepcao
+     Controle        http://localhost:3000/bio/controle
+     Painel TV       http://localhost:3000/bio/painel   (tecla F11 para tela cheia; toque em "Ativar som")
+     TV Box antiga   http://localhost:3000/bio/painel-simples   e   /diagnostico
+
+PARA USAR NO CELULAR / TV BOX
+-----------------------------
+Neste computador abra http://localhost:3000 e aponte a camera do celular (mesma rede Wi-Fi) para o QR code.
+Na TV Box use o ENDERECO NUMERICO (comando "hostname -I"), por exemplo http://192.168.0.15:3000/diagnostico
+
+COMO TESTAR
+-----------
+Siga o arquivo "2-Roteiro-de-validacao.pdf" (pasta "documentos"). Anote o que funcionou, o que confundiu e o que esta
+diferente do dia a dia, e devolva as anotacoes.
+
+DOCUMENTOS (pasta "documentos")
+-------------------------------
+1-Instalacao-Linux-Mint.pdf     Passo a passo completo, firewall, TV Box e solucao de problemas
+2-Roteiro-de-validacao.pdf      O que testar, o que deve acontecer e perguntas para voce
+3-Fluxo-Cura-Mediunica-Bio.pdf  O processo oficial e as telas do sistema
+
+Os nomes dos pacientes ficam somente neste computador (pasta "dados") e sao apagados em "Fechar o dia".
+Antes de fechar o dia, salve o "Relatorio do atendimento (PDF)" no Controle.
