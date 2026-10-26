@@ -181,6 +181,23 @@ página inicial de novo neste computador e use o QR code novo.
 
 Se preferir digitar, use o endereço numérico mostrado na página inicial (algo como `http://192.168.0.15:3000/bio/controle`).
 
+## C2B. Mostrar o painel na TV (inclusive com TV Box)
+
+Em uma TV ligada por um computador, abra `http://localhost:3000/bio/painel` em tela cheia (tecla **F11**). Se a TV usa uma **TV Box**
+(caixinha Android), faça assim:
+
+1. A caixinha e o computador precisam estar na **mesma rede**. Na caixinha, abra o navegador e digite o **endereço numérico** do
+   computador (aparece na página inicial, algo como `http://192.168.0.15:3000/diagnostico`). Evite o nome `.local`: muitas caixinhas não o entendem.
+2. Abra primeiro **`/diagnostico`**. Essa página funciona até em navegador muito antigo e mostra um veredito:
+   - *"NÃO alcançou o servidor"*: é rede ou endereço. Confira se o computador está ligado com o sistema no ar, o Wi-Fi (ou use cabo) e o endereço.
+   - *"Navegador antigo"*: use o **painel simples**, que mostra o mesmo conteúdo e toca o mesmo sinal.
+   - *"Tudo certo"*: o painel normal abre.
+3. Deixe nos favoritos da caixinha `http://ENDEREÇO:3000/bio/painel` (ou, se o diagnóstico mandar, `http://ENDEREÇO:3000/bio/painel-simples`).
+4. Na primeira vez, aperte **OK** em **Ativar som**.
+5. Se as bordas da TV forem cortadas, escolha **"Ajuste à tela"** ou **16:9** no menu de imagem da TV.
+
+O endereço do computador pode mudar; para fixá-lo, reserve o IP dele no roteador.
+
 ## C3. Primeiros passos em 2 minutos
 
 1. No **Controle**, confira as salas em **Abertura dos trabalhos** e toque em **Abrir o dia** (no menu da esquerda, abaixo de **Registrar chegada**).
