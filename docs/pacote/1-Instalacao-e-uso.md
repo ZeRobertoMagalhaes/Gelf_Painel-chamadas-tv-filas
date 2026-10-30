@@ -55,7 +55,7 @@ Se o Node.js já estiver instalado, pule este passo.
 3. Aparece uma **janela preta** com os endereços do sistema. **Não feche essa janela**: ela é o sistema funcionando.
 4. Se o Windows perguntar sobre o **Firewall** ("Permitir que o Node.js se comunique…"), marque **Redes privadas** e
    clique em **Permitir acesso**. Isso é necessário para usar os celulares.
-5. Em alguns segundos o navegador abre sozinho na tela do **Controle**. Pronto: o sistema está no ar.
+5. Em alguns segundos o navegador abre sozinho na **página inicial do Painel GELF** (de lá você escolhe a tela, por exemplo o **Controle**). Pronto: o sistema está no ar.
 
 ## A4. Desligar e ligar de novo
 
@@ -68,7 +68,7 @@ Se o Node.js já estiver instalado, pule este passo.
 |---|---|
 | A janela preta abre e fecha na hora | O Node.js não está instalado ou foi instalado há pouco. Instale (A1), **reinicie o computador** e tente de novo |
 | Mensagem de erro com **EADDRINUSE** | O sistema já está ligado em outra janela, ou outro programa usa a porta 3000. Feche todas as janelas pretas e ligue de novo. Se persistir, reinicie o computador |
-| O navegador não abriu sozinho | Abra você mesmo `http://localhost:3000/bio/controle` |
+| O navegador não abriu sozinho | Abra você mesmo `http://localhost:3000` |
 | Celular não abre o endereço | Mesma rede Wi-Fi? Firewall liberado para **Redes privadas** (A3, passo 4)? Use o QR code da página inicial (Parte C) |
 | Desconfia que o firewall bloqueou | Painel de Controle › Firewall do Windows › *Permitir um aplicativo* › marque **Node.js** em **Privada** |
 
@@ -118,7 +118,7 @@ chmod +x iniciar-mac-linux.sh
 
 - O `chmod +x` só é necessário na primeira vez.
 - O Terminal mostra os endereços do sistema. **Não feche o Terminal**: ele é o sistema funcionando.
-- Em alguns segundos o navegador abre sozinho no **Controle**. Se não abrir, entre em `http://localhost:3000/bio/controle`.
+- Em alguns segundos o navegador abre sozinho na **página inicial do Painel GELF**. Se não abrir, entre em `http://localhost:3000`.
 - Se aparecer "O Node.js é muito antigo", volte ao passo B1.
 
 ## B4. Liberar o acesso dos celulares (se houver firewall)
@@ -146,7 +146,7 @@ sistema fica `http://ENDEREÇO:3000`. A página inicial (Parte C) mostra isso ta
 | `node: command not found` | O Node.js não está instalado (B1) |
 | "O Node.js é muito antigo" | Instale o LTS em https://nodejs.org (B1, passo 3) |
 | Erro com **EADDRINUSE** | Algo já usa a porta 3000. Veja o quê: `ss -ltnp \| grep 3000` (Linux). Se for o próprio sistema em outro Terminal, feche-o (Ctrl+C) |
-| O navegador não abriu sozinho | Abra você mesmo `http://localhost:3000/bio/controle` |
+| O navegador não abriu sozinho | Abra você mesmo `http://localhost:3000` |
 | Celular não abre o endereço | Mesma rede Wi-Fi? Porta 3000 liberada no firewall (B4)? Use o QR code da página inicial |
 | O Terminal fechou e o sistema parou | É assim mesmo: o sistema roda dentro do Terminal. Abra de novo e ligue (B3) |
 

@@ -13,7 +13,7 @@ COMO COLOCAR NO AR
    (cria o icone "Painel GELF" na Area de Trabalho e no menu)
 3. Duas vezes no icone "Painel GELF"  (ou no Terminal:  ./iniciar-mint.sh ).
 4. NAO FECHE a janela do terminal: ela e o sistema funcionando. Para desligar, feche-a.
-5. O navegador abre sozinho no Controle. As telas sao:
+5. O navegador abre sozinho na pagina inicial (Painel GELF), de onde se escolhe a tela. As telas sao:
      Pagina inicial  http://localhost:3000        (links de tudo + QR code para o celular)
      Recepcao        http://localhost:3000/bio/recepcao
      Controle        http://localhost:3000/bio/controle

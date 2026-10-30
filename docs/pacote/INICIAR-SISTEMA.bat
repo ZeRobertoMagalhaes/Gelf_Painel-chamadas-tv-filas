@@ -22,8 +22,8 @@ echo  PAGINA INICIAL (links de todas as telas e QR code para o celular):
 echo     http://localhost:3000
 echo  Abra-a neste computador e aponte a camera do celular para o QR code.
 echo.
-echo  Abrindo o controle neste computador em instantes...
-start "" /b cmd /c "timeout /t 4 /nobreak >nul && start http://localhost:3000/bio/controle"
+echo  Abrindo a pagina inicial neste computador em instantes...
+start "" /b cmd /c "timeout /t 4 /nobreak >nul && start http://localhost:3000/"
 echo.
 echo  PARA ENCERRAR O SISTEMA: feche esta janela.
 echo  ------------------------------------------

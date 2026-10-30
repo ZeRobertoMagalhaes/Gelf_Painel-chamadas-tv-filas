@@ -12,7 +12,6 @@ fi
 mkdir -p dados
 echo "Painel GELF - Cura Mediunica (Bio)"
 echo "Pagina inicial (links e QR code para o celular): http://localhost:3000"
-echo "Controle neste computador: http://localhost:3000/bio/controle"
-(sleep 3; (xdg-open http://localhost:3000/bio/controle || open http://localhost:3000/bio/controle) >/dev/null 2>&1) &
+(sleep 3; (xdg-open http://localhost:3000/ || open http://localhost:3000/) >/dev/null 2>&1) &
 echo "Para encerrar: pressione Ctrl+C."
 node server/index.js

@@ -9,7 +9,7 @@ COMO COLOCAR NO AR (resumo)
    - Se o Windows avisar "protegeu o computador": Mais informacoes > Executar assim mesmo.
    - Se perguntar sobre o Firewall: marque "Redes privadas" > Permitir acesso.
 4. NAO FECHE a janela preta: ela e o sistema funcionando. Para desligar, feche-a.
-5. O navegador abre sozinho no Controle. As telas sao:
+5. O navegador abre sozinho na pagina inicial (Painel GELF), de onde se escolhe a tela. As telas sao:
      Recepcao   http://localhost:3000/bio/recepcao
      Controle   http://localhost:3000/bio/controle
      Painel TV  http://localhost:3000/bio/painel   (tecla F11 para tela cheia; toque em "Ativar som")

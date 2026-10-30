@@ -47,7 +47,7 @@ dentro do pacote.
 **Pelo Terminal:** dentro da pasta, digite `./iniciar-mint.sh`.
 
 Abre uma **janela de terminal** com os endereços do sistema. **Não feche essa janela**: ela é o sistema funcionando. Em alguns segundos o
-navegador abre sozinho na tela do **Controle**. Pronto: o sistema está no ar.
+navegador abre sozinho na **página inicial do Painel GELF** (de lá você escolhe a tela, por exemplo o **Controle**). Pronto: o sistema está no ar.
 
 ## 5. As telas do sistema
 
@@ -111,7 +111,7 @@ Para testar o processo inteiro, siga o **Roteiro de validação** (documento 2 d
 | "O Node.js não foi encontrado" | Confira se a pasta `node` está ao lado do `iniciar-mint.sh` e se `uname -m` mostra `x86_64` (64 bits). Em computador de 32 bits ou ARM, este pacote não serve |
 | "A porta 3000 já está em uso" | O sistema já está ligado em outra janela: use-a, ou feche-a. Para ver quem usa: `ss -ltnp \| grep 3000` |
 | O ícone da Área de Trabalho não liga | Clique nele com o botão direito e escolha **Permitir execução** / **Confiar neste lançador**; ou use `./iniciar-mint.sh` no Terminal |
-| O navegador não abriu sozinho | Abra você mesmo `http://localhost:3000/bio/controle` |
+| O navegador não abriu sozinho | Abra você mesmo `http://localhost:3000` |
 | Celular ou TV Box não abre o endereço | Mesma rede? Firewall (item 7)? Use o endereço numérico e o QR code da página inicial |
 | Sem som na TV | Toque em **Ativar som** e confira o volume do Mint e da TV |
 | Aviso **sem conexão** no topo da tela | O sistema foi desligado ou o computador entrou em repouso. Ligue de novo; a tela reconecta sozinha |

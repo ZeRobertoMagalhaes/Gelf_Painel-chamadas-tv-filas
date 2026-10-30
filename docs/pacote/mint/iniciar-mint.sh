@@ -21,7 +21,7 @@ fi
 
 if ss -ltn 2>/dev/null | grep -q ":$PORTA "; then
   echo "A porta $PORTA ja esta em uso: o sistema provavelmente ja esta ligado em outra janela."
-  echo "Abra http://localhost:$PORTA/bio/controle ou feche a outra janela e tente de novo."
+  echo "Abra http://localhost:$PORTA ou feche a outra janela e tente de novo."
   esperar; exit 1
 fi
 
@@ -36,10 +36,10 @@ echo " Pagina inicial (links de todas as telas e QR code para o celular):"
 echo "     http://localhost:$PORTA"
 [ -n "$IP" ] && echo " Em outros aparelhos da mesma rede:  http://$IP:$PORTA"
 echo
-echo " O navegador vai abrir no Controle em instantes."
+echo " O navegador vai abrir na pagina inicial em instantes."
 echo " PARA ENCERRAR: feche esta janela ou pressione Ctrl+C."
 echo "------------------------------------------"
-(sleep 4; xdg-open "http://localhost:$PORTA/bio/controle" >/dev/null 2>&1) &
+(sleep 4; xdg-open "http://localhost:$PORTA/" >/dev/null 2>&1) &
 PORT="$PORTA" "$NODE" server/index.js
 echo
 echo "O sistema parou. Se apareceu uma mensagem de erro acima, tire uma foto da tela e envie com os seus comentarios."
