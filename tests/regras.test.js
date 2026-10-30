@@ -189,11 +189,68 @@ test('fechar atendimento apaga filas e chamadas e bloqueia novas ações', () =>
     const e = diaAberto();
     cad(e, 'Ana', 'A');
     R.chamarProximo(e, { tratamento: 'reiki', sala: '1' }, ctx());
-    R.fecharAtendimento(e);
+    R.fecharAtendimento(e, {}, ctx());
     assert.equal(e.pacientes.length, 0);
     assert.equal(e.historicoChamadas.length, 0);
     assert.equal(e.atendimentoAberto, false);
     assert.equal(codigo(() => cad(e, 'Bia', 'B')), 'fechado');
+});
+
+test('relatório do dia: números gerais e por tratamento, sem os removidos', () => {
+    const e = diaAberto();
+    const a = cad(e, 'Ana', 'Lima', 'reiki');
+    const b = cad(e, 'Beto', 'Dias', 'reiki', { prioridade: true });
+    cad(e, 'Caio', 'Reis', 'gao');
+    const erradoCadastro = cad(e, 'Erro', 'Cad', 'gao');
+    R.remover(e, { id: erradoCadastro.id }, ctx());
+    R.chamarProximo(e, { tratamento: 'reiki', sala: 'Sala 1' }, ctx());   // Ana
+    R.iniciar(e, { id: a.id }, ctx());
+    R.concluir(e, { id: a.id }, ctx());
+    R.chamarProximo(e, { tratamento: 'reiki', sala: 'Sala 1' }, ctx());   // Beto
+    R.naoCompareceu(e, { id: b.id }, ctx());
+    const rel = R.relatorio(e, config);
+    assert.equal(rel.cadastrados, 3);
+    assert.equal(rel.concluidos, 1);
+    assert.equal(rel.naoCompareceram, 1);
+    assert.equal(rel.aguardando, 1);
+    assert.equal(rel.emAtendimento, 0);
+    assert.equal(rel.prioritarios, 0);
+    assert.ok(rel.esperaMediaMin > 0 && rel.duracaoMediaMin === 1);
+    const reiki = rel.tratamentos.find((t) => t.id === 'reiki');
+    assert.deepEqual([reiki.cadastrados, reiki.concluidos, reiki.naoCompareceram, reiki.aguardando], [2, 1, 1, 0]);
+    assert.equal(rel.tratamentos.find((t) => t.id === 'gao').aguardando, 1);
+    assert.ok(!JSON.stringify(rel).includes('Ana'), 'o relatório numérico não leva nomes');
+});
+
+test('registro do dia: um paciente por linha com horários e tempos', () => {
+    const e = diaAberto();
+    const a = cad(e, 'Ana', 'Lima', 'reiki');
+    cad(e, 'Beto', 'Dias', 'gao');
+    R.chamarProximo(e, { tratamento: 'reiki', sala: 'Sala 2' }, ctx());
+    R.rechamar(e, { id: a.id }, ctx());
+    R.iniciar(e, { id: a.id }, ctx());
+    R.concluir(e, { id: a.id }, ctx());
+    const reg = R.registroDoDia(e, config);
+    assert.deepEqual(reg.pacientes.map((p) => p.nome), ['Ana', 'Beto']);
+    const [ana, beto] = reg.pacientes;
+    assert.equal(ana.sala, 'Sala 2');
+    assert.equal(ana.chamadas, 2);
+    assert.ok(ana.esperaMin >= 1 && ana.duracaoMin === 1);
+    assert.equal(ana.tratamentoNome, config.tratamentos.find((t) => t.id === 'reiki').nome);
+    assert.equal(beto.chamado, null);
+    assert.equal(beto.esperaMin, null);
+    assert.equal(reg.resumo.cadastrados, 2);
+});
+
+test('fechar atendimento guarda o relatório final sem nomes e abrir limpa', () => {
+    const e = diaAberto();
+    cad(e, 'Ana', 'Lima', 'reiki');
+    const { relatorio } = R.fecharAtendimento(e, {}, ctx());
+    assert.equal(relatorio.cadastrados, 1);
+    assert.equal(e.relatorioFinal, relatorio);
+    assert.ok(!JSON.stringify(e).includes('Ana'));
+    R.abrirAtendimento(e);
+    assert.equal(e.relatorioFinal, null);
 });
 
 test('erro de regra não altera o estado', () => {

@@ -72,7 +72,7 @@ httpServer.listen(PORT, () => {
     iniciarRespondedorMdns();
     console.log(`Painel GELF (filas) em http://0.0.0.0:${PORT}`);
     console.log(`  inicio      http://${MDNS_HOST}:${PORT}/   (links das telas e QR code)`);
-    for (const tela of ['recepcao', 'atendimento', 'painel']) {
+    for (const tela of ['recepcao', 'atendimento', 'painel', 'relatorio']) {
         console.log(`  ${tela.padEnd(11)} http://${MDNS_HOST}:${PORT}/${tela}   (ou http://<ip-do-servidor>:${PORT}/${tela})`);
     }
     for (const tela of ['recepcao', 'controle', 'painel', 'relatorio']) {

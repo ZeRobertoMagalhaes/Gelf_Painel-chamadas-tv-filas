@@ -14,7 +14,8 @@ Antes do primeiro paciente (cerca de 5 minutos).
 
 ## No fim do dia
 
-- [ ] Na Recepção, **Fechar atendimento** (apaga as filas e os nomes). Se esquecer, o sistema apaga
+- [ ] Na Recepção, **Relatório do dia (PDF)** → *Salvar em PDF* (guardar o arquivo).
+- [ ] Na Recepção, **Fechar atendimento** (apaga as filas e os nomes; só o resumo em números fica salvo). Se esquecer, o sistema apaga
       sozinho no dia seguinte.
 
 ## Se algo falhar

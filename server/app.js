@@ -1,3 +1,5 @@
+const fs = require('fs');
+const path = require('path');
 const R = require('./regras');
 
 // Cola entre as regras (puras), o disco e a rede. Toda ação do cliente entra
@@ -15,7 +17,7 @@ function criarApp({ config, store, io, relogio = () => new Date() }) {
 
     const acoes = {
         abrirAtendimento: (e) => R.abrirAtendimento(e),
-        fecharAtendimento: (e) => R.fecharAtendimento(e),
+        fecharAtendimento: R.fecharAtendimento,
         cadastrar: R.cadastrar,
         corrigir: R.corrigir,
         trocarFila: R.trocarFila,
@@ -39,7 +41,26 @@ function criarApp({ config, store, io, relogio = () => new Date() }) {
         const filas = {};
         for (const t of config.tratamentos) filas[t.id] = R.fila(estado, t.id).map((p) => p.id);
         const historico = estado.historicoChamadas.map((c) => ({ ...c, nomeExibicao: nomeExibicao(config, c.nome, c.sobrenome) }));
-        return { data: estado.data, atendimentoAberto: estado.atendimentoAberto, pacientes, filas, historico };
+        return {
+            data: estado.data,
+            atendimentoAberto: estado.atendimentoAberto,
+            pacientes,
+            filas,
+            historico,
+            relatorio: estado.atendimentoAberto ? R.relatorio(estado, config) : estado.relatorioFinal,
+            registro: estado.atendimentoAberto ? R.registroDoDia(estado, config) : null,
+        };
+    }
+
+    // Relatório do dia (só números, sem nomes) fica em disco ao fechar o dia.
+    function salvarRelatorio(rel) {
+        try {
+            const pasta = path.join(store.pasta, 'relatorios');
+            fs.mkdirSync(pasta, { recursive: true });
+            fs.writeFileSync(path.join(pasta, `fila-${rel.data}.json`), JSON.stringify(rel, null, 2));
+        } catch (e) {
+            console.error('Não foi possível gravar o relatório do dia:', e.message);
+        }
     }
 
     function transmitirEstado() {
@@ -51,6 +72,7 @@ function criarApp({ config, store, io, relogio = () => new Date() }) {
     function verificarVirada() {
         const hoje = R.dataLocal(relogio());
         if (hoje === estado.data) return false;
+        if (estado.atendimentoAberto) salvarRelatorio(R.relatorio(estado, config));
         estado = R.novoDia(hoje);
         store.limparOutrosDias(hoje);
         store.salvar(estado);
@@ -81,12 +103,13 @@ function criarApp({ config, store, io, relogio = () => new Date() }) {
             return { ok: false, codigo: 'erro', mensagem: 'Não foi possível gravar. Tente novamente.' };
         }
 
+        if (resultado.relatorio) salvarRelatorio(resultado.relatorio);
         transmitirEstado();
         if (resultado.chamada) {
             const c = resultado.chamada;
             io.emit('chamada', { ...c, nomeExibicao: nomeExibicao(config, c.nome, c.sobrenome) });
         }
-        return { ok: true, paciente: resultado.paciente, chamada: resultado.chamada };
+        return { ok: true, paciente: resultado.paciente, chamada: resultado.chamada, relatorio: resultado.relatorio };
     }
 
     function aoConectar(socket) {

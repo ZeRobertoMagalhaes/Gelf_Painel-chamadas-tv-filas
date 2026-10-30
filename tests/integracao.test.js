@@ -102,6 +102,22 @@ test('quem conecta (ou reconecta) recebe config e estado atuais, sem evento de c
     fechar(a);
 });
 
+test('fechar o atendimento grava o relatório do dia e a visão traz o registro só com o dia aberto', async () => {
+    const { abrir, agir, fechar, dir, app } = await subir(() => new Date('2026-10-10T09:00:00-03:00'));
+    const a = await abrir();
+    await agir(a, 'abrirAtendimento');
+    await agir(a, 'cadastrar', { nome: 'Ana Lima', tratamento: 'reiki' });
+    assert.equal(app.visao().registro.pacientes[0].nome, 'Ana');
+    const r = await agir(a, 'fecharAtendimento');
+    assert.equal(r.ok, true);
+    assert.equal(r.relatorio.cadastrados, 1);
+    assert.equal(app.visao().registro, null);
+    assert.equal(app.visao().relatorio.cadastrados, 1);
+    const salvo = fs.readFileSync(path.join(dir, 'relatorios', 'fila-2026-10-10.json'), 'utf8');
+    assert.ok(!salvo.includes('Ana'));
+    fechar(a);
+});
+
 test('exibirSobrenomeCompleto=false mostra nome e inicial', () => {
     const { nomeExibicao } = require('../server/app');
     const cfg = { painel: { exibirSobrenomeCompleto: false } };
@@ -118,7 +134,11 @@ test('virada do dia com o servidor ligado apaga o dia anterior', async () => {
     assert.ok(fs.existsSync(path.join(dir, 'fila-2026-10-10.json')));
     agora = new Date('2026-10-11T08:00:00-03:00');
     assert.equal(app.verificarVirada(), true);
-    assert.deepEqual(fs.readdirSync(dir), ['fila-2026-10-11.json']);
+    assert.deepEqual(fs.readdirSync(dir).filter((n) => n !== 'relatorios'), ['fila-2026-10-11.json']);
+    // o relatório do dia que virou (só números, sem nomes) fica guardado
+    const salvo = fs.readFileSync(path.join(dir, 'relatorios', 'fila-2026-10-10.json'), 'utf8');
+    assert.equal(JSON.parse(salvo).cadastrados, 1);
+    assert.ok(!salvo.includes('Ana'));
     assert.equal(app.visao().atendimentoAberto, false);
     assert.equal(app.visao().pacientes.length, 0);
     fechar(a);

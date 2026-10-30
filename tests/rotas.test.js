@@ -57,7 +57,7 @@ test('rotas: painel simples e diagnóstico (TV Box), com JavaScript ES5 de verda
 
 test('rotas: todas as telas existem, e /controle e /bio levam ao controle do Bio', async () => {
     await comServidor(async (base) => {
-        for (const rota of ['/bio/recepcao', '/bio/controle', '/bio/painel', '/bio/relatorio', '/recepcao', '/atendimento', '/painel']) {
+        for (const rota of ['/bio/recepcao', '/bio/controle', '/bio/painel', '/bio/relatorio', '/recepcao', '/atendimento', '/painel', '/relatorio']) {
             const r = await get(`${base}${rota}`);
             assert.equal(r.status, 200, rota);
             assert.match(await r.text(), /<div id="app">/, rota);

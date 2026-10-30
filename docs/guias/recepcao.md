@@ -18,4 +18,8 @@ Se aparecer **"Já existe um paciente com este nome"**, confira: se for outra pe
 
 **Paciente com dois tratamentos no dia:** quando ele concluir o primeiro, cadastre-o de novo na fila seguinte.
 
-**Fim do dia:** **Fechar atendimento** apaga todas as filas e nomes. Confirme com o segundo toque.
+**Fim do dia**
+1. Toque em **Relatório do dia (PDF)** (abre em outra aba): mostra o resumo por tratamento e o registro de cada paciente
+   (chegada, chamada, sala, início, fim, espera e duração). Toque em **Salvar em PDF / Imprimir** e escolha *Salvar como PDF*.
+2. Só depois toque em **Fechar atendimento** (confirme com o segundo toque): apaga todas as filas e nomes.
+   Fica salvo apenas o resumo em números, sem nomes (`dados/relatorios/fila-AAAA-MM-DD.json`).

@@ -25,8 +25,8 @@ function registrarRotas(expressApp, { publicDir, porta, nomeMdns, obterEstadoFil
     expressApp.get(['/painel-simples', '/bio/painel-simples'], (req, res) => res.sendFile(path.join(legadoDir, 'painel-simples.html')));
     expressApp.get('/diagnostico', (req, res) => res.sendFile(path.join(legadoDir, 'diagnostico.html')));
 
-    // Atalhos curtos para as três telas das filas.
-    for (const nome of ['recepcao', 'atendimento', 'painel']) expressApp.get(`/${nome}`, tela(`${nome}.html`));
+    // Atalhos curtos para as telas das filas.
+    for (const nome of ['recepcao', 'atendimento', 'painel', 'relatorio']) expressApp.get(`/${nome}`, tela(`${nome}.html`));
 
     // Telas do módulo bioenergético.
     for (const nome of ['controle', 'painel', 'recepcao', 'relatorio']) expressApp.get(`/bio/${nome}`, tela(`bio-${nome}.html`));

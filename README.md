@@ -11,6 +11,7 @@ duplo. Especificação: `docs/Proposta de Solução — Sistema de Chamadas por 
 | Recepção | `/recepcao` | Cadastro, prioridade, correção, troca de fila, remoção, abrir/fechar atendimento |
 | Atendimento | `/atendimento` | Equipes no celular/tablet: chamar próximo, chamar novamente, iniciar, concluir, não compareceu |
 | Painel TV | `/painel` | Navegador em tela cheia no notebook ligado à TV |
+| Relatório | `/relatorio` | Registro do dia (pacientes, horários, tempos, resumo por tratamento) para salvar em PDF; botão na Recepção |
 | TV Box / navegador antigo | `/painel-simples`, `/bio/painel-simples`, `/diagnostico` | Painel da TV em JavaScript antigo (ES5) e página que diagnostica o navegador da caixinha; guia em `docs/guias/tv-box.md` |
 | Início | `/` | Links para todas as telas (filas e Bio) e **QR code do endereço atual**: o celular abre as telas sem digitar, mesmo se o IP mudou ou se o nome `.local` não resolve no aparelho |
 
@@ -40,7 +41,7 @@ quantidade de chamadas anteriores). Alterações valem ao reiniciar o servidor.
 `dados/fila-AAAA-MM-DD.json`: um arquivo por dia, gravado de forma atômica
 (`.tmp` + rename) antes de avisar as telas; recuperado se o servidor reiniciar no
 mesmo dia; arquivos de dias anteriores são apagados ao iniciar e na virada do dia.
-"Fechar atendimento" apaga tudo na hora. Os arquivos não são versionados (LGPD).
+"Fechar atendimento" apaga tudo na hora, guardando só o relatório em números (`dados/relatorios/fila-AAAA-MM-DD.json`, sem nomes). Os arquivos não são versionados (LGPD).
 
 ## Regras decididas no servidor
 

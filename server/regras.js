@@ -31,7 +31,7 @@ function isoLocal(d) {
 }
 
 function novoDia(data) {
-    return { data, atendimentoAberto: false, seq: 0, chamadaSeq: 0, pacientes: [], historicoChamadas: [] };
+    return { data, atendimentoAberto: false, seq: 0, chamadaSeq: 0, pacientes: [], historicoChamadas: [], relatorioFinal: null };
 }
 
 function limparTexto(valor, max) {
@@ -100,14 +100,19 @@ function fila(estado, tratamento) {
 
 function abrirAtendimento(estado) {
     estado.atendimentoAberto = true;
+    estado.relatorioFinal = null;
 }
 
-// Apaga filas e chamadas na hora (privacidade/LGPD) e deixa o dia fechado.
-function fecharAtendimento(estado) {
+// Apaga filas e chamadas na hora (privacidade/LGPD) e deixa o dia fechado,
+// guardando só o relatório do dia (números, sem nomes).
+function fecharAtendimento(estado, args, ctx) {
+    const rel = relatorio(estado, ctx.config);
     estado.atendimentoAberto = false;
     estado.seq = 0;
     estado.pacientes = [];
     estado.historicoChamadas = [];
+    estado.relatorioFinal = rel;
+    return { relatorio: rel };
 }
 
 function cadastrar(estado, args, ctx) {
@@ -301,6 +306,75 @@ function naoCompareceu(estado, args, ctx) {
     return { paciente: p };
 }
 
+// ---------------------------------------------------------------- relatório
+
+const minutos = (a, b) => (Date.parse(b) - Date.parse(a)) / 60000;
+const media = (lista) => (lista.length ? Math.round((lista.reduce((s, x) => s + x, 0) / lista.length) * 10) / 10 : null);
+const primeiraChamada = (p) => (p.movimentos ?? []).find((m) => m.acao === 'chamado')?.em ?? null;
+
+// Números de um grupo de pacientes: situação atual e tempos médios (em minutos)
+// de espera (chegada até a 1ª chamada) e de atendimento (início até a conclusão).
+function resumirGrupo(lista) {
+    const esperas = [];
+    const duracoes = [];
+    for (const p of lista) {
+        const chamado = primeiraChamada(p);
+        if (chamado) esperas.push(minutos(p.chegada, chamado));
+        if (p.situacao === 'concluido' && p.iniciado && p.concluido) duracoes.push(minutos(p.iniciado, p.concluido));
+    }
+    return {
+        cadastrados: lista.length,
+        concluidos: lista.filter((p) => p.situacao === 'concluido').length,
+        naoCompareceram: lista.filter((p) => p.situacao === 'nao_compareceu').length,
+        aguardando: lista.filter((p) => p.situacao === 'aguardando').length,
+        emAtendimento: lista.filter((p) => ['chamado', 'em_atendimento'].includes(p.situacao)).length,
+        prioritarios: lista.filter((p) => p.prioridade).length,
+        esperaMediaMin: media(esperas),
+        duracaoMediaMin: media(duracoes),
+    };
+}
+
+// Números do dia SEM nomes: geral e por tratamento. Quem foi removido da fila
+// (cadastro errado) não conta.
+function relatorio(estado, config) {
+    const considerados = estado.pacientes.filter((p) => p.situacao !== 'removido');
+    return {
+        data: estado.data,
+        ...resumirGrupo(considerados),
+        tratamentos: config.tratamentos.map((t) => ({ id: t.id, nome: t.nome, ...resumirGrupo(considerados.filter((p) => p.tratamento === t.id)) })),
+    };
+}
+
+// Registro detalhado do dia (com nomes), para o relatório impresso/PDF: um paciente
+// por linha, na ordem de chegada, mais o resumo geral.
+function registroDoDia(estado, config) {
+    const nomeTrat = (id) => config.tratamentos.find((t) => t.id === id)?.nome ?? id;
+    const pacientes = estado.pacientes
+        .filter((p) => p.situacao !== 'removido')
+        .map((p) => {
+            const chamado = primeiraChamada(p);
+            return {
+                id: p.id,
+                nome: p.nome,
+                sobrenome: p.sobrenome,
+                tratamento: p.tratamento,
+                tratamentoNome: nomeTrat(p.tratamento),
+                prioridade: p.prioridade === true,
+                sala: p.sala,
+                situacao: p.situacao,
+                chamadas: p.chamadas,
+                chegada: p.chegada,
+                chamado,
+                iniciado: p.iniciado,
+                concluido: p.concluido,
+                esperaMin: chamado ? Math.round(minutos(p.chegada, chamado)) : null,
+                duracaoMin: p.situacao === 'concluido' && p.iniciado && p.concluido ? Math.round(minutos(p.iniciado, p.concluido)) : null,
+            };
+        })
+        .sort((a, b) => a.chegada.localeCompare(b.chegada) || a.id.localeCompare(b.id));
+    return { data: estado.data, resumo: relatorio(estado, config), pacientes };
+}
+
 module.exports = {
     ATIVAS,
     ErroRegra,
@@ -312,6 +386,8 @@ module.exports = {
     fila,
     abrirAtendimento,
     fecharAtendimento,
+    relatorio,
+    registroDoDia,
     cadastrar,
     corrigir,
     trocarFila,

@@ -24,6 +24,7 @@ const FILAS = [
     ['/recepcao', 'Recepção', 'Cadastro e filas'],
     ['/atendimento', 'Atendimento', 'Equipes, no celular'],
     ['/painel', 'Painel da TV', 'Chamadas na TV'],
+    ['/relatorio', 'Relatório', 'Registro do dia, salvar em PDF'],
 ];
 
 const links = (lista) =>

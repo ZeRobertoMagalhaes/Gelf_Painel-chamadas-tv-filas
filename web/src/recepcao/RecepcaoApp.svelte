@@ -81,7 +81,7 @@
     }
     confirmandoFechar = false;
     const r = await acao("fecharAtendimento");
-    if (r.ok) mostrar("Atendimento fechado. Filas e chamadas foram apagadas.");
+    if (r.ok) mostrar("Atendimento fechado. Filas e chamadas foram apagadas; só o relatório (sem nomes) ficou salvo.");
   }
 
   let aberto_hist = $state(new Set()); // ids com o histórico expandido
@@ -186,9 +186,13 @@
           {aberto ? (confirmandoFechar ? "Confirmar: apagar tudo" : "Fechar atendimento") : "Abrir atendimento"}
         </button>
       {/if}
+      {#if estado && aberto}
+        <a class="btn-mini btn-relatorio" href="/relatorio" target="_blank" rel="noopener">Relatório do dia (PDF)</a>
+      {/if}
       {#if confirmandoFechar}
         <p class="estado-dica">
-          Fechar apaga todas as filas e chamadas de hoje.
+          Fechar apaga todas as filas e chamadas de hoje; só o relatório (sem nomes) fica salvo.
+          <strong>Salve antes o relatório completo em PDF</strong> (botão acima): os nomes não poderão ser recuperados.
           <button class="link-claro" onclick={() => (confirmandoFechar = false)}>Cancelar</button>
         </p>
       {/if}
