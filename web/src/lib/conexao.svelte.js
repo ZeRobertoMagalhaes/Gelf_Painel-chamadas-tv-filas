@@ -10,7 +10,10 @@ let socket = null;
 // namespace: "" para as filas; "/bio" para o módulo bioenergético.
 export function conectar(namespace = "") {
   if (socket) return;
-  socket = io(namespace, { transports: ["websocket", "polling"] });
+  // Transportes no padrão do Socket.IO (começa por polling e sobe para WebSocket).
+  // Com ["websocket", "polling"] o cliente NÃO cai para polling se o WebSocket
+  // for bloqueado (celular, VPN, DNS privado...) e a tela fica "sem conexão".
+  socket = io(namespace);
   socket.on("connect", () => (rede.online = true));
   socket.on("disconnect", () => (rede.online = false));
   socket.on("config", (c) => (rede.config = c));

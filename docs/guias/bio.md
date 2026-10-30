@@ -24,7 +24,7 @@ O paciente percorre uma **rota de etapas**: Captação/Apometria › Doutores �
 5. Toque em **Abrir o dia**, no menu da esquerda, abaixo de **Registrar chegada**. O indicador no canto esquerdo passa a **Dia aberto**.
 
 ## Cadastrar os pacientes (recepção)
-- Digite **nome** e **sobrenome** e toque em **Cadastrar**; ou toque no nome em **Pré-inscritos**.
+- Digite o **nome completo** e toque em **Cadastrar**; ou toque no nome em **Pré-inscritos**.
 - A tela mostra a orientação: *aguardar na Sala de Evangelhoterapia (térreo)*.
 - Se aparecer **"Já existe um paciente com este nome no fluxo"**: **Cadastrar mesmo assim** (é outra pessoa) ou **Cancelar**.
 - ★ marca como **prioridade** (idosos, gestantes, pessoas com deficiência): o paciente passa para o início da fila e fica com o

@@ -36,6 +36,17 @@ test('cadastro valida campos e normaliza espaços', () => {
     assert.equal(p.situacao, 'aguardando');
 });
 
+test('cadastro aceita o nome completo em um único campo', () => {
+    const e = diaAberto();
+    const p = R.cadastrar(e, { nome: '  Maria   da  Silva  Santos ', tratamento: 'reiki' }, ctx()).paciente;
+    assert.equal(p.nome, 'Maria');
+    assert.equal(p.sobrenome, 'da Silva Santos');
+    assert.equal(codigo(() => R.cadastrar(e, { nome: 'Maria', tratamento: 'reiki' }, ctx())), 'invalido');
+    assert.equal(codigo(() => R.cadastrar(e, { nome: {}, tratamento: 'reiki' }, ctx())), 'invalido');
+    // a mesma pessoa digitada em um campo ou nos dois é reconhecida como duplicada
+    assert.equal(codigo(() => cad(e, 'maria', 'DA SILVA SANTOS')), 'duplicado');
+});
+
 test('fila respeita ordem de chegada', () => {
     const e = diaAberto();
     const a = cad(e, 'Ana', 'A');
@@ -162,8 +173,10 @@ test('recepção: corrigir, trocar de fila (vai para o fim) e remover', () => {
     const e = diaAberto();
     const a = cad(e, 'Ana', 'A', 'reiki');
     const g1 = cad(e, 'Gil', 'G', 'gao');
-    R.corrigir(e, { id: a.id, nome: 'Anna' }, ctx());
+    R.corrigir(e, { id: a.id, nome: 'Anna Lima' }, ctx());
     assert.equal(a.nome, 'Anna');
+    assert.equal(a.sobrenome, 'Lima');
+    assert.equal(codigo(() => R.corrigir(e, { id: a.id, nome: 'Anna' }, ctx())), 'invalido');
     R.trocarFila(e, { id: a.id, tratamento: 'gao' }, ctx());
     assert.deepEqual(R.fila(e, 'gao').map((p) => p.id), [g1.id, a.id]);
     assert.equal(R.fila(e, 'reiki').length, 0);

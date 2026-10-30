@@ -34,7 +34,6 @@
   };
 
   let nome = $state("");
-  let sobrenome = $state("");
   let duplicado = $state(null);
   let aviso = $state({ texto: "", erro: false });
   let confirmandoFechar = $state(false);
@@ -96,11 +95,10 @@
   }
 
   async function registrarChegada(confirmarDuplicado = false) {
-    const r = await agir("registrarChegada", { nome, sobrenome, confirmarDuplicado });
+    const r = await agir("registrarChegada", { nome, confirmarDuplicado });
     if (r.ok) {
       mostrar(`${r.paciente.nome} ${r.paciente.sobrenome}: chegada registrada.`);
       nome = "";
-      sobrenome = "";
       duplicado = null;
       campoNome?.focus();
     } else if (r.codigo === "duplicado") duplicado = r.detalhe;
@@ -266,12 +264,8 @@
     {#if config}
       <form class="form-recepcao" onsubmit={aoEnviar}>
         <div class="form-group">
-          <label for="bnome">Nome</label>
-          <input id="bnome" bind:this={campoNome} bind:value={nome} maxlength="40" autocomplete="off" required />
-        </div>
-        <div class="form-group">
-          <label for="bsobrenome">Sobrenome</label>
-          <input id="bsobrenome" bind:value={sobrenome} maxlength="60" autocomplete="off" required />
+          <label for="bnome">Nome completo</label>
+          <input id="bnome" bind:this={campoNome} bind:value={nome} maxlength="100" autocomplete="off" required />
         </div>
 
         {#if duplicado}
@@ -280,7 +274,7 @@
             <span>{duplicado.situacoes.map((d) => ROTULO_SITUACAO[d.situacao].toLowerCase()).join(", ")}.</span>
             <div class="alerta-acoes">
               <button type="button" class="btn-mini ouro" onclick={() => registrarChegada(true)}>Registrar mesmo assim</button>
-              <button type="button" class="btn-mini" onclick={() => { duplicado = null; nome = ""; sobrenome = ""; campoNome?.focus(); }}>Cancelar</button>
+              <button type="button" class="btn-mini" onclick={() => { duplicado = null; nome = ""; campoNome?.focus(); }}>Cancelar</button>
             </div>
           </div>
         {/if}

@@ -26,6 +26,17 @@ function diaAberto(salas) {
     return e;
 }
 
+test('chegada aceita o nome completo em um único campo', () => {
+    const e = diaAberto();
+    const p = R.registrarChegada(e, { nome: 'João  da Silva' }, ctx()).paciente;
+    assert.equal(p.nome, 'João');
+    assert.equal(p.sobrenome, 'da Silva');
+    assert.equal(codigo(() => R.registrarChegada(e, { nome: 'Joao' }, ctx())), 'invalido');
+    assert.equal(codigo(() => R.registrarChegada(e, { nome: 'joao DA silva' }, ctx())), 'duplicado');
+    R.corrigir(e, { id: p.id, nome: 'João Lima' }, ctx());
+    assert.equal(p.sobrenome, 'Lima');
+});
+
 test('configuração: rota padrão, salas e capacidades válidas', () => {
     assert.deepEqual(config.rotaPadrao, ['captacao', 'doutores', 'reiki']);
     // todas as etapas têm 2 atendimentos simultâneos (duas salas de 1 vaga) e nenhuma tem preparo ("sala pronta")

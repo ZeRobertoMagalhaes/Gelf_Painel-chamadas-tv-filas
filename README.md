@@ -82,7 +82,7 @@ Fluxo oficial do processo: `docs/fluxos/fluxo-operacional-bio.md` (referência p
 
 | Tela | Endereço | Quem usa |
 |---|---|---|
-| Recepção | `/bio/recepcao` | A recepção: cadastra os pacientes (nome e sobrenome ou pré-inscritos) e orienta onde aguardar |
+| Recepção | `/bio/recepcao` | A recepção: cadastra os pacientes (nome completo ou pré-inscritos) e orienta onde aguardar |
 | Controle | `/bio/controle` | Responsável pelo controle: abre o dia (salas e capacidades, pré-inscritos), chama cada paciente para uma sala, inicia, conclui, cuida do prontuário, altera a rota, vê o relatório e fecha o dia |
 | Painel TV | `/bio/painel` | As duas TVs (térreo e 1º andar) mostram o mesmo: etapa, nome, sala, status e onde aguardar a próxima etapa |
 | Relatório | `/bio/relatorio` | Registro completo do dia (pacientes, horários, resumo geral) para salvar em PDF |

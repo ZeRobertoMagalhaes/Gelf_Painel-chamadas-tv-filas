@@ -6,11 +6,10 @@
   import ConnStatus from "../lib/ConnStatus.svelte";
 
   let nome = $state("");
-  let sobrenome = $state("");
   let tratamento = $state(null);
   let duplicado = $state(null); // { situacoes } quando o servidor avisa de nome repetido
   let aviso = $state({ texto: "", erro: false });
-  let editando = $state(null); // { id, modo: "corrigir" | "trocar" | "remover", nome, sobrenome }
+  let editando = $state(null); // { id, modo: "corrigir" | "trocar" | "remover", nome }
   let confirmandoFechar = $state(false);
   let campoNome = $state();
   let timerAviso;
@@ -43,11 +42,10 @@
 
   async function cadastrar(confirmarDuplicado = false) {
     if (!tratamento) return mostrar("Escolha o tratamento.", true);
-    const r = await agir("cadastrar", { nome, sobrenome, tratamento, confirmarDuplicado });
+    const r = await agir("cadastrar", { nome, tratamento, confirmarDuplicado });
     if (r.ok) {
       mostrar(`${r.paciente.nome} ${r.paciente.sobrenome} entrou na fila.`);
       nome = "";
-      sobrenome = "";
       duplicado = null;
       campoNome?.focus();
     } else if (r.codigo === "duplicado") {
@@ -71,7 +69,7 @@
   }
 
   const priorizar = (p) => acao("priorizar", { id: p.id, prioridade: !p.prioridade });
-  const salvarCorrecao = () => acao("corrigir", { id: editando.id, nome: editando.nome, sobrenome: editando.sobrenome });
+  const salvarCorrecao = () => acao("corrigir", { id: editando.id, nome: editando.nome });
   const trocar = (p, t) => acao("trocarFila", { id: p.id, tratamento: t });
   const remover = (p) => acao("remover", { id: p.id });
 
@@ -142,12 +140,8 @@
     {#if config}
       <form class="form-recepcao" onsubmit={aoEnviar}>
         <div class="form-group">
-          <label for="nome">Nome</label>
-          <input id="nome" bind:this={campoNome} bind:value={nome} maxlength="40" autocomplete="off" required />
-        </div>
-        <div class="form-group">
-          <label for="sobrenome">Sobrenome</label>
-          <input id="sobrenome" bind:value={sobrenome} maxlength="60" autocomplete="off" required />
+          <label for="nome">Nome completo</label>
+          <input id="nome" bind:this={campoNome} bind:value={nome} maxlength="100" autocomplete="off" required />
         </div>
         <div class="form-group">
           <span class="rotulo">Tratamento</span>
@@ -224,8 +218,7 @@
             <div class="cartao-paciente" class:prioridade={p.prioridade}>
               {#if editando?.id === p.id && editando.modo === "corrigir"}
                 <div class="edicao">
-                  <input bind:value={editando.nome} maxlength="40" aria-label="Nome" />
-                  <input bind:value={editando.sobrenome} maxlength="60" aria-label="Sobrenome" />
+                  <input bind:value={editando.nome} maxlength="100" aria-label="Nome completo" />
                   <div class="alerta-acoes">
                     <button class="btn-mini ouro" onclick={salvarCorrecao}>Salvar</button>
                     <button class="btn-mini" onclick={() => (editando = null)}>Cancelar</button>
@@ -258,7 +251,7 @@
                 {:else}
                   <div class="cartao-acoes">
                     <button class="icone" class:ligado={p.prioridade} title="Prioridade" aria-label="Prioridade" aria-pressed={p.prioridade} onclick={() => priorizar(p)}>★</button>
-                    <button class="icone" title="Corrigir nome" aria-label="Corrigir nome" onclick={() => (editando = { id: p.id, modo: "corrigir", nome: p.nome, sobrenome: p.sobrenome })}>✎</button>
+                    <button class="icone" title="Corrigir nome" aria-label="Corrigir nome" onclick={() => (editando = { id: p.id, modo: "corrigir", nome: `${p.nome} ${p.sobrenome}` })}>✎</button>
                     <button class="icone" title="Trocar de fila" aria-label="Trocar de fila" onclick={() => (editando = { id: p.id, modo: "trocar" })}>⇄</button>
                     <button class="icone perigo" title="Remover da fila" aria-label="Remover da fila" onclick={() => (editando = { id: p.id, modo: "remover" })}>✕</button>
                   </div>

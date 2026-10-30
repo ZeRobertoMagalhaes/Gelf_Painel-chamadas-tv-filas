@@ -23,7 +23,7 @@ Cada linha segue um passo do processo oficial.
 | # | O que fazer | O que deve acontecer | OK? | Observações |
 |---|---|---|---|---|
 | 1 | **Controle:** em *Abertura dos trabalhos*, confira as salas e capacidades, **informe em *sala/local* onde cada tratamento acontece hoje** (ex.: *Sala 03 (térreo)*) e toque em **Abrir o dia** (menu da esquerda, abaixo de **Registrar chegada**). Se quiser, cole uma lista de pré-inscritos | O indicador vira **Dia aberto**; aparecem as colunas por etapa, com o local de cada sala; a TV mostra *Aguardando próxima chamada* | | |
-| 2 | **Recepção:** cadastre 4 pacientes de teste (nome e sobrenome ou toque em um pré-inscrito) | Cada um entra na lista *Aguardando o início dos tratamentos* | | |
+| 2 | **Recepção:** cadastre 4 pacientes de teste (nome completo ou toque em um pré-inscrito) | Cada um entra na lista *Aguardando o início dos tratamentos* | | |
 | 3 | **Recepção:** leia a mensagem após cada cadastro | A tela orienta *aguardar na Sala de Evangelhoterapia (térreo)* | | |
 | 4 | **Controle:** confira as filas | Os 4 pacientes estão em **Aguardando**, na coluna **Captação/Apometria** | | |
 | 5 | **Controle:** toque em **Chamar próximo** na *Captação 1* | A TV mostra a etapa, o nome, a sala e toca o sinal. O cartão mostra **Chamado** | | |

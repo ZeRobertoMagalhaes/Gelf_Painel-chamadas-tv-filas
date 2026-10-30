@@ -38,6 +38,21 @@ function limparTexto(valor, max) {
     return String(valor ?? '').replace(/\s+/g, ' ').trim().slice(0, max);
 }
 
+// A tela pede um único campo, "nome completo". O arquivo do dia continua
+// guardando nome (1ª palavra) e sobrenome (o resto), que é o que o painel usa
+// para abreviar. Aceita também os campos antigos separados (nome + sobrenome).
+// Sem args.nome/args.sobrenome, usa `atual` (ex.: corrigir sem mudar o nome).
+function lerNome(args, atual = {}) {
+    const texto = (v) => (typeof v === 'string' ? v : '');
+    const completo =
+        args.nome === undefined && args.sobrenome === undefined
+            ? `${texto(atual.nome)} ${texto(atual.sobrenome)}`
+            : `${texto(args.nome)} ${texto(args.sobrenome)}`;
+    const palavras = limparTexto(completo, 101).split(' ').filter(Boolean);
+    if (palavras.length < 2) throw new ErroRegra('invalido', 'Informe o nome completo (nome e sobrenome).');
+    return { nome: palavras[0].slice(0, 40), sobrenome: palavras.slice(1).join(' ').slice(0, 60) };
+}
+
 // Chave para detectar a mesma pessoa: ignora caixa, acentos e espaços extras.
 function chavePaciente(nome, sobrenome) {
     return `${nome} ${sobrenome}`
@@ -97,9 +112,7 @@ function fecharAtendimento(estado) {
 
 function cadastrar(estado, args, ctx) {
     exigirAberto(estado);
-    const nome = limparTexto(args.nome, 40);
-    const sobrenome = limparTexto(args.sobrenome, 60);
-    if (!nome || !sobrenome) throw new ErroRegra('invalido', 'Informe nome e sobrenome.');
+    const { nome, sobrenome } = lerNome(args);
     exigirTratamento(ctx.config, args.tratamento);
 
     if (!args.confirmarDuplicado) {
@@ -148,9 +161,7 @@ function corrigir(estado, args, ctx) {
     exigirAberto(estado);
     const p = buscar(estado, args.id);
     exigirSituacao(p, ['aguardando'], 'corrigir');
-    const nome = limparTexto(args.nome ?? p.nome, 40);
-    const sobrenome = limparTexto(args.sobrenome ?? p.sobrenome, 60);
-    if (!nome || !sobrenome) throw new ErroRegra('invalido', 'Informe nome e sobrenome.');
+    const { nome, sobrenome } = lerNome(args, p);
     p.nome = nome;
     p.sobrenome = sobrenome;
     movimento(p, 'nome_corrigido', ctx);
@@ -297,6 +308,7 @@ module.exports = {
     isoLocal,
     novoDia,
     chavePaciente,
+    lerNome,
     fila,
     abrirAtendimento,
     fecharAtendimento,

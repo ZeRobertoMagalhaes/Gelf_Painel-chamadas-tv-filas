@@ -7,7 +7,7 @@
 // Mesmo desenho das regras das filas: funções puras sobre o estado do dia,
 // sem rede nem disco; cada uma valida antes de alterar e lança ErroRegra.
 
-const { ErroRegra, dataLocal, isoLocal, chavePaciente } = require('../regras');
+const { ErroRegra, dataLocal, isoLocal, chavePaciente, lerNome } = require('../regras');
 
 const LIMITE_HISTORICO = 20;
 const EM_SALA = ['chamado', 'em_atendimento'];
@@ -249,8 +249,8 @@ function pularEtapa(estado, args, ctx) {
 
 function registrarChegada(estado, args, ctx) {
     exigirAberto(estado);
-    let nome = limparTexto(args.nome, 40);
-    let sobrenome = limparTexto(args.sobrenome, 60);
+    let nome;
+    let sobrenome;
     let descricao = '';
     let pre = null;
     if (args.preinscritoId) {
@@ -258,8 +258,9 @@ function registrarChegada(estado, args, ctx) {
         if (!pre) throw new ErroRegra('nao_encontrado', 'Pré-inscrição não encontrada.');
         if (pre.pacienteId) throw new ErroRegra('duplicado_chegada', 'Esta pessoa já teve a chegada registrada.');
         ({ nome, sobrenome, descricao } = pre);
+    } else {
+        ({ nome, sobrenome } = lerNome(args));
     }
-    if (!nome || !sobrenome) throw new ErroRegra('invalido', 'Informe nome e sobrenome.');
 
     if (!args.confirmarDuplicado) {
         const chave = chavePaciente(nome, sobrenome);
@@ -308,9 +309,7 @@ function corrigir(estado, args, ctx) {
     exigirAberto(estado);
     const p = buscar(estado, args.id);
     exigirSituacao(p, ['aguardando'], 'corrigir');
-    const nome = limparTexto(args.nome ?? p.nome, 40);
-    const sobrenome = limparTexto(args.sobrenome ?? p.sobrenome, 60);
-    if (!nome || !sobrenome) throw new ErroRegra('invalido', 'Informe nome e sobrenome.');
+    const { nome, sobrenome } = lerNome(args, p);
     p.nome = nome;
     p.sobrenome = sobrenome;
     movimento(p, 'nome_corrigido', ctx);

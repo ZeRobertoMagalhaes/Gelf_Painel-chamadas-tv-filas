@@ -201,7 +201,7 @@ O endereço do computador pode mudar; para fixá-lo, reserve o IP dele no rotead
 ## C3. Primeiros passos em 2 minutos
 
 1. No **Controle**, confira as salas em **Abertura dos trabalhos** e toque em **Abrir o dia** (no menu da esquerda, abaixo de **Registrar chegada**).
-2. Na **Recepção**, digite nome e sobrenome de um paciente de teste e toque em **Cadastrar**.
+2. Na **Recepção**, digite o nome completo de um paciente de teste e toque em **Cadastrar**.
 3. No **Controle**, na coluna **Captação/Apometria**, toque em **Chamar próximo**.
 4. Olhe o **Painel da TV**: aparece o nome e a sala.
 
