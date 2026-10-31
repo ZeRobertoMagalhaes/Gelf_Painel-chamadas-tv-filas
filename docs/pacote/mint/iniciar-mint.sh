@@ -1,5 +1,5 @@
 #!/bin/bash
-# Painel GELF - Cura Mediunica (Bio) para Linux Mint.
+# Painel GELF - Filas e Bio para Linux Mint.
 # Liga o sistema. Usa o Node.js que vem dentro deste pacote (pasta "node"), sem precisar instalar nada.
 cd "$(dirname "$(readlink -f "$0")")" || exit 1
 AQUI="$(pwd)"
@@ -28,7 +28,7 @@ fi
 mkdir -p dados
 IP="$(hostname -I 2>/dev/null | awk '{print $1}')"
 echo "=========================================="
-echo " PAINEL GELF - Cura Mediunica (Bio)"
+echo " PAINEL GELF - Filas e Bio"
 echo "=========================================="
 echo " Node.js: $("$NODE" -v) ($ORIGEM)"
 echo

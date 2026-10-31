@@ -1,9 +1,9 @@
 @echo off
-title Painel GELF - Cura Mediunica (Bio) - NAO FECHE ESTA JANELA
+title Painel GELF - Filas e Bio - NAO FECHE ESTA JANELA
 cd /d "%~dp0"
 echo.
 echo  ==========================================
-echo   PAINEL GELF - Cura Mediunica (Bio)
+echo   PAINEL GELF - Filas e Bio
 echo  ==========================================
 echo.
 where node >nul 2>nul

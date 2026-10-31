@@ -10,7 +10,7 @@ if [ "$(node -p "process.versions.node.split('.')[0]")" -lt 18 ]; then
   exit 1
 fi
 mkdir -p dados
-echo "Painel GELF - Cura Mediunica (Bio)"
+echo "Painel GELF - Filas e Bio"
 echo "Pagina inicial (links e QR code para o celular): http://localhost:3000"
 (sleep 3; (xdg-open http://localhost:3000/ || open http://localhost:3000/) >/dev/null 2>&1) &
 echo "Para encerrar: pressione Ctrl+C."

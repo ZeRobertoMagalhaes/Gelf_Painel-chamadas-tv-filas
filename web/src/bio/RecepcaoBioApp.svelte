@@ -15,11 +15,10 @@
   };
 
   let nome = $state("");
-  let sobrenome = $state("");
   let duplicado = $state(null);
   let aviso = $state({ texto: "", erro: false });
   let campoNome = $state();
-  let editando = $state(null); // { id, modo: "corrigir" | "remover", nome, sobrenome }
+  let editando = $state(null); // { id, modo: "corrigir" | "remover", nome }
   let timerAviso;
 
   const config = $derived(rede.config);
@@ -62,11 +61,10 @@
   const orientacao = (p) => `${p.nome} ${p.sobrenome} cadastrado(a). Orientar: aguardar na ${localInicial}.`;
 
   async function cadastrar(confirmarDuplicado = false) {
-    const r = await agir("registrarChegada", { nome, sobrenome, confirmarDuplicado });
+    const r = await agir("registrarChegada", { nome, confirmarDuplicado });
     if (r.ok) {
       mostrar(orientacao(r.paciente));
       nome = "";
-      sobrenome = "";
       duplicado = null;
       campoNome?.focus();
     } else if (r.codigo === "duplicado") duplicado = r.detalhe;
@@ -86,7 +84,7 @@
   }
 
   async function salvarCorrecao() {
-    const r = await acao("corrigir", { id: editando.id, nome: editando.nome, sobrenome: editando.sobrenome });
+    const r = await acao("corrigir", { id: editando.id, nome: editando.nome });
     if (r.ok) editando = null;
   }
   async function confirmarRemocao() {
@@ -106,12 +104,8 @@
     {#if config}
       <form class="form-recepcao" onsubmit={aoEnviar}>
         <div class="form-group">
-          <label for="rnome">Nome</label>
-          <input id="rnome" bind:this={campoNome} bind:value={nome} maxlength="40" autocomplete="off" required />
-        </div>
-        <div class="form-group">
-          <label for="rsobrenome">Sobrenome</label>
-          <input id="rsobrenome" bind:value={sobrenome} maxlength="60" autocomplete="off" required />
+          <label for="rnome">Nome e Sobrenome</label>
+          <input id="rnome" bind:this={campoNome} bind:value={nome} maxlength="100" autocomplete="off" required />
         </div>
 
         {#if duplicado}
@@ -120,7 +114,7 @@
             <span>{duplicado.situacoes.map((d) => ROTULO_SITUACAO[d.situacao].toLowerCase()).join(", ")}.</span>
             <div class="alerta-acoes">
               <button type="button" class="btn-mini ouro" onclick={() => cadastrar(true)}>Cadastrar mesmo assim</button>
-              <button type="button" class="btn-mini" onclick={() => { duplicado = null; nome = ""; sobrenome = ""; campoNome?.focus(); }}>Cancelar</button>
+              <button type="button" class="btn-mini" onclick={() => { duplicado = null; nome = ""; campoNome?.focus(); }}>Cancelar</button>
             </div>
           </div>
         {/if}
@@ -169,8 +163,7 @@
           <div class="cartao-paciente" class:prioridade={p.prioridade}>
             {#if editando?.id === p.id && editando.modo === "corrigir"}
               <div class="cartao-edicao">
-                <input bind:value={editando.nome} maxlength="40" aria-label="Nome" />
-                <input bind:value={editando.sobrenome} maxlength="60" aria-label="Sobrenome" />
+                <input bind:value={editando.nome} maxlength="100" aria-label="Nome e Sobrenome" />
                 <div class="alerta-acoes">
                   <button class="btn-mini ouro" onclick={salvarCorrecao}>Salvar</button>
                   <button class="btn-mini" onclick={() => (editando = null)}>Cancelar</button>
@@ -195,7 +188,7 @@
               <PassosPaciente {p} etapas={config.etapas} />
               <div class="cartao-acoes">
                 <button class="icone" class:ligado={p.prioridade} title="Prioridade" aria-label="Prioridade" aria-pressed={p.prioridade} onclick={() => priorizar(p)}>★</button>
-                <button class="icone" title="Corrigir nome" aria-label="Corrigir nome" onclick={() => (editando = { id: p.id, modo: "corrigir", nome: p.nome, sobrenome: p.sobrenome })}>✎</button>
+                <button class="icone" title="Corrigir nome" aria-label="Corrigir nome" onclick={() => (editando = { id: p.id, modo: "corrigir", nome: `${p.nome} ${p.sobrenome}` })}>✎</button>
                 <button class="icone perigo" title="Remover do fluxo" aria-label="Remover do fluxo" onclick={() => (editando = { id: p.id, modo: "remover" })}>✕</button>
               </div>
             {/if}

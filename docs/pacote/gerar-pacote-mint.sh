@@ -41,7 +41,7 @@ chmod +x "$PACOTE/node/bin/node"
 echo "==> Ligador, atalho e textos"
 cp "$RAIZ/docs/pacote/mint/iniciar-mint.sh" "$RAIZ/docs/pacote/mint/instalar-atalho-mint.sh" "$RAIZ/docs/pacote/mint/LEIA-ME-PRIMEIRO.txt" "$PACOTE/"
 chmod +x "$PACOTE/iniciar-mint.sh" "$PACOTE/instalar-atalho-mint.sh"
-printf 'Painel GELF - Cura Mediunica (Bio) - pacote para Linux Mint\nVersao: %s\nNode.js incluido: %s (linux-x64)\nGerado em: %s\n' "$VERSAO" "$NODE_VERSAO" "$(date +%d/%m/%Y)" > "$PACOTE/VERSAO.txt"
+printf 'Painel GELF - Filas e Bio - pacote para Linux Mint\nVersao: %s\nNode.js incluido: %s (linux-x64)\nGerado em: %s\n' "$VERSAO" "$NODE_VERSAO" "$(date +%d/%m/%Y)" > "$PACOTE/VERSAO.txt"
 
 if [ -z "${NAO_PDF:-}" ]; then
   if [ ! -d "$FERRAMENTAS/node_modules/mermaid" ]; then
@@ -49,7 +49,8 @@ if [ -z "${NAO_PDF:-}" ]; then
     mkdir -p "$FERRAMENTAS" && (cd "$FERRAMENTAS" && npm init -y >/dev/null && npm i --silent playwright-core marked mermaid)
   fi
   echo "==> Gerando os PDFs"
-  node "$RAIZ/docs/pacote/ferramentas/md2pdf.mjs" "$RAIZ/docs/pacote/0-Roteiro-Rapido.md" "$PACOTE/documentos/0-Roteiro-Rapido.pdf" "Painel GELF — Roteiro rápido"
+  node "$RAIZ/docs/pacote/ferramentas/md2pdf.mjs" "$RAIZ/docs/pacote/0-Roteiro-Evangelho-Terapia.md" "$PACOTE/documentos/0-Roteiro-Evangelho-Terapia.pdf" "Painel GELF — Roteiro rápido: Evangelho Terapia"
+  node "$RAIZ/docs/pacote/ferramentas/md2pdf.mjs" "$RAIZ/docs/pacote/0-Roteiro-Bio-Energia.md" "$PACOTE/documentos/0-Roteiro-Bio-Energia.pdf" "Painel GELF — Roteiro rápido: Bio Energia"
   node "$RAIZ/docs/pacote/ferramentas/md2pdf.mjs" "$RAIZ/docs/pacote/mint/1-Instalacao-Linux-Mint.md" "$PACOTE/documentos/1-Instalacao-Linux-Mint.pdf" "Painel GELF Bio — Instalação no Linux Mint"
   node "$RAIZ/docs/pacote/ferramentas/md2pdf.mjs" "$RAIZ/docs/pacote/2-Roteiro-de-validacao.md" "$PACOTE/documentos/2-Roteiro-de-validacao.pdf" "Painel GELF Bio — Roteiro de validação" paisagem
   node "$RAIZ/docs/pacote/ferramentas/pdf-fluxos.mjs" "$RAIZ" Bio

@@ -1,4 +1,4 @@
-PAINEL GELF - CURA MEDIUNICA (BIO)  -  Pacote para LINUX MINT
+PAINEL GELF - FILAS E BIO  -  Pacote para LINUX MINT
 Pacote de teste e validacao do processo dos tratamentos bioenergeticos
 
 NAO PRECISA INSTALAR NADA E NAO PRECISA DE INTERNET: o Node.js ja vem dentro da pasta "node".
@@ -32,7 +32,8 @@ diferente do dia a dia, e devolva as anotacoes.
 
 DOCUMENTOS (pasta "documentos")
 -------------------------------
-0-Roteiro-Rapido.pdf            Passo a passo do dia: do clique no icone ate o fim do dia (1 pagina)
+0-Roteiro-Evangelho-Terapia.pdf  Passo a passo do dia, com imagens das telas (filas por tratamento)
+0-Roteiro-Bio-Energia.pdf        Passo a passo do dia, com imagens das telas (Bio)
 1-Instalacao-Linux-Mint.pdf     Passo a passo completo, firewall, TV Box e solucao de problemas
 2-Roteiro-de-validacao.pdf      O que testar, o que deve acontecer e perguntas para voce
 3-Fluxo-Cura-Mediunica-Bio.pdf  O processo oficial e as telas do sistema

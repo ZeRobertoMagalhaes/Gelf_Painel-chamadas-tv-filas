@@ -30,7 +30,7 @@ touch "$PACOTE/dados/.gitkeep"
 echo "==> Atalhos de inicialização e textos"
 cp "$RAIZ/docs/pacote/INICIAR-SISTEMA.bat" "$RAIZ/docs/pacote/iniciar-mac-linux.sh" "$RAIZ/docs/pacote/LEIA-ME-PRIMEIRO.txt" "$PACOTE/"
 chmod +x "$PACOTE/iniciar-mac-linux.sh"
-printf 'Painel GELF - Cura Mediunica (Bio) - pacote de teste e validacao\r\nVersao: %s\r\nGerado em: %s\r\nConteudo: filas por tratamento + modulo Bio (recepcao, controle e painel de TV)\r\n' "$VERSAO" "$(date +%d/%m/%Y)" > "$PACOTE/VERSAO.txt"
+printf 'Painel GELF - Filas e Bio - pacote de teste e validacao\r\nVersao: %s\r\nGerado em: %s\r\nConteudo: filas por tratamento + modulo Bio (recepcao, controle e painel de TV)\r\n' "$VERSAO" "$(date +%d/%m/%Y)" > "$PACOTE/VERSAO.txt"
 
 if [ -z "${NAO_PDF:-}" ]; then
   if [ ! -d "$FERRAMENTAS/node_modules/mermaid" ]; then
@@ -38,7 +38,8 @@ if [ -z "${NAO_PDF:-}" ]; then
     mkdir -p "$FERRAMENTAS" && (cd "$FERRAMENTAS" && npm init -y >/dev/null && npm i --silent playwright-core marked mermaid)
   fi
   echo "==> Gerando os PDFs"
-  node "$RAIZ/docs/pacote/ferramentas/md2pdf.mjs" "$RAIZ/docs/pacote/0-Roteiro-Rapido.md" "$PACOTE/documentos/0-Roteiro-Rapido.pdf" "Painel GELF — Roteiro rápido"
+  node "$RAIZ/docs/pacote/ferramentas/md2pdf.mjs" "$RAIZ/docs/pacote/0-Roteiro-Evangelho-Terapia.md" "$PACOTE/documentos/0-Roteiro-Evangelho-Terapia.pdf" "Painel GELF — Roteiro rápido: Evangelho Terapia"
+  node "$RAIZ/docs/pacote/ferramentas/md2pdf.mjs" "$RAIZ/docs/pacote/0-Roteiro-Bio-Energia.md" "$PACOTE/documentos/0-Roteiro-Bio-Energia.pdf" "Painel GELF — Roteiro rápido: Bio Energia"
   node "$RAIZ/docs/pacote/ferramentas/md2pdf.mjs" "$RAIZ/docs/pacote/1-Instalacao-e-uso.md" "$PACOTE/documentos/1-Instalacao-e-uso.pdf" "Painel GELF Bio — Instalação e uso"
   node "$RAIZ/docs/pacote/ferramentas/md2pdf.mjs" "$RAIZ/docs/pacote/2-Roteiro-de-validacao.md" "$PACOTE/documentos/2-Roteiro-de-validacao.pdf" "Painel GELF Bio — Roteiro de validação" paisagem
   node "$RAIZ/docs/pacote/ferramentas/pdf-fluxos.mjs" "$RAIZ" Bio

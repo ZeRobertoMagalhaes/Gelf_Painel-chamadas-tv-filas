@@ -4,6 +4,7 @@
 import { createRequire } from 'module';
 import fs from 'fs';
 import path from 'path';
+import { pathToFileURL } from 'url';
 
 const ferr = process.env.FERRAMENTAS || process.cwd();
 const req = createRequire(path.join(ferr, 'x.js'));
@@ -26,9 +27,16 @@ table { border-collapse: collapse; width: 100%; margin: 8px 0; font-size: 9.5pt;
 tr { break-inside: avoid; }
 th, td { border: 1px solid #cbd5e1; padding: 5px 7px; text-align: left; vertical-align: top; }
 th { background: #eef2ff; color: #16294a; }
+figure { margin: 10px 0; break-inside: avoid; text-align: center; }
+figure img, img { max-width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; }
+figcaption { font-size: 8.5pt; color: #475569; margin-top: 3px; }
+.lado { display: flex; gap: 10px; justify-content: center; align-items: flex-start; break-inside: avoid; }
+.lado figure { flex: 1 1 0; min-width: 0; margin: 4px 0; }
+.lado img { width: auto; max-height: 100mm; }
+.passo { break-inside: avoid; }
 blockquote { border-left: 4px solid #f59e0b; margin: 8px 0; padding: 2px 12px; background: #fffbeb; }
 `;
-const html = `<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><title>${titulo}</title><style>${css}</style></head><body>${marked.parse(fs.readFileSync(entrada, 'utf8'))}</body></html>`;
+const html = `<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><title>${titulo}</title><base href="${pathToFileURL(path.dirname(path.resolve(entrada)) + '/').href}"><style>${css}</style></head><body>${marked.parse(fs.readFileSync(entrada, 'utf8'))}</body></html>`;
 const f = saida + '.html';
 fs.writeFileSync(f, html);
 const b = await chromium.launch({ executablePath: chrome, args: ['--no-sandbox'] });
