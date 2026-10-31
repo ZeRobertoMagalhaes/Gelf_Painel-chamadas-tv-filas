@@ -53,7 +53,7 @@ Em `/bio/recepcao`, a recepção cadastra **todos** os pacientes do dia. Com o d
 
 Duas formas de cadastrar, ambas colocam o paciente no **fim da espera da primeira etapa**:
 
-- digitar o **nome completo** e tocar em **Cadastrar**;
+- digitar **Nome e Sobrenome** e tocar em **Cadastrar**;
 - tocar no nome na lista **Pré-inscritos** (o paciente leva a descrição junto, ex.: "dor nas costas").
 
 A cada cadastro, a tela diz o que fazer: **"Orientar: aguardar na Sala de Evangelhoterapia (térreo)"**.

@@ -2,20 +2,26 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 const { renderizarInicio, enderecosParaExibir } = require('../server/inicio');
 
-test('página inicial: links de todas as telas, nome na rede e um QR code por IP', () => {
+test('página inicial: links das telas, seções por tipo de tratamento e dois QR codes (nome e IP) em cada uma', () => {
     const html = renderizarInicio({ porta: 3000, nomeMdns: 'painel-gelf-filas.local', ips: ['192.168.0.10', '10.0.0.5'] });
     for (const href of ['/bio/recepcao', '/controle', '/bio/painel', '/bio/relatorio', '/recepcao', '/atendimento', '/painel', '/relatorio', '/diagnostico', '/painel-simples', '/bio/painel-simples']) {
         assert.ok(html.includes(`href="${href}"`), href);
     }
     assert.ok(html.includes('http://painel-gelf-filas.local:3000/'));
-    assert.ok(html.includes('http://192.168.0.10:3000/') && html.includes('http://10.0.0.5:3000/'));
-    assert.equal((html.match(/<svg /g) || []).length, 2); // um QR por endereço
+    assert.ok(html.includes('Tratamentos - Evangelho Terapia') && html.includes('Tratamentos - Bio Energia'));
+    // QR codes de cada tipo: pelo nome e por cada IP, apontando para a tela usada no celular
+    for (const caminho of ['/atendimento', '/bio/controle']) {
+        assert.ok(html.includes(`<code>http://painel-gelf-filas.local:3000${caminho}</code>`), caminho);
+        assert.ok(html.includes(`<code>http://192.168.0.10:3000${caminho}</code>`), caminho);
+        assert.ok(html.includes(`<code>http://10.0.0.5:3000${caminho}</code>`), caminho);
+    }
+    assert.equal((html.match(/<svg /g) || []).length, 6); // 2 tipos x (1 pelo nome + 2 pelos IPs)
 });
 
-test('página inicial: sem rede avisa em vez de mostrar QR; texto externo é escapado', () => {
+test('página inicial: sem rede avisa em vez de mostrar QR pelo IP; texto externo é escapado', () => {
     const html = renderizarInicio({ porta: 3000, nomeMdns: '<x>.local', ips: [] });
     assert.ok(html.includes('Nenhuma rede detectada'));
-    assert.equal((html.match(/<svg /g) || []).length, 0);
+    assert.equal((html.match(/<svg /g) || []).length, 2); // só os QR codes pelo nome
     assert.ok(!html.includes('<x>.local') && html.includes('&lt;x&gt;.local'));
 });
 

@@ -25,9 +25,9 @@ dentro do pacote.
 
 ## 3. Instalar (uma única vez)
 
-1. Salve o arquivo **Painel-GELF-Bio-Linux-Mint.zip** na pasta *Downloads*.
+1. Salve o arquivo **Painel-Gelf-Filas-Linux-Mint.zip** na pasta *Downloads*.
 2. Clique com o botão direito no arquivo e escolha **Extrair aqui**.
-3. **Mova a pasta extraída** (`Painel-GELF-Bio`) para a sua **Pasta pessoal**, para ficar fácil de achar.
+3. **Mova a pasta extraída** (`Painel-Gelf-Filas`) para a sua **Pasta pessoal**, para ficar fácil de achar.
 4. Abra a pasta, clique com o botão direito num espaço vazio e escolha **Abrir no terminal**.
 5. No Terminal, digite as duas linhas abaixo (aperte **Enter** depois de cada uma):
    ```

@@ -20,7 +20,7 @@ flowchart TD
 | # | Passo oficial | Quem | No sistema |
 |---|---|---|---|
 | 1 | Abrir o sistema e os módulos do dia | responsável pelo início | **Abrir o dia** em `/bio/controle` (salas, capacidades, pré-inscritos); TVs em `/bio/painel` |
-| 2 | Cadastrar todos os pacientes | recepção | `/bio/recepcao`: nome completo, ou toque no pré-inscrito |
+| 2 | Cadastrar todos os pacientes | recepção | `/bio/recepcao`: Nome e Sobrenome, ou toque no pré-inscrito |
 | 3 | Orientar a aguardar na sala de Evangelhoterapia (térreo) | recepção | A tela da recepção mostra a orientação após cada cadastro |
 | 4 | Conferir as filas já com todos os cadastrados | controle e orquestração | `/bio/controle`: colunas por etapa, com **Aguardando** |
 | 5 | Iniciar a chamada pelo sistema | controle | **Chamar próximo** (ou **→ sala** para escolher quem entra) |

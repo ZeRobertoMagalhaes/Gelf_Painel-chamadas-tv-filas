@@ -1,9 +1,10 @@
 const qrcode = require('qrcode-generator');
 
-// Página inicial (/): links para todas as telas e QR code do endereço atual do
-// sistema. É gerada a cada acesso, então o QR acompanha uma eventual mudança de
-// IP do computador; quem abre a página por qualquer endereço chega às telas
-// por links relativos.
+// Página inicial (/): links para todas as telas e, para cada tipo de tratamento,
+// dois QR codes da tela usada no celular: um pelo nome na rede e outro pelo IP
+// numérico (para os aparelhos que não resolvem o nome). É gerada a cada acesso,
+// então os QR codes acompanham uma eventual mudança de IP do computador; quem
+// abre a página por qualquer endereço chega às telas por links relativos.
 
 const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 
@@ -27,18 +28,29 @@ const FILAS = [
     ['/relatorio', 'Relatório', 'Registro do dia, salvar em PDF'],
 ];
 
+// Tela que o QR code abre em cada tipo de tratamento (a usada no celular).
+const QR_FILAS = ['/atendimento', 'Atendimento'];
+const QR_BIO = ['/bio/controle', 'Controle'];
+
 const links = (lista) =>
     lista.map(([href, titulo, dica]) => `<a class="tela" href="${esc(href)}"><strong>${esc(titulo)}</strong><span>${esc(dica)}</span></a>`).join('');
 
 function renderizarInicio({ porta, nomeMdns, ips }) {
     const nome = `http://${nomeMdns}:${porta}/`;
+    const cartaoQr = (titulo, url) =>
+        `<div class="qr-cartao"><div class="qr">${qrSvg(url)}</div><div><strong>${esc(titulo)}</strong><code>${esc(url)}</code></div></div>`;
+    // Dois QR codes por tipo: pelo nome (acompanha mudanças de IP) e pelo IP (um por endereço detectado).
+    const qrs = ([caminho, tela]) => `<div class="qrs">
+<p class="qr-titulo">QR code do celular: <strong>${esc(tela)}</strong></p>
+${cartaoQr('Pelo nome', `http://${nomeMdns}:${porta}${caminho}`)}
+${
+    ips.length
+        ? ips.map((ip) => cartaoQr(ips.length > 1 ? `Pelo IP (${ip})` : 'Pelo IP', `http://${ip}:${porta}${caminho}`)).join('\n')
+        : '<p class="aviso">Nenhuma rede detectada neste computador. Conecte-o ao Wi-Fi ou ao cabo de rede.</p>'
+}
+</div>`;
     const enderecos = ips.length
-        ? ips
-              .map((ip) => {
-                  const url = `http://${ip}:${porta}/`;
-                  return `<div class="end"><div class="qr">${qrSvg(url)}</div><div><code>${esc(url)}</code><p>Aponte a câmera do celular para abrir esta página.</p></div></div>`;
-              })
-              .join('')
+        ? ips.map((ip) => `<p>Pelo IP: <code>${esc(`http://${ip}:${porta}/`)}</code></p>`).join('')
         : '<p class="aviso">Nenhuma rede detectada neste computador. Conecte-o ao Wi-Fi ou ao cabo de rede.</p>';
     return `<!DOCTYPE html>
 <html lang="pt-BR">
@@ -62,8 +74,11 @@ a.tela { display: flex; flex-direction: column; gap: 2px; padding: 14px; border-
 a.tela:hover, a.tela:focus-visible { background: var(--azul2); color: #fff; }
 a.tela strong { font-size: 1.05rem; }
 a.tela span { font-size: .85rem; opacity: .85; }
-.end { display: flex; gap: 14px; align-items: center; margin-top: 12px; }
-.qr { width: 150px; flex: none; }
+.qrs { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 14px; padding-top: 12px; border-top: 1px solid #e2e8f0; }
+.qr-titulo { flex-basis: 100%; margin: 0; color: #475569; }
+.qr-cartao { display: flex; gap: 12px; align-items: center; flex: 1 1 260px; }
+.qr-cartao strong { display: block; margin-bottom: 4px; color: var(--azul); }
+.qr { width: 130px; flex: none; }
 .qr svg { width: 100%; height: auto; display: block; border: 1px solid #cbd5e1; border-radius: 8px; }
 code { background: #eef2ff; padding: 2px 6px; border-radius: 4px; word-break: break-all; }
 p { margin: 6px 0; }
@@ -74,8 +89,8 @@ p { margin: 6px 0; }
 <body>
 <header><h1>Painel GELF</h1><p>Escolha a tela que você vai usar</p></header>
 <main>
-<section><h2>Cura Mediúnica (Bio)</h2><div class="telas">${links(BIO)}</div></section>
-<section><h2>Filas por tratamento</h2><div class="telas">${links(FILAS)}</div></section>
+<section><h2>Tratamentos - Bio Energia</h2><div class="telas">${links(BIO)}</div>${qrs(QR_BIO)}</section>
+<section><h2>Tratamentos - Evangelho Terapia</h2><div class="telas">${links(FILAS)}</div>${qrs(QR_FILAS)}</section>
 <section>
 <h2>TV Box ou navegador antigo?</h2>
 <div class="telas">
@@ -87,7 +102,7 @@ p { margin: 6px 0; }
 <section>
 <h2>Endereço deste sistema</h2>
 <p>Pelo nome (acompanha mudanças de IP): <code>${esc(nome)}</code></p>
-<p class="dica">Salve nos favoritos o endereço com o nome. Se ele não abrir no seu aparelho (acontece em alguns Android e em redes de visitantes), use o endereço numérico abaixo ou o QR code.</p>
+<p class="dica">Salve nos favoritos o endereço com o nome. Se ele não abrir no seu aparelho (acontece em alguns Android e em redes de visitantes), use o endereço numérico abaixo ou o QR code "Pelo IP".</p>
 ${enderecos}
 <p class="dica">O endereço numérico muda se o roteador trocar o IP deste computador. Para fixá-lo, reserve o IP do computador no roteador.</p>
 </section>

@@ -4,7 +4,7 @@ Pacote de teste e validacao do processo dos tratamentos bioenergeticos
 COMO COLOCAR NO AR (resumo)
 ---------------------------
 1. Instale o Node.js (so uma vez): https://nodejs.org  -> botao verde "LTS" -> Next ate Install.
-2. Extraia este ZIP (botao direito > Extrair tudo) para uma pasta, por exemplo C:\Painel-GELF-Bio
+2. Extraia este ZIP (botao direito > Extrair tudo) para uma pasta, por exemplo C:\Painel-Gelf-Filas
 3. Duas vezes no arquivo  INICIAR-SISTEMA.bat
    - Se o Windows avisar "protegeu o computador": Mais informacoes > Executar assim mesmo.
    - Se perguntar sobre o Firewall: marque "Redes privadas" > Permitir acesso.
@@ -26,6 +26,7 @@ Anote o que funcionou, o que confundiu e o que esta diferente do dia a dia, e de
 
 DOCUMENTOS (pasta "documentos")
 -------------------------------
+0-Roteiro-Rapido.pdf            Passo a passo do dia: do clique ate o fim do dia (1 pagina)
 1-Instalacao-e-uso.pdf          Passo a passo para WINDOWS (Parte A) e LINUX (Parte B), uso e problemas
 2-Roteiro-de-validacao.pdf      O que testar, o que deve acontecer e perguntas para voce
 3-Fluxo-Cura-Mediunica-Bio.pdf  O processo oficial e as telas do sistema

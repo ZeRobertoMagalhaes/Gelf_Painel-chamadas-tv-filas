@@ -5,7 +5,7 @@ Endereço: `/recepcao` (ex.: http://painel-gelf-filas.local:3000/recepcao)
 **Começar o dia:** toque em **Abrir atendimento** (no canto esquerdo, embaixo). Sem isso ninguém cadastra nem chama.
 
 **Cadastrar um paciente**
-1. Digite o **nome completo** (nome e sobrenome, no mesmo campo).
+1. Digite **Nome e Sobrenome** (no mesmo campo; precisa ter pelo menos duas palavras).
 2. Toque no **tratamento** (botão colorido).
 3. Toque em **Cadastrar** (ou Enter). O paciente entra no fim da fila e o cursor volta ao nome.
 

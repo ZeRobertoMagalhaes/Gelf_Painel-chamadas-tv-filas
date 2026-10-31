@@ -264,7 +264,7 @@
     {#if config}
       <form class="form-recepcao" onsubmit={aoEnviar}>
         <div class="form-group">
-          <label for="bnome">Nome completo</label>
+          <label for="bnome">Nome e Sobrenome</label>
           <input id="bnome" bind:this={campoNome} bind:value={nome} maxlength="100" autocomplete="off" required />
         </div>
 

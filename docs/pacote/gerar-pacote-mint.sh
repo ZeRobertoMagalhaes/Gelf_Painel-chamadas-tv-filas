@@ -1,5 +1,5 @@
 #!/bin/bash
-# Gera o pacote para Linux Mint (dist/Painel-GELF-Bio-Linux-Mint.zip): o sistema + o Node.js embutido
+# Gera o pacote para Linux Mint (dist/Painel-Gelf-Filas-Linux-Mint.zip): o sistema + o Node.js embutido
 # (nao precisa instalar nada nem de internet no Mint) + ligador, atalho e guia em PDF.
 #
 # Uso (na raiz do projeto):   VERSAO=abc1234 bash docs/pacote/gerar-pacote-mint.sh
@@ -14,7 +14,7 @@ VERSAO="${VERSAO:-$(date +%Y-%m-%d)}"
 NODE_VERSAO="${NODE_VERSAO:-$(node -v)}"
 CACHE_NODE="${CACHE_NODE:-/tmp/gelf-node-cache}"
 PALCO="$(mktemp -d)"
-PACOTE="$PALCO/Painel-GELF-Bio"
+PACOTE="$PALCO/Painel-Gelf-Filas"
 trap 'rm -rf "$PALCO"' EXIT
 export FERRAMENTAS
 
@@ -49,6 +49,7 @@ if [ -z "${NAO_PDF:-}" ]; then
     mkdir -p "$FERRAMENTAS" && (cd "$FERRAMENTAS" && npm init -y >/dev/null && npm i --silent playwright-core marked mermaid)
   fi
   echo "==> Gerando os PDFs"
+  node "$RAIZ/docs/pacote/ferramentas/md2pdf.mjs" "$RAIZ/docs/pacote/0-Roteiro-Rapido.md" "$PACOTE/documentos/0-Roteiro-Rapido.pdf" "Painel GELF — Roteiro rápido"
   node "$RAIZ/docs/pacote/ferramentas/md2pdf.mjs" "$RAIZ/docs/pacote/mint/1-Instalacao-Linux-Mint.md" "$PACOTE/documentos/1-Instalacao-Linux-Mint.pdf" "Painel GELF Bio — Instalação no Linux Mint"
   node "$RAIZ/docs/pacote/ferramentas/md2pdf.mjs" "$RAIZ/docs/pacote/2-Roteiro-de-validacao.md" "$PACOTE/documentos/2-Roteiro-de-validacao.pdf" "Painel GELF Bio — Roteiro de validação" paisagem
   node "$RAIZ/docs/pacote/ferramentas/pdf-fluxos.mjs" "$RAIZ" Bio
@@ -58,6 +59,6 @@ cp "$RAIZ/docs/fluxos/pdf/Fluxo-Cura-Mediunica-Bio.pdf" "$PACOTE/documentos/3-Fl
 
 echo "==> Compactando"
 mkdir -p "$RAIZ/dist"
-rm -f "$RAIZ/dist/Painel-GELF-Bio-Linux-Mint.zip"
-(cd "$PALCO" && zip -qr "$RAIZ/dist/Painel-GELF-Bio-Linux-Mint.zip" Painel-GELF-Bio -x "*/dados/*.json")
-ls -la "$RAIZ/dist/Painel-GELF-Bio-Linux-Mint.zip"
+rm -f "$RAIZ/dist/Painel-Gelf-Filas-Linux-Mint.zip"
+(cd "$PALCO" && zip -qr "$RAIZ/dist/Painel-Gelf-Filas-Linux-Mint.zip" Painel-Gelf-Filas -x "*/dados/*.json")
+ls -la "$RAIZ/dist/Painel-Gelf-Filas-Linux-Mint.zip"

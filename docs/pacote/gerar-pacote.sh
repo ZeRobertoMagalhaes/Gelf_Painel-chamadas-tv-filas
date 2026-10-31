@@ -1,5 +1,5 @@
 #!/bin/bash
-# Gera o pacote de instalação para teste e validação (dist/Painel-GELF-Bio.zip).
+# Gera o pacote de instalação para teste e validação (dist/Painel-Gelf-Filas-Windows.zip).
 #
 # Uso (na raiz do projeto):
 #   VERSAO=abc1234 bash docs/pacote/gerar-pacote.sh
@@ -17,7 +17,7 @@ RAIZ="$(cd "$(dirname "$0")/../.." && pwd)"
 FERRAMENTAS="${FERRAMENTAS:-/tmp/gelf-ferramentas-pdf}"
 VERSAO="${VERSAO:-$(date +%Y-%m-%d)}"
 PALCO="$(mktemp -d)"
-PACOTE="$PALCO/Painel-GELF-Bio"
+PACOTE="$PALCO/Painel-Gelf-Filas"
 trap 'rm -rf "$PALCO"' EXIT
 export FERRAMENTAS
 
@@ -38,6 +38,7 @@ if [ -z "${NAO_PDF:-}" ]; then
     mkdir -p "$FERRAMENTAS" && (cd "$FERRAMENTAS" && npm init -y >/dev/null && npm i --silent playwright-core marked mermaid)
   fi
   echo "==> Gerando os PDFs"
+  node "$RAIZ/docs/pacote/ferramentas/md2pdf.mjs" "$RAIZ/docs/pacote/0-Roteiro-Rapido.md" "$PACOTE/documentos/0-Roteiro-Rapido.pdf" "Painel GELF — Roteiro rápido"
   node "$RAIZ/docs/pacote/ferramentas/md2pdf.mjs" "$RAIZ/docs/pacote/1-Instalacao-e-uso.md" "$PACOTE/documentos/1-Instalacao-e-uso.pdf" "Painel GELF Bio — Instalação e uso"
   node "$RAIZ/docs/pacote/ferramentas/md2pdf.mjs" "$RAIZ/docs/pacote/2-Roteiro-de-validacao.md" "$PACOTE/documentos/2-Roteiro-de-validacao.pdf" "Painel GELF Bio — Roteiro de validação" paisagem
   node "$RAIZ/docs/pacote/ferramentas/pdf-fluxos.mjs" "$RAIZ" Bio
@@ -47,6 +48,6 @@ cp "$RAIZ/docs/fluxos/pdf/Fluxo-Cura-Mediunica-Bio.pdf" "$PACOTE/documentos/3-Fl
 
 echo "==> Compactando"
 mkdir -p "$RAIZ/dist"
-rm -f "$RAIZ/dist/Painel-GELF-Bio.zip"
-(cd "$PALCO" && zip -qr "$RAIZ/dist/Painel-GELF-Bio.zip" Painel-GELF-Bio -x "*/dados/*.json")
-ls -la "$RAIZ/dist/Painel-GELF-Bio.zip"
+rm -f "$RAIZ/dist/Painel-Gelf-Filas-Windows.zip"
+(cd "$PALCO" && zip -qr "$RAIZ/dist/Painel-Gelf-Filas-Windows.zip" Painel-Gelf-Filas -x "*/dados/*.json")
+ls -la "$RAIZ/dist/Painel-Gelf-Filas-Windows.zip"

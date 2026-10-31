@@ -6,7 +6,7 @@ Serve para Linux Mint de 64 bits (confira: no Terminal, "uname -m" mostra x86_64
 
 COMO COLOCAR NO AR
 ------------------
-1. Clique com o botao direito no ZIP > "Extrair aqui" e mova a pasta Painel-GELF-Bio para a sua Pasta pessoal.
+1. Clique com o botao direito no ZIP > "Extrair aqui" e mova a pasta Painel-Gelf-Filas para a sua Pasta pessoal.
 2. Dentro da pasta: botao direito num espaco vazio > "Abrir no terminal". Digite:
      chmod +x iniciar-mint.sh instalar-atalho-mint.sh node/bin/node
      ./instalar-atalho-mint.sh
@@ -32,6 +32,7 @@ diferente do dia a dia, e devolva as anotacoes.
 
 DOCUMENTOS (pasta "documentos")
 -------------------------------
+0-Roteiro-Rapido.pdf            Passo a passo do dia: do clique no icone ate o fim do dia (1 pagina)
 1-Instalacao-Linux-Mint.pdf     Passo a passo completo, firewall, TV Box e solucao de problemas
 2-Roteiro-de-validacao.pdf      O que testar, o que deve acontecer e perguntas para voce
 3-Fluxo-Cura-Mediunica-Bio.pdf  O processo oficial e as telas do sistema

@@ -38,7 +38,7 @@ function limparTexto(valor, max) {
     return String(valor ?? '').replace(/\s+/g, ' ').trim().slice(0, max);
 }
 
-// A tela pede um único campo, "nome completo". O arquivo do dia continua
+// A tela pede um único campo, "Nome e Sobrenome". O arquivo do dia continua
 // guardando nome (1ª palavra) e sobrenome (o resto), que é o que o painel usa
 // para abreviar. Aceita também os campos antigos separados (nome + sobrenome).
 // Sem args.nome/args.sobrenome, usa `atual` (ex.: corrigir sem mudar o nome).
@@ -49,7 +49,7 @@ function lerNome(args, atual = {}) {
             ? `${texto(atual.nome)} ${texto(atual.sobrenome)}`
             : `${texto(args.nome)} ${texto(args.sobrenome)}`;
     const palavras = limparTexto(completo, 101).split(' ').filter(Boolean);
-    if (palavras.length < 2) throw new ErroRegra('invalido', 'Informe o nome completo (nome e sobrenome).');
+    if (palavras.length < 2) throw new ErroRegra('invalido', 'Informe nome e sobrenome.');
     return { nome: palavras[0].slice(0, 40), sobrenome: palavras.slice(1).join(' ').slice(0, 60) };
 }
 

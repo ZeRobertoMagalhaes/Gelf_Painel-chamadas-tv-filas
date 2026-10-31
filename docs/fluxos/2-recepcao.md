@@ -6,7 +6,7 @@ Quem faz: a **recepção**. Endereço: `/recepcao`. Resumo para consulta rápida
 
 ```mermaid
 flowchart TD
-    A[Digitar o nome completo] --> B[Tocar no tratamento]
+    A[Digitar Nome e Sobrenome] --> B[Tocar no tratamento]
     B --> C[Cadastrar]
     C -->|nome novo| D[Entra no fim da fila]
     C -->|nome repetido| E{Mesma pessoa?}
@@ -18,7 +18,7 @@ flowchart TD
 ## Passo a passo
 
 ### 1. Cadastrar um paciente
-Digite o **nome completo** (nome e sobrenome, em um só campo) e toque no **tratamento** (o botão escolhido fica preenchido).
+Digite **Nome e Sobrenome** (em um só campo, com pelo menos duas palavras) e toque no **tratamento** (o botão escolhido fica preenchido).
 
 ![Formulário de cadastro com o tratamento escolhido](img/recepcao-1-formulario.webp)
 
@@ -54,7 +54,7 @@ Toque em ⇄ e depois no tratamento de destino. O paciente vai para o **fim** da
 ![Escolha da nova fila](img/recepcao-5-trocar-fila.webp)
 
 ### 5. Corrigir ✎
-Abre o campo de nome completo do cartão. **Salvar** grava a correção; **Cancelar** descarta.
+Abre o campo Nome e Sobrenome do cartão. **Salvar** grava a correção; **Cancelar** descarta.
 
 ### 6. Remover ✕
 Pede confirmação no próprio cartão (**Remover** / **Não**). Use para desistência ou cadastro errado.

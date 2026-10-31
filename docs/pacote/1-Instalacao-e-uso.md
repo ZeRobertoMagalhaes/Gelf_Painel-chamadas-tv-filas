@@ -41,9 +41,9 @@ Se o Node.js já estiver instalado, pule este passo.
 
 ## A2. Colocar o sistema no computador
 
-1. Salve o arquivo **Painel-GELF-Bio.zip** em uma pasta, por exemplo a Área de Trabalho.
+1. Salve o arquivo **Painel-Gelf-Filas-Windows.zip** em uma pasta, por exemplo a Área de Trabalho.
 2. Clique com o botão direito no arquivo e escolha **Extrair tudo…**, depois **Extrair**.
-3. **Mova a pasta extraída** para `C:\` (fica `C:\Painel-GELF-Bio`), para ficar fácil de achar.
+3. **Mova a pasta extraída** para `C:\` (fica `C:\Painel-Gelf-Filas`), para ficar fácil de achar.
 
 > Não abra o sistema de dentro do arquivo ZIP: extraia primeiro.
 
@@ -97,21 +97,21 @@ Digite cada linha e aperte **Enter**.
 
 ## B2. Colocar o sistema no computador
 
-1. Salve o arquivo **Painel-GELF-Bio.zip** na sua pasta pessoal (por exemplo em *Downloads*).
+1. Salve o arquivo **Painel-Gelf-Filas-Windows.zip** na sua pasta pessoal (por exemplo em *Downloads*).
 2. Extraia: pelo gerenciador de arquivos (botão direito › *Extrair aqui*) ou no Terminal:
    ```
    cd ~/Downloads
-   unzip Painel-GELF-Bio.zip
+   unzip Painel-Gelf-Filas-Windows.zip
    ```
    (se faltar o comando `unzip`: `sudo apt install unzip`, ou o equivalente da sua distribuição).
-3. Opcional: mova a pasta para a sua pasta pessoal: `mv Painel-GELF-Bio ~/`.
+3. Opcional: mova a pasta para a sua pasta pessoal: `mv Painel-Gelf-Filas ~/`.
 
 ## B3. Ligar o sistema
 
 No Terminal, entre na pasta e execute o script:
 
 ```
-cd ~/Painel-GELF-Bio
+cd ~/Painel-Gelf-Filas
 chmod +x iniciar-mac-linux.sh
 ./iniciar-mac-linux.sh
 ```
@@ -201,7 +201,7 @@ O endereço do computador pode mudar; para fixá-lo, reserve o IP dele no rotead
 ## C3. Primeiros passos em 2 minutos
 
 1. No **Controle**, confira as salas em **Abertura dos trabalhos** e toque em **Abrir o dia** (no menu da esquerda, abaixo de **Registrar chegada**).
-2. Na **Recepção**, digite o nome completo de um paciente de teste e toque em **Cadastrar**.
+2. Na **Recepção**, digite Nome e Sobrenome de um paciente de teste e toque em **Cadastrar**.
 3. No **Controle**, na coluna **Captação/Apometria**, toque em **Chamar próximo**.
 4. Olhe o **Painel da TV**: aparece o nome e a sala.
 
