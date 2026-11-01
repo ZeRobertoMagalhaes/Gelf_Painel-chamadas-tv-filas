@@ -60,7 +60,7 @@ const appBio = criarAppBio({
     io: io.of('/bio'),
 });
 
-registrarRotas(expressApp, { publicDir: path.join(__dirname, '..', 'public'), porta: PORT, nomeMdns: MDNS_HOST, obterEstadoFilas: app.obterEstado });
+registrarRotas(expressApp, { publicDir: path.join(__dirname, '..', 'public'), porta: PORT, nomeMdns: MDNS_HOST, obterEstadoFilas: app.obterEstado, ipServidor: config.rede.ipServidor });
 
 io.on('connection', app.aoConectar);
 io.of('/bio').on('connection', appBio.aoConectar);

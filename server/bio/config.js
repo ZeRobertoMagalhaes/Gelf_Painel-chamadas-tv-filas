@@ -45,7 +45,12 @@ function normalizarBio(bruto) {
         localEspera: locais.some((l) => l.id === pr.localEspera) ? pr.localEspera : null,
         aviso: texto(pr.aviso, 300),
     };
-    return { locais, etapas, rotaPadrao, prioridade, som: base.som, painel: base.painel };
+    // Salas/locais de uso geral, oferecidas como atalho no campo "sala/local" do controle (ex.: sala do térreo para PCD).
+    const locaisRapidos = (Array.isArray(bruto.locaisRapidos) ? bruto.locaisRapidos : [])
+        .filter((n) => typeof n === 'string' && n.trim())
+        .map((n) => n.trim().slice(0, 40))
+        .slice(0, 8);
+    return { locais, etapas, rotaPadrao, prioridade, locaisRapidos, som: base.som, painel: base.painel };
 }
 
 function carregarConfigBio(arquivo = path.join(__dirname, '..', '..', 'config', 'bio.json')) {

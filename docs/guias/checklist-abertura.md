@@ -7,7 +7,7 @@ Antes do primeiro paciente (cerca de 5 minutos).
 - [ ] O painel aparece em tela cheia (se não, abrir o atalho "Painel GELF - TV")
 - [ ] Se aparecer o botão **🔊 Ativar som**, tocar nele uma vez (toca um sinal de teste)
 - [ ] Indicador do canto do painel mostra **conectado**
-- [ ] Na Recepção, tocar em **Abrir atendimento**
+- [ ] Na Recepção, conferir **Pacientes chamados ao mesmo tempo** (por tratamento) e tocar em **Abrir atendimento**
 - [ ] Teste: cadastrar um paciente "Teste Teste", chamar pelo celular, conferir **nome, sala e som** na TV,
       e então **Iniciar** e **Concluir** (ou remover com ✕ antes de chamar)
 - [ ] Cada equipe abriu **/atendimento** no celular e escolheu o seu tratamento

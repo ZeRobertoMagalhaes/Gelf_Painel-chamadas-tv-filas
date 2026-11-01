@@ -7,9 +7,12 @@ const config = carregarConfig();
 let t0 = new Date('2026-10-10T08:00:00-03:00');
 const ctx = () => ({ agora: new Date((t0 = new Date(t0.getTime() + 60000))), config });
 
-function diaAberto() {
+// Por padrão os testes abrem o dia com folga (5 simultâneos por tratamento);
+// `limites` troca o valor de tratamentos específicos.
+function diaAberto(limites = {}) {
     const e = R.novoDia('2026-10-10');
-    R.abrirAtendimento(e);
+    const todos = Object.fromEntries(config.tratamentos.map((t) => [t.id, 5]));
+    R.abrirAtendimento(e, { limites: { ...todos, ...limites } }, ctx());
     return e;
 }
 const cad = (e, nome, sobrenome, tratamento = 'reiki', extra = {}) =>
@@ -23,6 +26,7 @@ const codigo = (fn) => {
 test('atendimento fechado bloqueia cadastro e chamada', () => {
     const e = R.novoDia('2026-10-10');
     assert.equal(codigo(() => cad(e, 'Maria', 'Silva')), 'fechado');
+    assert.throws(() => cad(e, 'Maria', 'Silva'), /atendimento está fechado.*antes de cadastrar/);
     assert.equal(codigo(() => R.chamarProximo(e, { tratamento: 'reiki', sala: '1' }, ctx())), 'fechado');
 });
 
@@ -115,17 +119,91 @@ test('duas equipes chamando seguidamente recebem pacientes diferentes', () => {
     assert.deepEqual([r1.paciente.id, r2.paciente.id], [a.id, b.id]);
 });
 
-test('cada aparelho atende um paciente por vez', () => {
-    const e = diaAberto();
+test('sem definir limites, vale um paciente por vez em cada tratamento', () => {
+    const e = R.novoDia('2026-10-10');
+    R.abrirAtendimento(e, {}, ctx());
+    assert.deepEqual(R.limites(e, config), Object.fromEntries(config.tratamentos.map((t) => [t.id, 1])));
     cad(e, 'Ana', 'A');
     const b = cad(e, 'Bia', 'B');
     const r1 = R.chamarProximo(e, { tratamento: 'reiki', sala: '1', equipeId: 'e1' }, ctx());
-    assert.equal(codigo(() => R.chamarProximo(e, { tratamento: 'reiki', sala: '1', equipeId: 'e1' }, ctx())), 'equipe_ocupada');
+    assert.equal(codigo(() => R.chamarProximo(e, { tratamento: 'reiki', sala: '2', equipeId: 'e2' }, ctx())), 'limite_atingido');
     assert.equal(b.situacao, 'aguardando');
     R.iniciar(e, { id: r1.paciente.id }, ctx());
-    assert.equal(codigo(() => R.chamarProximo(e, { tratamento: 'reiki', sala: '1', equipeId: 'e1' }, ctx())), 'equipe_ocupada');
+    assert.equal(codigo(() => R.chamarProximo(e, { tratamento: 'reiki', sala: '2', equipeId: 'e2' }, ctx())), 'limite_atingido');
     R.concluir(e, { id: r1.paciente.id }, ctx());
     assert.equal(R.chamarProximo(e, { tratamento: 'reiki', sala: '1', equipeId: 'e1' }, ctx()).paciente.id, b.id);
+});
+
+test('limite por tratamento: o aparelho chama até o limite, em qualquer sala, e o resto espera vaga', () => {
+    const e = diaAberto({ reiki: 2 });
+    cad(e, 'Ana', 'A');
+    cad(e, 'Bia', 'B');
+    const c = cad(e, 'Cris', 'C');
+    const r1 = R.chamarProximo(e, { tratamento: 'reiki', sala: '1', equipeId: 'e1' }, ctx());
+    R.chamarProximo(e, { tratamento: 'reiki', sala: '2', equipeId: 'e1' }, ctx());
+    assert.throws(
+        () => R.chamarProximo(e, { tratamento: 'reiki', sala: '3', equipeId: 'e1' }, ctx()),
+        (x) => x.codigo === 'limite_atingido' && /Reiki.*limite de 2/.test(x.message),
+    );
+    assert.equal(c.situacao, 'aguardando');
+    R.naoCompareceu(e, { id: r1.paciente.id }, ctx());
+    assert.equal(R.chamarProximo(e, { tratamento: 'reiki', sala: '1', equipeId: 'e1' }, ctx()).paciente.id, c.id);
+});
+
+test('tratamentos diferentes têm limites independentes e não se bloqueiam', () => {
+    const e = diaAberto({ apometrico: 1, reiki: 1 });
+    cad(e, 'Ana', 'A', 'apometrico');
+    const rei1 = cad(e, 'Bia', 'B', 'reiki');
+    const rei2 = cad(e, 'Cris', 'C', 'reiki');
+    const r1 = R.chamarProximo(e, { tratamento: 'apometrico', sala: '1', equipeId: 'e1' }, ctx());
+    R.iniciar(e, { id: r1.paciente.id }, ctx());
+    assert.equal(R.chamarProximo(e, { tratamento: 'reiki', sala: '2', equipeId: 'e1' }, ctx()).paciente.id, rei1.id);
+    assert.equal(codigo(() => R.chamarProximo(e, { tratamento: 'reiki', sala: '3', equipeId: 'e1' }, ctx())), 'limite_atingido');
+    assert.equal(rei2.situacao, 'aguardando');
+    assert.equal(codigo(() => R.chamarProximo(e, { tratamento: 'apometrico', sala: '1', equipeId: 'e1' }, ctx())), 'limite_atingido');
+});
+
+test('limites: validação na abertura e ajuste durante o dia', () => {
+    const e = R.novoDia('2026-10-10');
+    assert.equal(codigo(() => R.abrirAtendimento(e, { limites: { reiki: 0 } }, ctx())), 'invalido');
+    assert.equal(codigo(() => R.abrirAtendimento(e, { limites: { reiki: 2.5 } }, ctx())), 'invalido');
+    assert.equal(codigo(() => R.abrirAtendimento(e, { limites: { reiki: '2' } }, ctx())), 'invalido');
+    assert.equal(codigo(() => R.abrirAtendimento(e, { limites: { reiki: 21 } }, ctx())), 'invalido');
+    assert.equal(codigo(() => R.abrirAtendimento(e, { limites: { inexistente: 2 } }, ctx())), 'invalido');
+    assert.equal(codigo(() => R.abrirAtendimento(e, { limites: [2] }, ctx())), 'invalido');
+    assert.equal(e.atendimentoAberto, false);
+
+    R.abrirAtendimento(e, { limites: { reiki: 3 } }, ctx());
+    assert.equal(R.limites(e, config).reiki, 3);
+    assert.equal(R.limites(e, config).gao, 1);
+
+    // abrir de novo com o dia aberto não troca os limites
+    R.abrirAtendimento(e, { limites: { reiki: 9 } }, ctx());
+    assert.equal(R.limites(e, config).reiki, 3);
+
+    R.definirLimites(e, { limites: { reiki: 1, gao: 4 } }, ctx());
+    assert.equal(R.limites(e, config).reiki, 1);
+    assert.equal(R.limites(e, config).gao, 4);
+    assert.equal(codigo(() => R.definirLimites(e, { limites: { gao: 0 } }, ctx())), 'invalido');
+    assert.equal(R.limites(e, config).gao, 4);
+
+    R.fecharAtendimento(e, {}, ctx());
+    assert.equal(codigo(() => R.definirLimites(e, { limites: { gao: 2 } }, ctx())), 'fechado');
+});
+
+test('reduzir o limite não retira quem já está em sala, mas segura novas chamadas', () => {
+    const e = diaAberto({ reiki: 2 });
+    cad(e, 'Ana', 'A');
+    cad(e, 'Bia', 'B');
+    const c = cad(e, 'Cris', 'C');
+    const r1 = R.chamarProximo(e, { tratamento: 'reiki', sala: '1' }, ctx());
+    const r2 = R.chamarProximo(e, { tratamento: 'reiki', sala: '2' }, ctx());
+    R.definirLimites(e, { limites: { reiki: 1 } }, ctx());
+    assert.equal(r1.paciente.situacao, 'chamado');
+    R.naoCompareceu(e, { id: r1.paciente.id }, ctx());
+    assert.equal(codigo(() => R.chamarProximo(e, { tratamento: 'reiki', sala: '1' }, ctx())), 'limite_atingido');
+    R.naoCompareceu(e, { id: r2.paciente.id }, ctx());
+    assert.equal(R.chamarProximo(e, { tratamento: 'reiki', sala: '1' }, ctx()).paciente.id, c.id);
 });
 
 test('ciclo completo e transições inválidas', () => {

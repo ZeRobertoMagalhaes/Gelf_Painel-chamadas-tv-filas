@@ -66,6 +66,9 @@
       ]
     }
   ],
+  "locaisRapidos": [
+    "Sala Prioritários - Térreo"
+  ],
   "rotaPadrao": [
     "captacao",
     "doutores",
@@ -83,6 +86,6 @@
   },
   "prioridade": {
     "localEspera": "terreo",
-    "aviso": "Prioritário: os tratamentos devem ser feitos em uma sala do térreo e, entre os atendimentos, o paciente aguarda na Sala de Evangelhoterapia (térreo) até ser chamado."
+    "aviso": "Prioritário: os tratamentos devem ser feitos na Sala Prioritários - Térreo (acessível para PCD) ou em outra sala do térreo e, entre os atendimentos, o paciente aguarda na Sala de Evangelhoterapia (térreo) até ser chamado."
   }
 }

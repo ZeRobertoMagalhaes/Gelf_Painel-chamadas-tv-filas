@@ -287,7 +287,11 @@ button.btn-call:active {
     transition: background-color .18s var(--ease), border-color .18s var(--ease), color .18s var(--ease), transform .12s var(--ease);
 }
 
-.room-chip.nomeada { grid-column: span 2; padding-left: 6px; padding-right: 6px; white-space: nowrap; }
+.rotulo-sala { text-align: center; font-size: 1.1rem; font-weight: 800; letter-spacing: .3px; color: #fff; }
+#sala { text-align: center; }
+/* Salas de nome próprio (ex.: Sala Reiki, Sala Prioritários - Térreo), lado a lado abaixo das numeradas */
+.room-nomeadas { display: flex; gap: 8px; }
+.room-nomeadas .room-chip { flex: 1; padding: 8px 6px; line-height: 1.25; }
 
 .room-chip:hover {
     border-color: rgba(147, 197, 253, .7);
@@ -643,6 +647,11 @@ button:disabled { opacity: .5; cursor: not-allowed; filter: grayscale(.3); }
 .estado-ponto { width: 10px; height: 10px; border-radius: 50%; background: #fca5a5; }
 .estado-atendimento.aberto .estado-ponto { background: #86efac; box-shadow: 0 0 0 4px rgba(134, 239, 172, .25); }
 .estado-dica { font-size: .78rem; color: #fde68a; }
+.limites { display: flex; flex-direction: column; gap: 6px; width: 100%; }
+.limites h3 { margin: 0; font-size: .85rem; color: #fff; }
+.limite-linha { display: flex; align-items: center; gap: 8px; font-size: .85rem; color: #fff; }
+.limite-nome { flex: 1; border-left: 4px solid var(--cor); padding-left: 8px; }
+.limite-linha input { width: 64px; padding: 4px 6px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, .4); text-align: center; font-weight: 700; }
 
 .filas-painel {
     flex: 1; min-width: 0; overflow: auto; padding: 26px 30px;
@@ -947,4 +956,12 @@ body.tela-relatorio { display: block; height: auto; min-height: 100%; overflow: 
 .sala-linha .loc { display: flex; align-items: center; gap: 6px; flex: 1; min-width: 220px; justify-content: flex-end; }
 .sala-linha .loc input { width: 200px; padding: 6px 8px; border-radius: 8px; border: 1px solid #cbd5e1; font: inherit; background: #fff; color: #0f172a; }
 .sala-box .campo-local { margin: 2px 0 6px; }
+.rotulo-sala-bio { font-weight: 800; }
+.loc-bloco { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; flex: 1; min-width: 220px; }
+.loc-bloco .loc { min-width: 0; width: 100%; flex: none; }
+.loc-atalhos { display: flex; flex-wrap: wrap; gap: 6px; justify-content: flex-end; }
+.room-chip-claro { appearance: none; border: 1px solid #cbd5e1; background: #f8fafc; color: #334155; font: inherit; font-size: .78rem; font-weight: 600; padding: 4px 10px; border-radius: 999px; cursor: pointer; }
+.room-chip-claro:hover { background: #e2e8f0; }
+.room-chip-claro.active { background: var(--gelf-yellow-gold); border-color: var(--gelf-yellow-gold); color: #78350f; }
+.campo-local .room-chip-claro { margin-top: 4px; align-self: flex-start; }
 .rel-local { display: block; color: #475569; font-size: .75rem; }

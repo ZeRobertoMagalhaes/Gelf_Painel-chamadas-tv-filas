@@ -10,7 +10,10 @@
   "salas": {
     "quantidade": 6,
     "prefixo": "Sala",
-    "extras": ["Sala Reiki"]
+    "extras": ["Sala Reiki", "Sala Prioritários - Térreo"]
+  },
+  "rede": {
+    "ipServidor": "192.168.0.192"
   },
   "som": {
     "repeticoes": 2,

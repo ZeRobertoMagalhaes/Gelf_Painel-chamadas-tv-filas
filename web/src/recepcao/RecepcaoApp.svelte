@@ -12,6 +12,8 @@
   let editando = $state(null); // { id, modo: "corrigir" | "trocar" | "remover", nome }
   let confirmandoFechar = $state(false);
   let campoNome = $state();
+  let limitesForm = $state({}); // tratamento -> pacientes ao mesmo tempo (campo de abertura do dia)
+  let limitesAlterados = $state(false);
   let timerAviso;
 
   const config = $derived(rede.config);
@@ -34,6 +36,12 @@
 
   onMount(() => conectar());
 
+  // Mostra os limites em vigor, sem sobrescrever o que a recepção está digitando.
+  $effect(() => {
+    const atuais = estado?.limites;
+    if (atuais && !limitesAlterados) limitesForm = { ...atuais };
+  });
+
   function mostrar(texto, erro = false) {
     aviso = { texto, erro };
     clearTimeout(timerAviso);
@@ -41,7 +49,7 @@
   }
 
   async function cadastrar(confirmarDuplicado = false) {
-    if (!tratamento) return mostrar("Escolha o tratamento.", true);
+    if (aberto && !tratamento) return mostrar("Escolha o tratamento.", true);
     const r = await agir("cadastrar", { nome, tratamento, confirmarDuplicado });
     if (r.ok) {
       mostrar(`${r.paciente.nome} ${r.paciente.sobrenome} entrou na fila.`);
@@ -74,7 +82,11 @@
   const remover = (p) => acao("remover", { id: p.id });
 
   async function alternarAtendimento() {
-    if (!aberto) return acao("abrirAtendimento");
+    if (!aberto) {
+      const r = await acao("abrirAtendimento", { limites: limitesForm });
+      if (r.ok) limitesAlterados = false;
+      return;
+    }
     if (!confirmandoFechar) {
       confirmandoFechar = true;
       return;
@@ -82,6 +94,14 @@
     confirmandoFechar = false;
     const r = await acao("fecharAtendimento");
     if (r.ok) mostrar("Atendimento fechado. Filas e chamadas foram apagadas; só o relatório (sem nomes) ficou salvo.");
+  }
+
+  async function salvarLimites() {
+    const r = await acao("definirLimites", { limites: limitesForm });
+    if (r.ok) {
+      limitesAlterados = false;
+      mostrar("Limites atualizados.");
+    }
   }
 
   let aberto_hist = $state(new Set()); // ids com o histórico expandido
@@ -171,7 +191,7 @@
           </div>
         {/if}
 
-        <button type="submit" class="btn-call" disabled={!aberto}>Cadastrar</button>
+        <button type="submit" class="btn-call">Cadastrar</button>
         <div class="send-feedback" class:show={aviso.texto} class:erro={aviso.erro} role="status">{aviso.texto}</div>
       </form>
     {/if}
@@ -181,6 +201,31 @@
         <span class="estado-ponto"></span>
         {estado ? (aberto ? "Atendimento aberto" : "Atendimento fechado") : "Conectando…"}
       </div>
+      {#if estado && config}
+        <div class="limites" class:aberto>
+          <h3>Pacientes chamados ao mesmo tempo</h3>
+          <p class="estado-dica">
+            {aberto ? "Por tratamento. Mudar não retira quem já está em sala." : "Defina por tratamento antes de abrir o atendimento."}
+          </p>
+          {#each config.tratamentos as t (t.id)}
+            <label class="limite-linha" style:--cor={t.cor}>
+              <span class="limite-nome">{t.nome}</span>
+              <input
+                type="number"
+                min="1"
+                max="20"
+                step="1"
+                inputmode="numeric"
+                bind:value={limitesForm[t.id]}
+                oninput={() => (limitesAlterados = true)}
+                aria-label={`${t.nome}: pacientes ao mesmo tempo`} />
+            </label>
+          {/each}
+          {#if aberto && limitesAlterados}
+            <button class="btn-mini ouro" onclick={salvarLimites}>Salvar limites</button>
+          {/if}
+        </div>
+      {/if}
       {#if estado}
         <button class="btn-mini" class:ouro={!aberto} class:perigo={confirmandoFechar} onclick={alternarAtendimento}>
           {aberto ? (confirmandoFechar ? "Confirmar: apagar tudo" : "Fechar atendimento") : "Abrir atendimento"}

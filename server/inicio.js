@@ -2,7 +2,9 @@ const qrcode = require('qrcode-generator');
 
 // Página inicial (/): links para todas as telas e, para cada tipo de tratamento,
 // dois QR codes da tela usada no celular: um pelo nome na rede e outro pelo IP
-// numérico (para os aparelhos que não resolvem o nome). É gerada a cada acesso,
+// numérico (para os aparelhos que não resolvem o nome). O QR pelo IP usa o
+// primeiro endereço da lista: o IP do servidor (config rede.ipServidor), se o
+// computador o tiver, senão o primeiro detectado; os demais ficam só em texto. É gerada a cada acesso,
 // então os QR codes acompanham uma eventual mudança de IP do computador; quem
 // abre a página por qualquer endereço chega às telas por links relativos.
 
@@ -39,13 +41,13 @@ function renderizarInicio({ porta, nomeMdns, ips }) {
     const nome = `http://${nomeMdns}:${porta}/`;
     const cartaoQr = (titulo, url) =>
         `<div class="qr-cartao"><div class="qr">${qrSvg(url)}</div><div><strong>${esc(titulo)}</strong><code>${esc(url)}</code></div></div>`;
-    // Dois QR codes por tipo: pelo nome (acompanha mudanças de IP) e pelo IP (um por endereço detectado).
+    // Dois QR codes por tipo: pelo nome (acompanha mudanças de IP) e pelo IP principal do servidor.
     const qrs = ([caminho, tela]) => `<div class="qrs">
 <p class="qr-titulo">QR code do celular: <strong>${esc(tela)}</strong></p>
 ${cartaoQr('Pelo nome', `http://${nomeMdns}:${porta}${caminho}`)}
 ${
     ips.length
-        ? ips.map((ip) => cartaoQr(ips.length > 1 ? `Pelo IP (${ip})` : 'Pelo IP', `http://${ip}:${porta}${caminho}`)).join('\n')
+        ? cartaoQr(`Pelo IP (${ips[0]})`, `http://${ips[0]}:${porta}${caminho}`)
         : '<p class="aviso">Nenhuma rede detectada neste computador. Conecte-o ao Wi-Fi ou ao cabo de rede.</p>'
 }
 </div>`;
@@ -89,8 +91,8 @@ p { margin: 6px 0; }
 <body>
 <header><h1>Painel GELF</h1><p>Escolha a tela que você vai usar</p></header>
 <main>
-<section><h2>Tratamentos - Bio Energia</h2><div class="telas">${links(BIO)}</div>${qrs(QR_BIO)}</section>
 <section><h2>Tratamentos - Evangelho Terapia</h2><div class="telas">${links(FILAS)}</div>${qrs(QR_FILAS)}</section>
+<section><h2>Tratamentos - Bio Energia</h2><div class="telas">${links(BIO)}</div>${qrs(QR_BIO)}</section>
 <section>
 <h2>TV Box ou navegador antigo?</h2>
 <div class="telas">
@@ -113,11 +115,12 @@ ${enderecos}
 
 // Endereços para mostrar na página: só placas reais (Wi-Fi/cabo), sem redes
 // virtuais (Docker, WSL, VPN, máquinas virtuais), da faixa doméstica mais
-// provável (192.168.x) para a menos provável, no máximo 3.
+// provável (192.168.x) para a menos provável, no máximo 3. O IP do servidor
+// (`preferido`), se estiver entre os detectados, vai para o início da lista.
 const VIRTUAIS = /docker|^br-|veth|virbr|vmnet|vboxnet|vethernet|wsl|hyper-v|tailscale|zerotier|^zt|^tun|^tap|loopback/i;
 const faixa = (ip) => (ip.startsWith('192.168.') ? 0 : ip.startsWith('10.') ? 1 : 2);
 
-function enderecosParaExibir(interfaces) {
+function enderecosParaExibir(interfaces, preferido = '') {
     const ips = [];
     for (const [nome, lista] of Object.entries(interfaces)) {
         if (VIRTUAIS.test(nome)) continue;
@@ -126,7 +129,9 @@ function enderecosParaExibir(interfaces) {
             if ((e.family === 'IPv4' || e.family === 4) && !e.internal && !e.address.startsWith('169.254.')) ips.push(e.address);
         }
     }
-    return [...new Set(ips)].sort((a, b) => faixa(a) - faixa(b)).slice(0, 3);
+    const ordenados = [...new Set(ips)].sort((a, b) => faixa(a) - faixa(b));
+    if (ordenados.includes(preferido)) ordenados.unshift(...ordenados.splice(ordenados.indexOf(preferido), 1));
+    return ordenados.slice(0, 3);
 }
 
 module.exports = { renderizarInicio, enderecosParaExibir };

@@ -2,7 +2,7 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 const { renderizarInicio, enderecosParaExibir } = require('../server/inicio');
 
-test('página inicial: links das telas, seções por tipo de tratamento e dois QR codes (nome e IP) em cada uma', () => {
+test('página inicial: links das telas, seções por tipo de tratamento e dois QR codes (nome e IP principal) em cada uma', () => {
     const html = renderizarInicio({ porta: 3000, nomeMdns: 'painel-gelf-filas.local', ips: ['192.168.0.10', '10.0.0.5'] });
     for (const href of ['/bio/recepcao', '/controle', '/bio/painel', '/bio/relatorio', '/recepcao', '/atendimento', '/painel', '/relatorio', '/diagnostico', '/painel-simples', '/bio/painel-simples']) {
         assert.ok(html.includes(`href="${href}"`), href);
@@ -13,9 +13,10 @@ test('página inicial: links das telas, seções por tipo de tratamento e dois Q
     for (const caminho of ['/atendimento', '/bio/controle']) {
         assert.ok(html.includes(`<code>http://painel-gelf-filas.local:3000${caminho}</code>`), caminho);
         assert.ok(html.includes(`<code>http://192.168.0.10:3000${caminho}</code>`), caminho);
-        assert.ok(html.includes(`<code>http://10.0.0.5:3000${caminho}</code>`), caminho);
+        assert.ok(!html.includes(`http://10.0.0.5:3000${caminho}`), 'só o IP principal tem QR code');
     }
-    assert.equal((html.match(/<svg /g) || []).length, 6); // 2 tipos x (1 pelo nome + 2 pelos IPs)
+    assert.ok(html.includes('<code>http://10.0.0.5:3000/</code>')); // os demais IPs ficam só em texto
+    assert.equal((html.match(/<svg /g) || []).length, 4); // 2 tipos x (1 pelo nome + 1 pelo IP)
 });
 
 test('página inicial: sem rede avisa em vez de mostrar QR pelo IP; texto externo é escapado', () => {
@@ -42,4 +43,12 @@ test('endereços exibidos: ignora redes virtuais, locais e link-local; 192.168 p
 test('endereços exibidos: aceita family numérico (Node 18.0 a 18.3)', () => {
     const ips = enderecosParaExibir({ 'Wi-Fi': [{ family: 4, address: '192.168.1.7', internal: false }, { family: 6, address: 'fe80::1', internal: false }] });
     assert.deepEqual(ips, ['192.168.1.7']);
+});
+
+test('endereços exibidos: o IP do servidor configurado vai primeiro; ausente, vale a ordem normal', () => {
+    const v4 = (address) => [{ family: 'IPv4', address, internal: false }];
+    const rede = { 'Ethernet': v4('192.168.0.103'), 'Wi-Fi': v4('192.168.0.192'), 'Wi-Fi 2': v4('192.168.0.143') };
+    assert.deepEqual(enderecosParaExibir(rede, '192.168.0.192'), ['192.168.0.192', '192.168.0.103', '192.168.0.143']);
+    assert.deepEqual(enderecosParaExibir(rede, '192.168.0.50'), ['192.168.0.103', '192.168.0.192', '192.168.0.143']);
+    assert.deepEqual(enderecosParaExibir(rede), ['192.168.0.103', '192.168.0.192', '192.168.0.143']);
 });

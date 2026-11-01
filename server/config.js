@@ -6,6 +6,7 @@ const PADRAO = {
     salas: { quantidade: 6, prefixo: 'Sala', extras: [] },
     som: { repeticoes: 2, intervaloMs: 4000, volume: 0.3 },
     painel: { destaqueMs: 15000, exibirSobrenomeCompleto: true, ultimasChamadas: 4 },
+    rede: { ipServidor: '' },
 };
 
 function numeroEntre(valor, min, max, padrao) {
@@ -29,6 +30,7 @@ function normalizar(bruto) {
     const salas = bruto.salas || {};
     const som = bruto.som || {};
     const painel = bruto.painel || {};
+    const rede = bruto.rede || {};
     return {
         tratamentos,
         salas: {
@@ -49,6 +51,10 @@ function normalizar(bruto) {
             destaqueMs: numeroEntre(painel.destaqueMs, 3000, 120000, PADRAO.painel.destaqueMs),
             exibirSobrenomeCompleto: painel.exibirSobrenomeCompleto !== false,
             ultimasChamadas: numeroEntre(painel.ultimasChamadas, 0, 8, PADRAO.painel.ultimasChamadas),
+        },
+        // IP fixo do computador servidor: é o usado no QR code "Pelo IP" da página inicial.
+        rede: {
+            ipServidor: typeof rede.ipServidor === 'string' && /^\d{1,3}(\.\d{1,3}){3}$/.test(rede.ipServidor.trim()) ? rede.ipServidor.trim() : PADRAO.rede.ipServidor,
         },
     };
 }

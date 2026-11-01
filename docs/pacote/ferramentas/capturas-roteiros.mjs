@@ -117,7 +117,7 @@ const secao = (titulo) => `[...document.querySelectorAll('section')].find((s) =>
 await ir('/', { w: 900, h: 900 });
 await foto('e-01-pagina-inicial', secao('Evangelho Terapia'));
 
-await ir('/recepcao');
+await ir('/recepcao', { h: 1150 }); // altura maior: o quadro do atendimento (limites e botão) fica inteiro
 await foto('e-02-recepcao-fechada');
 await agir(filas, 'abrirAtendimento');
 for (const [n, t] of [['Maria Souza', 'reiki'], ['João Pereira', 'reiki'], ['Ana Paula Lima', 'gao'], ['Carlos Mendes', 'apometrico'], ['Helena Rocha', 'acolhimento']]) {
@@ -152,7 +152,7 @@ await foto('e-09-atendimento-em-atendimento');
 await clicar('Concluir atendimento');
 await foto('e-10-atendimento-concluido');
 
-await ir('/recepcao');
+await ir('/recepcao', { h: 1150 });
 await clicar('Fechar atendimento');
 await esperar(400);
 await foto('e-11-recepcao-fechar');

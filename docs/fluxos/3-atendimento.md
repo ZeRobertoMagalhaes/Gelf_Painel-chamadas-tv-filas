@@ -19,7 +19,7 @@ flowchart TD
     H --> B
 ```
 
-Cada aparelho atende **um paciente por vez**: só depois de concluir (ou marcar "não compareceu") dá para chamar outro.
+O número de pacientes em sala **ao mesmo tempo em cada tratamento** é definido pela recepção na abertura do dia (padrão 1): com o limite cheio, só depois de concluir (ou marcar "não compareceu") dá para chamar outro do mesmo tratamento. Tratamentos diferentes não se bloqueiam.
 
 ## Passo a passo
 
@@ -31,7 +31,7 @@ lembra a escolha; para mudar, toque em **trocar** no topo.
 
 ### 2. Escolher a sala e chamar
 O topo mostra o seu tratamento, quantos aguardam e o resumo de todas as filas (a sua fica destacada).
-No cartão escuro, informe a **Sala / Maca**: toque no número (1 a 6) ou em **Sala Reiki**, ou digite
+No cartão escuro, informe a sala em **Selecione / Informe a Sala**: toque no número (1 a 6), em **Sala Reiki** ou em **Sala Prioritários - Térreo** (térreo, acessível para PCD, serve a qualquer tratamento), ou digite
 livremente (ex.: "Sala 02"). O botão laranja mostra quem será chamado: **Chamar próximo: nome**.
 
 ![Tela inicial da equipe](img/atendimento-2-tela-inicial.webp)

@@ -58,7 +58,7 @@ test('clientes simultâneos disputando o último da fila: só um consegue', asyn
     const { abrir, agir, fechar } = await subir(() => new Date());
     const a = await abrir();
     const b = await abrir();
-    await agir(a, 'abrirAtendimento');
+    await agir(a, 'abrirAtendimento', { limites: { gao: 2 } });
     await agir(a, 'cadastrar', { nome: 'Ana', sobrenome: 'Lima', tratamento: 'gao' });
     const [r1, r2] = await Promise.all([
         agir(a, 'chamarProximo', { tratamento: 'gao', sala: '1', equipeId: 'a' }),

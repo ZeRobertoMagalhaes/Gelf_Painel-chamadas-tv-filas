@@ -25,7 +25,7 @@ Em poucos segundos o **navegador abre sozinho** na página inicial.
 Na seção **Tratamentos - Evangelho Terapia** ficam os links das telas e **dois QR codes** da tela usada no celular, o **Atendimento**:
 
 - **Pelo nome**: use primeiro.
-- **Pelo IP**: use se o primeiro não abrir no seu aparelho (acontece em alguns Android e em redes de visitantes).
+- **Pelo IP** (o endereço do computador servidor, `192.168.0.192`): use se o primeiro não abrir no seu aparelho (acontece em alguns Android e em redes de visitantes).
 
 O celular precisa estar na **mesma rede Wi-Fi** do computador.
 
@@ -37,7 +37,7 @@ O celular precisa estar na **mesma rede Wi-Fi** do computador.
 
 ## 3. A recepção abre o atendimento
 
-Abra a **Recepção** (`/recepcao`) e toque em **Abrir atendimento** (canto esquerdo, embaixo). Sem isso ninguém cadastra nem chama.
+Abra a **Recepção** (`/recepcao`) e no canto esquerdo, embaixo, confira em **Pacientes chamados ao mesmo tempo** quantos pacientes de cada tratamento podem estar em sala (padrão 1) e toque em **Abrir atendimento**. Sem isso ninguém cadastra nem chama (cadastrar com o dia fechado mostra um aviso de erro).
 
 <figure><img src="img/e-02-recepcao-fechada.webp"><figcaption>Recepção com o atendimento fechado: toque em <b>Abrir atendimento</b>.</figcaption></figure>
 
@@ -61,9 +61,9 @@ Abra a **Recepção** (`/recepcao`) e toque em **Abrir atendimento** (canto esqu
 
 ## 5. A equipe chama o paciente, no celular
 
-Aponte a câmera para o QR code do **Atendimento**. Na primeira vez, escolha **o seu tratamento** (o aparelho lembra). Depois toque na **sala** e em **Chamar próximo**.
+Aponte a câmera para o QR code do **Atendimento**. Na primeira vez, escolha **o seu tratamento** (o aparelho lembra). Depois, em **Selecione / Informe a Sala**, toque na **sala** (1 a 6, **Sala Reiki** ou **Sala Prioritários - Térreo**, para pacientes PCD e atendimentos prioritários de qualquer tratamento) e em **Chamar próximo**.
 
-<div class="lado"><figure><img src="img/e-05-atendimento-escolher.webp"><figcaption>Primeira vez: escolher o tratamento.</figcaption></figure><figure><img src="img/e-06-atendimento-chamar.webp"><figcaption>Escolher a sala e tocar em <b>Chamar próximo</b>.</figcaption></figure></div>
+<div class="lado"><figure><img src="img/e-05-atendimento-escolher.webp"><figcaption>Primeira vez: escolher o tratamento.</figcaption></figure><figure><img src="img/e-06-atendimento-chamar.webp"><figcaption>Escolher a sala (inclusive a <b>Sala Prioritários - Térreo</b>) e tocar em <b>Chamar próximo</b>.</figcaption></figure></div>
 
 </div>
 
@@ -85,7 +85,7 @@ A TV mostra o **nome**, a **sala** e toca o **sinal sonoro**. Na TV, abra o **Pa
 - Terminou: **Concluir atendimento**. Em seguida, **Chamar próximo**.
 - Não apareceu: **Chamar novamente** e, se ainda assim não vier, **Não compareceu** (toque duas vezes para confirmar).
 
-Cada aparelho atende **um paciente por vez**: conclua antes de chamar outro.
+Cada tratamento atende até o limite definido na abertura do dia (padrão 1 paciente por vez): conclua antes de chamar além do limite. Tratamentos diferentes não se bloqueiam.
 
 <div class="lado"><figure><img src="img/e-08-atendimento-chamado.webp"><figcaption>Chamado: <b>Iniciar atendimento</b>.</figcaption></figure><figure><img src="img/e-09-atendimento-em-atendimento.webp"><figcaption>Em atendimento: <b>Concluir atendimento</b>.</figcaption></figure><figure><img src="img/e-10-atendimento-concluido.webp"><figcaption>Concluído: já dá para chamar o próximo.</figcaption></figure></div>
 

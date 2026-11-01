@@ -32,7 +32,7 @@ function criarAppBio({ config, store, io, relogio = () => new Date() }) {
         informarSala: R.informarSala,
     };
 
-    const configPublica = () => ({ locais: config.locais, etapas: config.etapas, rotaPadrao: config.rotaPadrao, prioridade: config.prioridade, som: config.som, painel: config.painel });
+    const configPublica = () => ({ locais: config.locais, etapas: config.etapas, rotaPadrao: config.rotaPadrao, prioridade: config.prioridade, locaisRapidos: config.locaisRapidos, som: config.som, painel: config.painel });
 
     function visao() {
         const exibir = (x) => ({ ...x, nomeExibicao: nomeExibicao(config, x.nome, x.sobrenome) });

@@ -32,7 +32,7 @@ vagas e salas se ajustam na própria tela.
 Com o dia fechado, o controle mostra a **Abertura dos trabalhos**:
 
 - marque as **salas que funcionam hoje** e a **capacidade** de cada uma (ex.: número de macas do reiki);
-- em **sala/local**, informe **com antecedência onde cada tratamento acontece hoje** (ex.: *Sala 03 (térreo)*). Esse local **já vem preenchido para o paciente quando ele é chamado** para aquela sala, e dá para mudar depois. O navegador lembra os locais usados na última abertura;
+- em **Selecione / Informe a Sala**, informe **com antecedência onde cada tratamento acontece hoje** (ex.: *Sala 03 (térreo)*). Esse local **já vem preenchido para o paciente quando ele é chamado** para aquela sala, e dá para mudar depois. O navegador lembra os locais usados na última abertura;
 - se houver lista de pré-inscritos, cole **uma pessoa por linha**: `Nome Sobrenome ; dia ; descrição`;
 - o **relatório do último dia fechado** aparece embaixo, como referência.
 
@@ -111,7 +111,7 @@ Só chama se a sala tem vaga: sem vaga, o botão fica desativado. A chamada apar
 
 ![TV: paciente chamado](img/bio-painel-2-chamado.webp)
 
-**Sala/local de cada tratamento.** Cada sala tem um campo **"Sala/local onde acontece"**: o que foi informado na abertura do dia aparece
+**Sala/local de cada tratamento.** Cada sala tem um campo **"Selecione / Informe a Sala"** (com o botão **Sala Prioritários - Térreo**): o que foi informado na abertura do dia aparece
 ali e pode ser alterado a qualquer momento. Se o local mudar, quem está naquela sala com o local antigo passa a ver o novo (o que foi
 digitado à mão para um paciente fica como está). Ao concluir a etapa, a sala de destino do paciente é limpa, e a da próxima etapa vem
 preenchida quando ele for chamado.

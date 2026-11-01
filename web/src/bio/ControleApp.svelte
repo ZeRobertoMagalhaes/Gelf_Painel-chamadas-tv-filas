@@ -333,7 +333,7 @@
       <div class="abertura">
         <h2>Abertura dos trabalhos</h2>
         <p class="abertura-dica">
-          Confirme as salas que funcionam hoje e a capacidade de cada uma. Em <strong>sala/local</strong>, informe com antecedência onde cada
+          Confirme as salas que funcionam hoje e a capacidade de cada uma. Em <strong>Selecione / Informe a Sala</strong>, informe com antecedência onde cada
           tratamento acontece hoje (ex.: <em>Sala 03 (térreo)</em>): o local já vem preenchido para o paciente quando ele é chamado, e dá para mudar depois.
         </p>
         {#each config.etapas as e (e.id)}
@@ -343,7 +343,16 @@
               {@const aj = ajusteDe(s)}
               <div class="sala-linha">
                 <label><input type="checkbox" bind:checked={aj.ativa} /> {s.nome}</label>
-                <label class="loc">sala/local <input type="text" maxlength="40" placeholder="Ex.: Sala 03 (térreo)" bind:value={aj.local} disabled={!aj.ativa} /></label>
+                <div class="loc-bloco">
+                  <label class="loc rotulo-sala-bio">Selecione / Informe a Sala <input type="text" maxlength="40" placeholder="Ex.: Sala 03 (térreo)" bind:value={aj.local} disabled={!aj.ativa} /></label>
+                  {#if aj.ativa}
+                    <div class="loc-atalhos">
+                      {#each config.locaisRapidos ?? [] as l (l)}
+                        <button type="button" class="room-chip-claro" class:active={aj.local === l} onclick={() => (aj.local = l)}>{l}</button>
+                      {/each}
+                    </div>
+                  {/if}
+                </div>
                 <label class="cap">capacidade <input type="number" min="1" max="20" bind:value={aj.capacidade} disabled={!aj.ativa} /></label>
               </div>
             {/each}
@@ -378,8 +387,11 @@
                 </div>
                 {#if s.ativa}
                   <label class="campo-sala campo-local">
-                    <span>Sala/local onde acontece</span>
+                    <span class="rotulo-sala-bio">Selecione / Informe a Sala</span>
                     <input type="text" maxlength="40" value={s.local ?? ""} placeholder="Ex.: Sala 03 (térreo)" onchange={(e) => informarLocal(s, e.currentTarget.value)} />
+                    {#each config.locaisRapidos ?? [] as l (l)}
+                      <button type="button" class="room-chip-claro" class:active={s.local === l} onclick={() => informarLocal(s, l)}>{l}</button>
+                    {/each}
                   </label>
                 {/if}
                 {#each naSala(s) as p (p.id)}

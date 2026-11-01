@@ -150,6 +150,10 @@ test('config oficial: Captação/Apometria › Doutores (inclui a acupuntura) �
     assert.equal(config.etapas.find((e) => e.id === 'doutores').emiteProntuario, true);
     assert.equal(config.prioridade.localEspera, 'terreo');
     assert.match(config.prioridade.aviso, /térreo/);
+    assert.deepEqual(config.locaisRapidos, ['Sala Prioritários - Térreo']);
+    const base = { etapas: [{ id: 'a', nome: 'A', cor: '#000000', salas: [{ id: 's', nome: 'S' }] }] };
+    assert.deepEqual(normalizarBio(base).locaisRapidos, []);
+    assert.deepEqual(normalizarBio({ ...base, locaisRapidos: [' Térreo PCD ', '', 7] }).locaisRapidos, ['Térreo PCD']);
     const e = diaAberto();
     const a = cheg(e, 'Ana', 'Lima');
     assert.deepEqual(a.rota, ['captacao', 'doutores', 'reiki']);

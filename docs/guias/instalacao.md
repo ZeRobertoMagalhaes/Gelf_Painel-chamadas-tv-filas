@@ -24,7 +24,7 @@ Faça uma vez, com o notebook ligado ao roteador do local.
 
 **Dica para celulares e tablets:** abra `http://painel-gelf-filas.local:3000/` (página inicial). Ela lista as telas e mostra um
 QR code com o endereço numérico atual do notebook; se o nome `.local` não abrir no aparelho (comum em alguns Android),
-basta apontar a câmera para o QR code. Reserve o IP do notebook no roteador para que o endereço numérico não mude.
+basta apontar a câmera para o QR code. Reserve o IP do notebook no roteador para que o endereço numérico não mude. A página mostra dois QR codes por tipo de tratamento (pelo nome e pelo IP); o IP do servidor fica em `config/configuracao.json`, campo `rede.ipServidor` (hoje `192.168.0.192`). Se o computador não tiver esse endereço, o QR usa o primeiro endereço detectado.
 
 Para remover: `instalacao\desinstalar.ps1` (mantém a pasta e os dados).
 

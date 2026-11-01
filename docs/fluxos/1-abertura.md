@@ -31,8 +31,9 @@ o botão some. O indicador **conectado** (canto superior direito) confirma a lig
 ![Painel da TV antes da abertura](img/abertura-2-painel-tv.webp)
 
 ### 3. Abrir o atendimento
-Na recepção, toque em **Abrir atendimento** (canto esquerdo, embaixo). O indicador passa a
-**Atendimento aberto**, o botão **Cadastrar** é liberado e as seis filas aparecem vazias. Na TV, o aviso muda
+Na recepção, confira (canto esquerdo, embaixo) quantos pacientes de cada tratamento podem estar em sala ao
+mesmo tempo (padrão 1) e toque em **Abrir atendimento**. O indicador passa a
+**Atendimento aberto**, o cadastro é liberado (com o dia fechado, **Cadastrar** devolve um aviso de erro) e as seis filas aparecem vazias. Na TV, o aviso muda
 para **Aguardando próxima chamada** (ver [Fluxo 4 — Painel](4-painel.md)).
 
 ![Recepção com o atendimento aberto](img/abertura-3-recepcao-aberta.webp)

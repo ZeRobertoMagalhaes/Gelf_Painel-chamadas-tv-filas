@@ -5,7 +5,7 @@ Endereço: `/atendimento` (ex.: http://painel-gelf-filas.local:3000/atendimento)
 **Primeira vez:** escolha o **seu tratamento**. O aparelho lembra; para mudar, toque em *trocar*.
 
 **Chamar um paciente**
-1. Toque no número da **sala** (1 a 6) ou em **Sala Reiki** ou digite livremente a sala/maca (ex.: "Sala 02").
+1. Toque no número da **sala** (1 a 6), em **Sala Reiki** ou em **Sala Prioritários - Térreo** (para pacientes PCD e atendimentos prioritários de qualquer tratamento), ou digite livremente a sala/maca (ex.: "Sala 02").
 2. Toque em **Chamar próximo**. A TV mostra nome, sala e toca o sinal duas vezes.
 
 **Depois**
@@ -15,6 +15,6 @@ Endereço: `/atendimento` (ex.: http://painel-gelf-filas.local:3000/atendimento)
   (toque duas vezes para confirmar) e chame o próximo.
 
 **Boas práticas**
-- Cada aparelho atende **um paciente por vez**: conclua (ou marque "não compareceu") antes de chamar outro.
+- A recepção define, na abertura do dia, **quantos pacientes do seu tratamento podem estar em sala ao mesmo tempo** (o topo da tela mostra "N de M em sala"). Com o limite cheio, conclua (ou marque "não compareceu") para liberar a próxima chamada. Tratamentos diferentes não se bloqueiam.
 - A fila abaixo mostra a ordem; quem tem selo **Prioridade** já está na frente.
 - Se o aviso for vermelho ou a fila não atualizar, veja o indicador **conectado / sem conexão** no topo.

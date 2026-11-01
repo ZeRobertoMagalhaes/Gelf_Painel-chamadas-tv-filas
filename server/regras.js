@@ -5,7 +5,10 @@
 // intacto (toda validação acontece antes de qualquer alteração).
 
 const ATIVAS = ['aguardando', 'chamado', 'em_atendimento'];
+const EM_CURSO = ['chamado', 'em_atendimento'];
 const LIMITE_HISTORICO = 20;
+const SIMULTANEOS_PADRAO = 1;
+const SIMULTANEOS_MAXIMO = 20;
 
 class ErroRegra extends Error {
     constructor(codigo, mensagem, detalhe) {
@@ -31,7 +34,7 @@ function isoLocal(d) {
 }
 
 function novoDia(data) {
-    return { data, atendimentoAberto: false, seq: 0, chamadaSeq: 0, pacientes: [], historicoChamadas: [], relatorioFinal: null };
+    return { data, atendimentoAberto: false, limites: {}, seq: 0, chamadaSeq: 0, pacientes: [], historicoChamadas: [], relatorioFinal: null };
 }
 
 function limparTexto(valor, max) {
@@ -63,10 +66,8 @@ function chavePaciente(nome, sobrenome) {
         .trim();
 }
 
-function exigirAberto(estado) {
-    if (!estado.atendimentoAberto) {
-        throw new ErroRegra('fechado', 'O atendimento está fechado. Abra o atendimento para continuar.');
-    }
+function exigirAberto(estado, mensagem = 'O atendimento está fechado. Abra o atendimento para continuar.') {
+    if (!estado.atendimentoAberto) throw new ErroRegra('fechado', mensagem);
 }
 
 function exigirTratamento(config, id) {
@@ -98,9 +99,52 @@ function fila(estado, tratamento) {
         });
 }
 
-function abrirAtendimento(estado) {
+// Quantos pacientes de um tratamento podem estar ao mesmo tempo em sala
+// (chamados ou em atendimento). Definido pela recepção na abertura do dia;
+// sem definição vale 1.
+function limiteDe(estado, tratamento) {
+    return estado.limites?.[tratamento] ?? SIMULTANEOS_PADRAO;
+}
+
+function limites(estado, config) {
+    return Object.fromEntries(config.tratamentos.map((t) => [t.id, limiteDe(estado, t.id)]));
+}
+
+// Confere o que veio da tela: só tratamentos conhecidos, números inteiros de 1 a 20.
+// Tratamento que não veio mantém o limite atual.
+function lerLimites(estado, bruto, config) {
+    if (bruto === null || typeof bruto !== 'object' || Array.isArray(bruto)) {
+        throw new ErroRegra('invalido', 'Informe quantos pacientes de cada tratamento podem ser chamados ao mesmo tempo.');
+    }
+    const novos = limites(estado, config);
+    for (const [id, valor] of Object.entries(bruto)) {
+        const trat = config.tratamentos.find((t) => t.id === id);
+        if (!trat) throw new ErroRegra('invalido', 'Tratamento inválido.');
+        if (!Number.isInteger(valor) || valor < 1 || valor > SIMULTANEOS_MAXIMO) {
+            throw new ErroRegra('invalido', `${trat.nome}: informe de 1 a ${SIMULTANEOS_MAXIMO} pacientes ao mesmo tempo.`);
+        }
+        novos[id] = valor;
+    }
+    return novos;
+}
+
+// Abre o dia. `limites` (opcional) define, por tratamento, quantos pacientes
+// podem ser chamados ao mesmo tempo; o que não vier fica com o valor anterior
+// (ou 1). Com o dia já aberto nada muda (o ajuste durante o dia é definirLimites).
+function abrirAtendimento(estado, args = {}, ctx) {
+    if (estado.atendimentoAberto) return;
+    const novos = args.limites === undefined ? undefined : lerLimites(estado, args.limites, ctx.config);
+    if (novos) estado.limites = novos;
     estado.atendimentoAberto = true;
     estado.relatorioFinal = null;
+}
+
+// Muda durante o dia. Reduzir abaixo do que já está em sala não tira ninguém:
+// só impede novas chamadas até liberar vaga.
+function definirLimites(estado, args, ctx) {
+    exigirAberto(estado);
+    estado.limites = lerLimites(estado, args.limites, ctx.config);
+    return {};
 }
 
 // Apaga filas e chamadas na hora (privacidade/LGPD) e deixa o dia fechado,
@@ -116,7 +160,7 @@ function fecharAtendimento(estado, args, ctx) {
 }
 
 function cadastrar(estado, args, ctx) {
-    exigirAberto(estado);
+    exigirAberto(estado, 'Não é possível cadastrar: o atendimento está fechado. Abra o atendimento antes de cadastrar pacientes.');
     const { nome, sobrenome } = lerNome(args);
     exigirTratamento(ctx.config, args.tratamento);
 
@@ -242,18 +286,23 @@ function limparSala(valor) {
 // Chama o primeiro da fila. A transição acontece aqui, no servidor, numa única
 // operação síncrona: se duas equipes tocarem em "Chamar próximo" ao mesmo
 // tempo, cada uma recebe um paciente diferente (nunca o mesmo duas vezes).
-// "equipeId" identifica o aparelho de quem chama: cada aparelho atende um
-// paciente por vez.
+// O limite de chamadas simultâneas vale por tratamento, somando todos os
+// aparelhos: com limite 2, dois pacientes podem estar em sala ao mesmo tempo
+// e a terceira chamada só sai quando um deles for concluído ou não comparecer.
+// "equipeId" só registra quem chamou (aparece nas telas de atendimento).
 function chamarProximo(estado, args, ctx) {
     exigirAberto(estado);
     exigirTratamento(ctx.config, args.tratamento);
     const sala = limparSala(args.sala);
     const equipeId = limparTexto(args.equipeId, 64);
-    if (equipeId) {
-        const ocupado = estado.pacientes.find((p) => p.chamadoPor === equipeId && ['chamado', 'em_atendimento'].includes(p.situacao));
-        if (ocupado) {
-            throw new ErroRegra('equipe_ocupada', 'Conclua ou marque o paciente atual antes de chamar o próximo.');
-        }
+    const limite = limiteDe(estado, args.tratamento);
+    const emSala = estado.pacientes.filter((p) => p.tratamento === args.tratamento && EM_CURSO.includes(p.situacao)).length;
+    if (emSala >= limite) {
+        const nome = ctx.config.tratamentos.find((t) => t.id === args.tratamento).nome;
+        throw new ErroRegra(
+            'limite_atingido',
+            `${nome}: já há ${emSala} ${emSala === 1 ? 'paciente' : 'pacientes'} em sala (limite de ${limite} ao mesmo tempo). Conclua ou marque "não compareceu" antes de chamar o próximo.`,
+        );
     }
     const proximo = fila(estado, args.tratamento)[0];
     if (!proximo) throw new ErroRegra('fila_vazia', 'Não há pacientes aguardando neste tratamento.');
@@ -384,7 +433,9 @@ module.exports = {
     chavePaciente,
     lerNome,
     fila,
+    limites,
     abrirAtendimento,
+    definirLimites,
     fecharAtendimento,
     relatorio,
     registroDoDia,

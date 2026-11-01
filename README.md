@@ -13,7 +13,7 @@ duplo. Especificação: `docs/Proposta de Solução — Sistema de Chamadas por 
 | Painel TV | `/painel` | Navegador em tela cheia no notebook ligado à TV |
 | Relatório | `/relatorio` | Registro do dia (pacientes, horários, tempos, resumo por tratamento) para salvar em PDF; botão na Recepção |
 | TV Box / navegador antigo | `/painel-simples`, `/bio/painel-simples`, `/diagnostico` | Painel da TV em JavaScript antigo (ES5) e página que diagnostica o navegador da caixinha; guia em `docs/guias/tv-box.md` |
-| Início | `/` | Links para todas as telas (filas e Bio) e **QR code do endereço atual**: o celular abre as telas sem digitar, mesmo se o IP mudou ou se o nome `.local` não resolve no aparelho |
+| Início | `/` | Links para todas as telas (filas e Bio) e dois **QR codes por tipo de tratamento** (pelo nome e pelo IP do servidor, `rede.ipServidor` em `config/configuracao.json`): o celular abre as telas sem digitar, mesmo se o IP mudou ou se o nome `.local` não resolve no aparelho |
 
 ## Rodar
 
@@ -32,7 +32,7 @@ cd web && npm install && npm run build
 
 ## Configuração
 
-`config/configuracao.json`: tratamentos (id, nome, cor), salas (atalhos numerados: quantidade e prefixo, padrão 6 × "Sala"; mais `extras` com salas de nome próprio, ex.: "Sala Reiki"), som (repetições, intervalo
+`config/configuracao.json`: tratamentos (id, nome, cor), salas (atalhos numerados: quantidade e prefixo, padrão 6 × "Sala"; mais `extras` com salas de nome próprio, ex.: "Sala Reiki" e "Sala Prioritários - Térreo", sala do térreo para PCD usada por qualquer tratamento), som (repetições, intervalo
 em ms — padrão 4000, volume) e painel (tempo de destaque, exibir sobrenome completo,
 quantidade de chamadas anteriores). Alterações valem ao reiniciar o servidor.
 
@@ -48,7 +48,7 @@ mesmo dia; arquivos de dias anteriores são apagados ao iniciar e na virada do d
 - Situações: aguardando → chamado → em atendimento → concluído (ou não compareceu / removido).
 - Fila por tratamento: prioritários primeiro, depois ordem de chegada.
 - Dois aparelhos chamando ao mesmo tempo nunca recebem o mesmo paciente.
-- Cada aparelho atende um paciente por vez (`equipeId` guardado no navegador).
+- Ao abrir o atendimento, a Recepção define, por tratamento, quantos pacientes podem estar em sala ao mesmo tempo (padrão 1; de 1 a 20; ajustável durante o dia). Passou do limite, a chamada é recusada até concluir ou marcar "não compareceu". Tratamentos diferentes têm limites independentes e não se bloqueiam. Cadastrar com o dia fechado devolve erro.
 - Aviso de nome repetido (ignora acento e maiúsculas), com opção de confirmar.
 - A sala é informada por quem chama, a cada chamada.
 

@@ -5,7 +5,7 @@ const { renderizarInicio, enderecosParaExibir } = require('./inicio');
 
 // Rotas HTTP do sistema (arquivos das telas, atalhos e página inicial). Ficam
 // fora do index.js para poderem ser testadas sem subir o servidor completo.
-function registrarRotas(expressApp, { publicDir, porta, nomeMdns, obterEstadoFilas, interfaces = () => os.networkInterfaces(), legadoDir = path.join(__dirname, 'legado') }) {
+function registrarRotas(expressApp, { publicDir, porta, nomeMdns, obterEstadoFilas, ipServidor = '', interfaces = () => os.networkInterfaces(), legadoDir = path.join(__dirname, 'legado') }) {
     const tela = (arquivo) => (req, res) => res.sendFile(path.join(publicDir, arquivo));
 
     expressApp.use(express.static(publicDir));
@@ -17,7 +17,7 @@ function registrarRotas(expressApp, { publicDir, porta, nomeMdns, obterEstadoFil
     // Página inicial: links para todas as telas e QR code do endereço atual (muda com o IP).
     expressApp.get('/', (req, res) => {
         res.set('Cache-Control', 'no-store');
-        res.type('html').send(renderizarInicio({ porta, nomeMdns, ips: enderecosParaExibir(interfaces()) }));
+        res.type('html').send(renderizarInicio({ porta, nomeMdns, ips: enderecosParaExibir(interfaces(), ipServidor) }));
     });
 
     // Versão simples da TV e diagnóstico, em JavaScript antigo, para TV Box e navegadores velhos.

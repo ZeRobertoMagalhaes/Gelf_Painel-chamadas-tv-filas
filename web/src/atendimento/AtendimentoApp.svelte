@@ -27,13 +27,14 @@
       .filter((p) => p.tratamento === meuTratamento && ["chamado", "em_atendimento"].includes(p.situacao))
       .sort((a, b) => (b.chamadoPor === equipeId) - (a.chamadoPor === equipeId)),
   );
-  const euAtendo = $derived(emCurso.some((p) => p.chamadoPor === equipeId));
+  const limite = $derived(estado?.limites?.[meuTratamento] ?? 1);
+  const vagaLivre = $derived(emCurso.length < limite);
   // Atalhos de sala: numeradas (1..N, tocar escolhe "Sala N") e as de nome próprio
   // da configuração (ex.: "Sala Reiki"). O campo continua livre.
-  const salasRapidas = $derived([
-    ...Array.from({ length: config?.salas.quantidade ?? 0 }, (_, i) => ({ valor: `${config.salas.prefixo} ${i + 1}`, rotulo: String(i + 1) })),
-    ...(config?.salas.extras ?? []).map((nome) => ({ valor: nome, rotulo: nome, nomeada: true })),
-  ]);
+  const salasNumeradas = $derived(
+    Array.from({ length: config?.salas.quantidade ?? 0 }, (_, i) => ({ valor: `${config.salas.prefixo} ${i + 1}`, rotulo: String(i + 1) })),
+  );
+  const salasNomeadas = $derived((config?.salas.extras ?? []).map((nome) => ({ valor: nome, rotulo: nome })));
   // Pacientes aguardando em cada tratamento (visão geral para toda a equipe).
   const pendentes = $derived(
     (config?.tratamentos ?? []).map((t) => ({ ...t, total: estado?.filas?.[t.id]?.length ?? 0 })),
@@ -114,7 +115,7 @@
   {:else}
     <div class="atend-topo" style:border-color={trat.cor}>
       <span class="trat-pilula" style:background-color={trat.cor}>{trat.nome}</span>
-      <span class="atend-contagem">{fila.length} aguardando</span>
+      <span class="atend-contagem">{fila.length} aguardando • {emCurso.length} de {limite} em sala</span>
       <button class="link-botao" onclick={trocarTratamento}>trocar</button>
     </div>
 
@@ -149,22 +150,35 @@
       </section>
     {/each}
 
-    {#if !euAtendo}
+    {#if vagaLivre}
       <section class="bloco-chamar">
-        <label for="sala">Sala / Maca</label>
+        <label for="sala" class="rotulo-sala">Selecione / Informe a Sala</label>
         <input id="sala" bind:value={sala} placeholder="Ex: Sala 02 ou digite livremente" maxlength="40" autocomplete="off" />
-        {#if salasRapidas.length > 0}
+        {#if salasNumeradas.length + salasNomeadas.length > 0}
           <div class="room-quick-select">
-            {#each salasRapidas as s (s.valor)}
-              <button type="button" class="room-chip" class:nomeada={s.nomeada} class:active={sala === s.valor} onclick={() => (sala = s.valor)}>{s.rotulo}</button>
+            {#each salasNumeradas as s (s.valor)}
+              <button type="button" class="room-chip" class:active={sala === s.valor} onclick={() => (sala = s.valor)}>{s.rotulo}</button>
             {/each}
           </div>
+          {#if salasNomeadas.length > 0}
+            <div class="room-nomeadas">
+              {#each salasNomeadas as s (s.valor)}
+                <button type="button" class="room-chip" class:active={sala === s.valor} onclick={() => (sala = s.valor)}>{s.rotulo}</button>
+              {/each}
+            </div>
+          {/if}
           <div class="room-hint">Toque em uma sala ou digite livremente acima</div>
         {/if}
         <button class="btn-call btn-grande" disabled={ocupado || fechado || fila.length === 0} onclick={chamarProximo}>
           {fila.length ? `Chamar próximo: ${fila[0].nomeExibicao}` : "Fila vazia"}
         </button>
       </section>
+    {/if}
+
+    {#if !vagaLivre && !fechado}
+      <div class="faixa-aviso">
+        Limite de {limite} {limite === 1 ? "paciente" : "pacientes"} ao mesmo tempo em {trat.nome}. Conclua ou marque "não compareceu" para chamar o próximo.
+      </div>
     {/if}
 
     {#if fila.length > 0}

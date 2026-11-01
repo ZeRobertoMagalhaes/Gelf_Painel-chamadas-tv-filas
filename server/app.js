@@ -16,7 +16,8 @@ function criarApp({ config, store, io, relogio = () => new Date() }) {
     let estado = store.carregar();
 
     const acoes = {
-        abrirAtendimento: (e) => R.abrirAtendimento(e),
+        abrirAtendimento: R.abrirAtendimento,
+        definirLimites: R.definirLimites,
         fecharAtendimento: R.fecharAtendimento,
         cadastrar: R.cadastrar,
         corrigir: R.corrigir,
@@ -44,6 +45,7 @@ function criarApp({ config, store, io, relogio = () => new Date() }) {
         return {
             data: estado.data,
             atendimentoAberto: estado.atendimentoAberto,
+            limites: R.limites(estado, config),
             pacientes,
             filas,
             historico,
