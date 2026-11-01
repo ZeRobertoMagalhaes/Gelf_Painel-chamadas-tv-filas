@@ -18,7 +18,7 @@ O paciente percorre uma **rota de etapas**: Captação/Apometria › Doutores �
 1. Em **Abertura dos trabalhos**, deixe marcadas as salas que funcionam hoje.
 2. Ajuste a **capacidade** de cada sala (ex.: número de macas do reiki).
 3. Em **Selecione / Informe a Sala**, informe com antecedência onde cada tratamento acontece hoje (ex.: *Sala 03 (térreo)*): o local vem preenchido
-   para o paciente quando ele é chamado, e dá para mudar depois (campo **Selecione / Informe a Sala**, em cada sala do controle). O botão **Sala Prioritários - Térreo** preenche o campo com a sala do térreo para PCD e atendimentos prioritários.
+   para o paciente quando ele é chamado, e dá para mudar depois (campo **Selecione / Informe a Sala**, em cada sala do controle). O botão **Sala Prioritários - Térreo** preenche o campo com a sala do térreo para PCD e atendimentos prioritários. Quando o paciente é **prioritário**, a sala para onde ele deve ir já vem como **Sala Prioritários - Térreo** ao ser chamado, em qualquer etapa (o controle pode trocar).
 4. Se houver lista de pré-inscritos, cole no campo, **um por linha**: `Nome Sobrenome ; dia ; descrição`
    (ex.: `Maria Souza ; 10/10 ; dor nas costas`).
 5. Toque em **Abrir o dia**, no menu da esquerda, abaixo de **Registrar chegada**. O indicador no canto esquerdo passa a **Dia aberto**.

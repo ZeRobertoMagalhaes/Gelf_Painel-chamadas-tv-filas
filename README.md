@@ -32,7 +32,7 @@ cd web && npm install && npm run build
 
 ## Configuração
 
-`config/configuracao.json`: tratamentos (id, nome, cor), salas (atalhos numerados: quantidade e prefixo, padrão 6 × "Sala"; mais `extras` com salas de nome próprio, ex.: "Sala Reiki" e "Sala Prioritários - Térreo", sala do térreo para PCD usada por qualquer tratamento), som (repetições, intervalo
+`config/configuracao.json`: tratamentos (id, nome, cor), salas (atalhos numerados: quantidade e prefixo, padrão 6 × "Sala"; mais `extras` com salas de nome próprio, ex.: "Sala Reiki" e "Sala Prioritários - Térreo", sala do térreo para PCD usada por qualquer tratamento; `prioritaria` e `porTratamento` definem a sala que já vem selecionada no Atendimento: a prioritária quando o próximo da fila é prioritário, ou a do tratamento, ex.: Reiki → Sala Reiki). No Bio, `prioridade.sala` em `config/bio.json` é a sala de destino do paciente prioritário ao ser chamado, som (repetições, intervalo
 em ms — padrão 4000, volume) e painel (tempo de destaque, exibir sobrenome completo,
 quantidade de chamadas anteriores). Alterações valem ao reiniciar o servidor.
 

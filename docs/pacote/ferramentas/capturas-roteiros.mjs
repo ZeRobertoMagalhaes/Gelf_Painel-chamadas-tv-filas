@@ -137,7 +137,7 @@ await ir('/atendimento', { w: 390, h: 800, celular: true });
 await foto('e-05-atendimento-escolher');
 await clicar('Reiki', 'button.trat-botao');
 await esperar(500);
-await clicar('1', 'button.room-chip');
+// a sala já vem selecionada (o próximo, João, é prioritário): a captura mostra isso, sem tocar em nenhuma sala
 await foto('e-06-atendimento-chamar');
 
 await ir('/painel', { w: 1280, h: 720 });

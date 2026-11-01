@@ -356,6 +356,28 @@ test('local das salas: informado na abertura, pré-preenche o paciente na chamad
     assert.equal(R.registroDoDia(e, config).pacientes[0].passos[0].local, 'Sala 01');
 });
 
+test('prioritário já vai para a Sala Prioritários - Térreo ao ser chamado, em qualquer etapa; digitada à mão vale', () => {
+    assert.equal(config.prioridade.sala, 'Sala Prioritários - Térreo');
+    const e = R.novoDiaBio('2026-10-10');
+    R.abrirDia(e, { salas: [{ id: 'captacao1', local: 'Sala 01' }, { id: 'doutores', local: 'Sala 04' }] }, ctx());
+    const pri = cheg(e, 'Ana', 'Lima', { rota: ['captacao', 'doutores'] });
+    const comum = cheg(e, 'Beto', 'Dias', { rota: ['captacao', 'doutores'] });
+    const manual = cheg(e, 'Cris', 'Melo', { rota: ['doutores'] });
+    R.priorizar(e, { id: pri.id }, ctx());
+    R.priorizar(e, { id: manual.id }, ctx());
+    R.chamar(e, { pacienteId: pri.id, salaId: 'captacao1' }, ctx());
+    assert.equal(pri.salaDestino, 'Sala Prioritários - Térreo'); // no lugar do local da sala
+    R.chamar(e, { pacienteId: comum.id, salaId: 'captacao2' }, ctx());
+    assert.equal(comum.salaDestino, null); // captacao2 sem local e sem prioridade
+    R.iniciar(e, { id: pri.id }, ctx());
+    R.concluir(e, { id: pri.id }, ctx());
+    R.chamar(e, { pacienteId: pri.id, salaId: 'doutores' }, ctx());
+    assert.equal(pri.salaDestino, 'Sala Prioritários - Térreo'); // também na etapa seguinte
+    R.informarSala(e, { id: manual.id, sala: 'Sala 09 (térreo)' }, ctx());
+    R.chamar(e, { pacienteId: manual.id, salaId: 'doutores2' }, ctx());
+    assert.equal(manual.salaDestino, 'Sala 09 (térreo)');
+});
+
 test('rota por paciente: pular etapa, alterar o que falta e terminar a rota', () => {
     const e = diaAberto();
     const a = cheg(e, 'Ana', 'Lima', { rota: ['captacao', 'doutores', 'reiki'] });

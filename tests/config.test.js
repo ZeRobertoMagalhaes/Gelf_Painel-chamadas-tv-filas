@@ -4,11 +4,23 @@ const { carregarConfig, normalizar } = require('../server/config');
 
 test('salas: padrão do arquivo e valores inválidos caem no padrão', () => {
     const c = carregarConfig();
-    assert.deepEqual(c.salas, { quantidade: 6, prefixo: 'Sala', extras: ['Sala Reiki', 'Sala Prioritários - Térreo'] });
+    assert.deepEqual(c.salas, {
+        quantidade: 6,
+        prefixo: 'Sala',
+        extras: ['Sala Reiki', 'Sala Prioritários - Térreo'],
+        prioritaria: 'Sala Prioritários - Térreo',
+        porTratamento: { reiki: 'Sala Reiki' },
+    });
     const t = [{ id: 'a', nome: 'A', cor: '#111111' }];
-    assert.deepEqual(normalizar({ tratamentos: t }).salas, { quantidade: 6, prefixo: 'Sala', extras: [] });
-    assert.deepEqual(normalizar({ tratamentos: t, salas: { quantidade: 999, prefixo: '  ' } }).salas, { quantidade: 6, prefixo: 'Sala', extras: [] });
-    assert.deepEqual(normalizar({ tratamentos: t, salas: { quantidade: 4, prefixo: 'Maca', extras: [' Sala Reiki ', '', 7] } }).salas, { quantidade: 4, prefixo: 'Maca', extras: ['Sala Reiki'] });
+    const base = { prioritaria: '', porTratamento: {} };
+    assert.deepEqual(normalizar({ tratamentos: t }).salas, { quantidade: 6, prefixo: 'Sala', extras: [], ...base });
+    assert.deepEqual(normalizar({ tratamentos: t, salas: { quantidade: 999, prefixo: '  ' } }).salas, { quantidade: 6, prefixo: 'Sala', extras: [], ...base });
+    assert.deepEqual(normalizar({ tratamentos: t, salas: { quantidade: 4, prefixo: 'Maca', extras: [' Sala Reiki ', '', 7] } }).salas, { quantidade: 4, prefixo: 'Maca', extras: ['Sala Reiki'], ...base });
+    // sala sugerida: só para tratamentos que existem e com texto válido
+    const sugestoes = normalizar({ tratamentos: t, salas: { prioritaria: ' Prioritária ', porTratamento: { a: ' Sala A ', b: 'Sala B', c: 7 } } }).salas;
+    assert.equal(sugestoes.prioritaria, 'Prioritária');
+    assert.deepEqual(sugestoes.porTratamento, { a: 'Sala A' });
+    assert.equal(normalizar({ tratamentos: t, salas: { prioritaria: 5, porTratamento: [1] } }).salas.prioritaria, '');
 });
 
 test('rede.ipServidor: aceita IPv4 e ignora valores inválidos', () => {

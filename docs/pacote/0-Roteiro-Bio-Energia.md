@@ -40,7 +40,7 @@ O celular precisa estar na **mesma rede Wi-Fi** do computador.
 No **Controle** (`/bio/controle`), em **Abertura dos trabalhos**:
 
 1. Deixe marcadas as **salas** que funcionam hoje e ajuste a **capacidade** de cada uma.
-2. Em **Selecione / Informe a Sala**, informe onde cada tratamento acontece hoje (ex.: *Sala 03 (térreo)*) ou toque em **Sala Prioritários - Térreo**, a sala do térreo para pacientes PCD e atendimentos prioritários.
+2. Em **Selecione / Informe a Sala**, informe onde cada tratamento acontece hoje (ex.: *Sala 03 (térreo)*) ou toque em **Sala Prioritários - Térreo**, a sala do térreo para pacientes PCD e atendimentos prioritários. Paciente **prioritário** já é encaminhado para essa sala ao ser chamado, sem precisar digitar.
 3. Se houver lista de **pré-inscritos**, cole no campo, **um por linha**: `Nome Sobrenome ; dia ; descrição`.
 4. Toque em **Abrir o dia** (menu da esquerda). O indicador passa a **Dia aberto**.
 

@@ -61,9 +61,9 @@ Abra a **Recepção** (`/recepcao`) e no canto esquerdo, embaixo, confira em **P
 
 ## 5. A equipe chama o paciente, no celular
 
-Aponte a câmera para o QR code do **Atendimento**. Na primeira vez, escolha **o seu tratamento** (o aparelho lembra). Depois, em **Selecione / Informe a Sala**, toque na **sala** (1 a 6, **Sala Reiki** ou **Sala Prioritários - Térreo**, para pacientes PCD e atendimentos prioritários de qualquer tratamento) e em **Chamar próximo**.
+Aponte a câmera para o QR code do **Atendimento**. Na primeira vez, escolha **o seu tratamento** (o aparelho lembra). Depois, em **Selecione / Informe a Sala**, toque na **sala** (1 a 6, **Sala Reiki** ou **Sala Prioritários - Térreo**, para pacientes PCD e atendimentos prioritários de qualquer tratamento) e em **Chamar próximo**. A sala já vem selecionada: **Sala Prioritários - Térreo** se o próximo da fila é prioritário, ou **Sala Reiki** se é do Reiki e não é prioritário; dá para trocar antes de chamar.
 
-<div class="lado"><figure><img src="img/e-05-atendimento-escolher.webp"><figcaption>Primeira vez: escolher o tratamento.</figcaption></figure><figure><img src="img/e-06-atendimento-chamar.webp"><figcaption>Escolher a sala (inclusive a <b>Sala Prioritários - Térreo</b>) e tocar em <b>Chamar próximo</b>.</figcaption></figure></div>
+<div class="lado"><figure><img src="img/e-05-atendimento-escolher.webp"><figcaption>Primeira vez: escolher o tratamento.</figcaption></figure><figure><img src="img/e-06-atendimento-chamar.webp"><figcaption>A sala já vem selecionada (aqui, <b>Sala Prioritários - Térreo</b>, porque o próximo é prioritário). Confira e toque em <b>Chamar próximo</b>.</figcaption></figure></div>
 
 </div>
 

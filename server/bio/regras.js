@@ -330,8 +330,12 @@ function remover(estado, args, ctx) {
 function registrarChamada(estado, p, sala, ctx) {
     p.chamado = isoLocal(ctx.agora);
     p.chamadas += 1;
-    // O local da sala (informado na abertura do dia) já vem como sala de destino do paciente, salvo se o controle digitou outro.
-    if (!p.salaDestino && sala.local) p.salaDestino = sala.local;
+    // A sala de destino já vem preenchida, salvo se o controle digitou outra: o prioritário vai para a sala
+    // prioritária (térreo); os demais, para o local da sala informado na abertura do dia.
+    if (!p.salaDestino) {
+        const destino = (p.prioridade && ctx.config.prioridade?.sala) || sala.local;
+        if (destino) p.salaDestino = destino;
+    }
     movimento(p, 'chamado', ctx, { etapa: sala.etapa, sala: sala.nome, local: sala.local ?? null });
     const chamada = {
         seq: ++estado.chamadaSeq,

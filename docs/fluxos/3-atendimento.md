@@ -33,6 +33,7 @@ lembra a escolha; para mudar, toque em **trocar** no topo.
 O topo mostra o seu tratamento, quantos aguardam e o resumo de todas as filas (a sua fica destacada).
 No cartão escuro, informe a sala em **Selecione / Informe a Sala**: toque no número (1 a 6), em **Sala Reiki** ou em **Sala Prioritários - Térreo** (térreo, acessível para PCD, serve a qualquer tratamento), ou digite
 livremente (ex.: "Sala 02"). O botão laranja mostra quem será chamado: **Chamar próximo: nome**.
+A sala **já vem selecionada** conforme o próximo da fila: **Sala Prioritários - Térreo** se ele for prioritário; **Sala Reiki** se for do Reiki e não for prioritário. Dá para trocar antes de chamar. (Configurável em `config/configuracao.json`, `salas.prioritaria` e `salas.porTratamento`.)
 
 ![Tela inicial da equipe](img/atendimento-2-tela-inicial.webp)
 

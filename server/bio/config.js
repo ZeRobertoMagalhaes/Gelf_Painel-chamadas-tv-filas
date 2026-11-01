@@ -44,6 +44,8 @@ function normalizarBio(bruto) {
     const prioridade = {
         localEspera: locais.some((l) => l.id === pr.localEspera) ? pr.localEspera : null,
         aviso: texto(pr.aviso, 300),
+        // Sala de destino que o paciente prioritário recebe ao ser chamado (o controle ainda pode mudar).
+        sala: texto(pr.sala, 40),
     };
     // Salas/locais de uso geral, oferecidas como atalho no campo "sala/local" do controle (ex.: sala do térreo para PCD).
     const locaisRapidos = (Array.isArray(bruto.locaisRapidos) ? bruto.locaisRapidos : [])

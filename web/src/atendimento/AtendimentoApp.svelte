@@ -27,6 +27,10 @@
       .filter((p) => p.tratamento === meuTratamento && ["chamado", "em_atendimento"].includes(p.situacao))
       .sort((a, b) => (b.chamadoPor === equipeId) - (a.chamadoPor === equipeId)),
   );
+  // Sala que já vem selecionada para o próximo da fila: a prioritária, se ele for prioritário;
+  // senão a do tratamento (ex.: Reiki -> Sala Reiki), se houver. O aparelho ainda pode trocar.
+  const proximo = $derived(fila[0]);
+  const salaSugerida = $derived(proximo?.prioridade && config?.salas.prioritaria ? config.salas.prioritaria : (config?.salas.porTratamento?.[meuTratamento] ?? null));
   const limite = $derived(estado?.limites?.[meuTratamento] ?? 1);
   const vagaLivre = $derived(emCurso.length < limite);
   // Atalhos de sala: numeradas (1..N, tocar escolhe "Sala N") e as de nome próprio
@@ -42,6 +46,16 @@
   const fechado = $derived(estado && !estado.atendimentoAberto);
 
   onMount(() => conectar());
+
+  // Só reescolhe a sala quando muda quem é o próximo (ou o tratamento): digitar/trocar a sala à mão vale até lá.
+  let chaveProximo = "";
+  $effect(() => {
+    if (!proximo) return;
+    const chave = `${meuTratamento}|${proximo.id}|${proximo.prioridade ? 1 : 0}`;
+    if (chave === chaveProximo) return;
+    chaveProximo = chave;
+    sala = salaSugerida ?? lembrar("gelf.sala") ?? "";
+  });
 
   function mostrar(texto, erro = false) {
     aviso = { texto, erro };
@@ -76,7 +90,8 @@
   async function chamarProximo() {
     const valor = sala.trim();
     if (!valor) return mostrar("Informe a sala antes de chamar.", true);
-    lembrar("gelf.sala", valor);
+    // Salas sugeridas (prioritária, Sala Reiki) não viram a "última sala" dos demais pacientes.
+    if (valor !== config?.salas.prioritaria && valor !== config?.salas.porTratamento?.[meuTratamento]) lembrar("gelf.sala", valor);
     const r = await executar("chamarProximo", { tratamento: meuTratamento, sala: valor, equipeId });
     if (r?.ok) mostrar(`Chamando ${r.chamada.nome} ${r.chamada.sobrenome}`);
   }
