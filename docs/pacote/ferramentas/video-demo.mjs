@@ -20,7 +20,9 @@ const CHROME = process.env.CHROME_PATH || 'google-chrome';
 const FFMPEG = process.env.FFMPEG || 'ffmpeg';
 const PIPER_PY = process.env.PIPER_PY;
 const PIPER_MODELO = process.env.PIPER_MODELO;
-if (!PIPER_PY || !PIPER_MODELO) throw new Error('Defina PIPER_PY (python com piper-tts) e PIPER_MODELO (arquivo .onnx da voz).');
+// Outra voz: VOZ_SCRIPT = script Python que lê o texto da entrada padrão e grava um WAV 16 bits mono no caminho recebido.
+const VOZ_SCRIPT = process.env.VOZ_SCRIPT;
+if (!PIPER_PY || (!PIPER_MODELO && !VOZ_SCRIPT)) throw new Error('Defina PIPER_PY (python com piper-tts) e PIPER_MODELO (arquivo .onnx da voz), ou VOZ_SCRIPT.');
 const PORTA = 3936;
 const DEBUG = 9336;
 const URL_BASE = `http://localhost:${PORTA}`;
@@ -349,18 +351,21 @@ const cenas = [
     id: 'outro-tratamento',
     passos: [
       {
-        fala: 'Tratamentos diferentes não se bloqueiam. Mesmo com o Reiki ocupado, a mesma equipe pode trocar de tratamento no mesmo aparelho.',
+        fala: 'Tratamentos diferentes não se bloqueiam. O limite vale só para cada tratamento. Enquanto a Maria está na sala do Reiki, a equipe do Apométrico, com o seu próprio celular, trabalha normalmente.',
+        // Outro aparelho: a memória do celular é apagada, como se fosse o celular de outra equipe.
         fazer: async () => {
-          await clicar('button.link-botao', 'trocar', cel({}));
-          await clicar('button.trat-botao', 'Apométrico', cel({}));
+          await js(`(() => { document.querySelector('.rot').textContent = 'Celular da equipe do Apométrico'; const c = document.getElementById('cel').contentWindow; c.localStorage.clear(); c.location.reload(); })()`);
+          await esperar(2500);
         },
       },
       {
-        fala: 'Escolhemos a sala, e chamamos a Ana, do Apométrico, sem nenhum bloqueio.',
+        fala: 'Essa equipe escolhe o Apométrico, escolhe a sala, e chama a Ana. A televisão mostra a Ana, e a Maria continua na sala do Reiki. O aviso amarelo é o limite do próprio Apométrico, de um paciente, e não depende do Reiki. Cada equipe segue o seu atendimento, sem interferir nas outras.',
         fazer: async () => {
+          await clicar('button.trat-botao', 'Apométrico', cel({}));
           await clicar('button.room-chip', '2', cel({}));
           await clicar('.bloco-chamar .btn-call', 'Chamar próximo', cel({}));
           await esperar(3500);
+          await rolar('.faixa-aviso', null, 'cel');
         },
       },
     ],
@@ -395,7 +400,7 @@ const cenas = [
     preparar: () => ir(titulo('Painel Gelf', 'Obrigado pela atenção', 'Evangelho Terapia')),
     passos: [
       {
-        fala: 'Esta foi a demonstração do Painel Guélf para o Evangelho Terapia: limite de pacientes por tratamento, salas já selecionadas, aviso com o dia fechado, e o relatório do dia. Obrigado pela atenção.',
+        fala: 'Esta foi a demonstração do Painel Guélf para o Evangelho Terapia: limite de pacientes por tratamento, equipes de tratamentos diferentes trabalhando sem se bloquear, salas já selecionadas, aviso com o dia fechado, e o relatório do dia. Obrigado pela atenção.',
       },
     ],
   },
@@ -404,8 +409,10 @@ const cenas = [
 // ---------------------------------------------------------------- voz (Piper, local) e vídeo (ffmpeg)
 const VOZ = ['--length-scale', '1.2', '--noise-scale', '0.5', '--noise-w', '0.55', '--sentence-silence', '0.6'];
 function falar(texto, arquivo) {
-  execFileSync(PIPER_PY, ['-m', 'piper', '-m', PIPER_MODELO, '-f', arquivo, ...VOZ], { input: texto, stdio: ['pipe', 'ignore', 'ignore'] });
-  return (fs.statSync(arquivo).size - 44) / (22050 * 2); // WAV 16 bits mono, 22,05 kHz
+  const args = VOZ_SCRIPT ? [VOZ_SCRIPT, arquivo] : ['-m', 'piper', '-m', PIPER_MODELO, '-f', arquivo, ...VOZ];
+  execFileSync(PIPER_PY, args, { input: texto, stdio: ['pipe', 'ignore', 'ignore'] });
+  const taxa = fs.readFileSync(arquivo).readUInt32LE(24); // WAV 16 bits mono
+  return (fs.statSync(arquivo).size - 44) / (taxa * 2);
 }
 const ff = (...args) => execFileSync(FFMPEG, ['-y', '-loglevel', 'error', ...args]);
 
@@ -435,13 +442,15 @@ function gravador(pasta) {
 }
 
 const apenas = process.env.SO_CENAS ? process.env.SO_CENAS.split(',') : null;
+// SO_CENAS_NO_VIDEO=1: o vídeo final leva só as cenas de SO_CENAS (útil para um trecho curto de teste de voz).
+const soEssas = !!process.env.SO_CENAS_NO_VIDEO;
 const videosCena = [];
 let totalSeg = 0;
 for (const [i, cena] of cenas.entries()) {
   const dir = path.join(tmp, 'cenas', `${String(i).padStart(2, '0')}-${cena.id}`);
   fs.mkdirSync(dir, { recursive: true });
   if (apenas && !apenas.includes(cena.id)) {
-    videosCena.push(path.join(dir, 'cena.mp4')); // reaproveita a gravação anterior
+    if (!soEssas) videosCena.push(path.join(dir, 'cena.mp4')); // reaproveita a gravação anterior
     continue;
   }
   console.log(`\n== Cena ${i}: ${cena.id}`);

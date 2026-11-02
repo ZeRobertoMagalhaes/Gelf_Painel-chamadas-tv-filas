@@ -14,6 +14,11 @@
   const geradoEm = new Date().toLocaleString("pt-BR");
   const nomeCompleto = (p) => `${p.nome} ${p.sobrenome}`;
 
+  // O navegador sugere o título da página como nome do arquivo ao salvar em PDF.
+  $effect(() => {
+    if (registro?.data) document.title = `Gelf-Relatorio-Tratamentos_${registro.data.split("-").reverse().join("-")}`;
+  });
+
   onMount(() => conectar());
 </script>
 
