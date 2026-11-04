@@ -120,10 +120,10 @@ ${enderecos}
 const VIRTUAIS = /docker|^br-|veth|virbr|vmnet|vboxnet|vethernet|wsl|hyper-v|tailscale|zerotier|^zt|^tun|^tap|loopback/i;
 const faixa = (ip) => (ip.startsWith('192.168.') ? 0 : ip.startsWith('10.') ? 1 : 2);
 
-function enderecosParaExibir(interfaces, preferido = '') {
+function enderecosParaExibir(interfaces, preferido = '', incluirVirtuais = false) {
     const ips = [];
     for (const [nome, lista] of Object.entries(interfaces)) {
-        if (VIRTUAIS.test(nome)) continue;
+        if (!incluirVirtuais && VIRTUAIS.test(nome)) continue;
         for (const e of lista || []) {
             // Node 18.0 a 18.3 devolve `family` como número (4); as demais versões, como 'IPv4'.
             if ((e.family === 'IPv4' || e.family === 4) && !e.internal && !e.address.startsWith('169.254.')) ips.push(e.address);
@@ -134,4 +134,17 @@ function enderecosParaExibir(interfaces, preferido = '') {
     return ordenados.slice(0, 3);
 }
 
-module.exports = { renderizarInicio, enderecosParaExibir };
+// O QR code pelo IP precisa aparecer sempre. Ordem de tentativa: placas reais; qualquer placa (inclusive
+// as que parecem virtuais); o IP do servidor da configuração; o endereço numérico pelo qual a página foi aberta.
+const IPV4 = /^(\d{1,3})(\.\d{1,3}){3}$/;
+function enderecosDaPagina(interfaces, preferido = '', hospedeiro = '') {
+    const reais = enderecosParaExibir(interfaces, preferido);
+    if (reais.length) return reais;
+    const todos = enderecosParaExibir(interfaces, preferido, true);
+    if (todos.length) return todos;
+    if (preferido) return [preferido];
+    const host = String(hospedeiro).replace(/:\d+$/, '');
+    return IPV4.test(host) && !host.startsWith('127.') ? [host] : [];
+}
+
+module.exports = { renderizarInicio, enderecosParaExibir, enderecosDaPagina };

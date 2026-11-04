@@ -9,11 +9,11 @@ duplo. Especificação: `docs/Proposta de Solução — Sistema de Chamadas por 
 | Tela | Endereço | Quem usa |
 |---|---|---|
 | Recepção | `/recepcao` | Cadastro, prioridade, correção, troca de fila, remoção, abrir/fechar atendimento |
-| Atendimento | `/atendimento` | Equipes no celular/tablet: chamar próximo, chamar novamente, iniciar, concluir, não compareceu |
+| Atendimento | `/atendimento` | Equipes no celular/tablet: chamar próximo (ou qualquer paciente escolhido na fila), chamar novamente, iniciar, concluir, não compareceu |
 | Painel TV | `/painel` | Navegador em tela cheia no notebook ligado à TV |
-| Relatório | `/relatorio` | Registro do dia (pacientes, horários, tempos, resumo por tratamento) para salvar em PDF; botão na Recepção |
+| Relatório | `/relatorio` | Registro do dia (pacientes, horários, tempos, resumo por tratamento) para salvar em PDF (`Relatorio Atendimentos Gelf DD-MM-AAAA_HHMMSS.pdf`) e, junto, em JSON com os mesmos dados; botão na Recepção |
 | TV Box / navegador antigo | `/painel-simples`, `/bio/painel-simples`, `/diagnostico` | Painel da TV em JavaScript antigo (ES5) e página que diagnostica o navegador da caixinha; guia em `docs/guias/tv-box.md` |
-| Início | `/` | Links para todas as telas (filas e Bio) e dois **QR codes por tipo de tratamento** (pelo nome e pelo IP do servidor, `rede.ipServidor` em `config/configuracao.json`): o celular abre as telas sem digitar, mesmo se o IP mudou ou se o nome `.local` não resolve no aparelho |
+| Início | `/` | Links para todas as telas (filas e Bio) e dois **QR codes por tipo de tratamento** (pelo nome e pelo IP do servidor, `rede.ipServidor` em `config/configuracao.json`): o celular abre as telas sem digitar, mesmo se o IP mudou ou se o nome `.local` não resolve no aparelho. O QR code pelo IP aparece sempre (se nenhuma placa de rede for reconhecida, usa `rede.ipServidor` ou o IP numérico pelo qual a página foi aberta) |
 
 ## Rodar
 
@@ -92,7 +92,7 @@ Fluxo oficial do processo: `docs/fluxos/fluxo-operacional-bio.md` (referência p
   (todas as etapas com 2 salas de 1 vaga, ou seja, 2 atendimentos simultâneos: Captação 1 e 2, Doutor 1 e 2, Reiki 1 e 2).
   A acupuntura faz parte do atendimento dos Doutores (não é etapa nem sala separada; o mecanismo de etapa `opcional` continua disponível por configuração).
   Mudar o fluxo é editar esse arquivo e reiniciar. No dia, as vagas (macas) e salas em uso se ajustam na própria tela.
-- **Relatório do atendimento (PDF)**: `/bio/relatorio` (botão no controle) reúne dados dos pacientes, sala, horários de início e fim de cada tratamento e resumo geral; o PDF sai da janela de impressão do navegador ("Salvar como PDF"). Salve antes de fechar o dia: os nomes são apagados no fechamento.
+- **Relatório do atendimento (PDF)**: `/bio/relatorio` (botão no controle) reúne dados dos pacientes, sala, horários de início e fim de cada tratamento e resumo geral; o PDF sai da janela de impressão do navegador ("Salvar como PDF") com o nome sugerido `Relatorio Atendimentos Gelf DD-MM-AAAA_HHMMSS.pdf`, e um arquivo `.json` de mesmo nome, com os mesmos dados, é baixado junto. Salve antes de fechar o dia: os nomes são apagados no fechamento.
 - **Local das salas**: informado na abertura do dia (campo `local` de cada sala, também em `config/bio.json`) e editável durante o dia; pré-preenche a sala de destino do paciente na chamada.
 - **Sala de destino**: campo no cartão do controle (`informarSala`); aparece na recepção e na TV no lugar da sala chamada.
 - **Progresso na recepção**: barra de progresso por etapas (concluída / em atendimento / chamado / aguardando / a fazer) em cada paciente da tela da recepção (`web/src/lib/PassosPaciente.svelte`); a TV não mostra a barra.

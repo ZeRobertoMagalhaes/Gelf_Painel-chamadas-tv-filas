@@ -95,7 +95,8 @@ Em cada sala:
 ## Relatório e fechar o dia
 - **Relatório do atendimento (PDF):** botão no menu da esquerda, abaixo de **Fechar o dia**. Abre o relatório completo, com
   **dados dos pacientes, sala, horários de início e fim de cada tratamento e um resumo geral** (totais e tempos médios). Toque em
-  **Salvar em PDF / Imprimir** e, na janela, escolha **Salvar como PDF**. **Faça isso antes de fechar o dia**: os nomes são apagados
+  **Salvar em PDF / Imprimir** e, na janela, escolha **Salvar como PDF** (nome sugerido: `Relatorio Atendimentos Gelf DD-MM-AAAA_HHMMSS.pdf`;
+  junto é baixado um arquivo `.json` com o mesmo nome e os mesmos dados). **Faça isso antes de fechar o dia**: os nomes são apagados
   no fechamento.
 - **Relatório do dia** (embaixo, **Mostrar / Ocultar**): resumo rápido, sem nomes, com chegadas, concluídos, não compareceram,
   em andamento, tempo médio total e, por etapa, atendidos, espera média, duração média e quem aguarda agora.

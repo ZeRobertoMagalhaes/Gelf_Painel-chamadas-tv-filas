@@ -1,6 +1,6 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
-const { renderizarInicio, enderecosParaExibir } = require('../server/inicio');
+const { renderizarInicio, enderecosParaExibir, enderecosDaPagina } = require('../server/inicio');
 
 test('página inicial: links das telas, seções por tipo de tratamento e dois QR codes (nome e IP principal) em cada uma', () => {
     const html = renderizarInicio({ porta: 3000, nomeMdns: 'painel-gelf-filas.local', ips: ['192.168.0.10', '10.0.0.5'] });
@@ -51,4 +51,19 @@ test('endereços exibidos: o IP do servidor configurado vai primeiro; ausente, v
     assert.deepEqual(enderecosParaExibir(rede, '192.168.0.192'), ['192.168.0.192', '192.168.0.103', '192.168.0.143']);
     assert.deepEqual(enderecosParaExibir(rede, '192.168.0.50'), ['192.168.0.103', '192.168.0.192', '192.168.0.143']);
     assert.deepEqual(enderecosParaExibir(rede), ['192.168.0.103', '192.168.0.192', '192.168.0.143']);
+});
+
+test('QR code pelo IP sempre disponível: cai para placas "virtuais", IP do servidor configurado e endereço da requisição', () => {
+    const v4 = (address, internal = false) => [{ family: 'IPv4', address, internal }];
+    // Só há placa com nome de rede virtual: ainda assim é o IP do computador.
+    assert.deepEqual(enderecosDaPagina({ lo: v4('127.0.0.1', true), 'vEthernet (Padrão)': v4('172.20.0.2') }), ['172.20.0.2']);
+    // Placas reais têm preferência sobre as virtuais.
+    assert.deepEqual(enderecosDaPagina({ docker0: v4('172.17.0.1'), 'Wi-Fi': v4('192.168.0.5') }), ['192.168.0.5']);
+    // Sem nenhuma placa: usa o IP do servidor da configuração.
+    assert.deepEqual(enderecosDaPagina({ lo: v4('127.0.0.1', true) }, '192.168.0.192'), ['192.168.0.192']);
+    // Sem placa nem configuração: o IP numérico pelo qual a página foi aberta (nunca localhost).
+    assert.deepEqual(enderecosDaPagina({}, '', '192.168.0.50:3000'), ['192.168.0.50']);
+    assert.deepEqual(enderecosDaPagina({}, '', 'localhost:3000'), []);
+    assert.deepEqual(enderecosDaPagina({}, '', '127.0.0.1:3000'), []);
+    assert.deepEqual(enderecosDaPagina({}, '', 'painel-gelf-filas.local:3000'), []);
 });

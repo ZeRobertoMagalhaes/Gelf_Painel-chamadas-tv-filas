@@ -111,7 +111,7 @@ Na última etapa, o botão é **Concluir e guardar prontuário**: conclui a etap
 ## 9. Fim do dia: relatório e fechamento
 
 1. No menu da esquerda, toque em **Relatório do atendimento (PDF)**. Ele traz os dados dos pacientes, a sala, os horários de início e fim de cada tratamento e um resumo geral.
-2. Toque em **Salvar em PDF / Imprimir** e, na janela, escolha **Salvar como PDF**.
+2. Toque em **Salvar em PDF / Imprimir** e, na janela, escolha **Salvar como PDF**. O nome sugerido é `Relatorio Atendimentos Gelf DD-MM-AAAA_HHMMSS.pdf`, e o sistema baixa também um arquivo `.json` com o mesmo nome e os mesmos dados.
 3. **Só depois** toque em **Fechar o dia** e confirme em **Confirmar: apagar tudo**: os nomes são apagados. Fica salvo apenas o relatório sem nomes.
 
 <figure><img src="img/b-10-relatorio.webp"><figcaption>Relatório do atendimento, pronto para salvar em PDF.</figcaption></figure>

@@ -83,6 +83,7 @@ A TV mostra o **nome**, a **sala** e toca o **sinal sonoro**. Na TV, abra o **Pa
 
 - Paciente chegou à sala: **Iniciar atendimento**.
 - Terminou: **Concluir atendimento**. Em seguida, **Chamar próximo**.
+- Quer chamar alguém que não é o primeiro? Na **Fila de espera**, toque no nome do paciente (fica como **Escolhido**) e depois em **Chamar: nome**.
 - Não apareceu: **Chamar novamente** e, se ainda assim não vier, **Não compareceu** (toque duas vezes para confirmar).
 
 Cada tratamento atende até o limite definido na abertura do dia (padrão 1 paciente por vez): conclua antes de chamar além do limite. Tratamentos diferentes não se bloqueiam.
@@ -96,7 +97,7 @@ Cada tratamento atende até o limite definido na abertura do dia (padrão 1 paci
 ## 8. Fim do dia: relatório e fechamento
 
 1. Na Recepção, toque em **Relatório do dia (PDF)**. Ele mostra o resumo por tratamento e o registro de cada paciente (chegada, chamada, sala, início, fim, espera e duração).
-2. Toque em **Salvar em PDF / Imprimir** e, na janela, escolha **Salvar como PDF**.
+2. Toque em **Salvar em PDF / Imprimir** e, na janela, escolha **Salvar como PDF**. O nome sugerido é `Relatorio Atendimentos Gelf DD-MM-AAAA_HHMMSS.pdf`, e o sistema baixa também um arquivo `.json` com o mesmo nome e os mesmos dados.
 3. **Só depois** toque em **Fechar atendimento** e confirme: os nomes são apagados. Fica salvo apenas o resumo em números.
 
 <figure><img src="img/e-11-recepcao-fechar.webp"><figcaption>Antes de fechar: <b>Relatório do dia (PDF)</b>. O botão de fechar pede uma confirmação.</figcaption></figure>

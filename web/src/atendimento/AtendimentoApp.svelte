@@ -11,6 +11,8 @@
   let sala = $state(lembrar("gelf.sala") ?? "");
   let aviso = $state({ texto: "", erro: false });
   let confirmandoFalta = $state(null);
+  // Paciente escolhido na fila de espera (qualquer posição). Sem escolha, chama-se o próximo da fila.
+  let escolhidoId = $state(null);
   let ocupado = $state(false);
   let timerAviso;
 
@@ -27,9 +29,11 @@
       .filter((p) => p.tratamento === meuTratamento && ["chamado", "em_atendimento"].includes(p.situacao))
       .sort((a, b) => (b.chamadoPor === equipeId) - (a.chamadoPor === equipeId)),
   );
-  // Sala que já vem selecionada para o próximo da fila: a prioritária, se ele for prioritário;
-  // senão a do tratamento (ex.: Reiki -> Sala Reiki), se houver. O aparelho ainda pode trocar.
-  const proximo = $derived(fila[0]);
+  const escolhido = $derived(fila.find((p) => p.id === escolhidoId) ?? null);
+  // Sala que já vem selecionada para quem será chamado (o escolhido ou, sem escolha, o próximo da fila):
+  // a prioritária, se ele for prioritário; senão a do tratamento (ex.: Reiki -> Sala Reiki), se houver.
+  // O aparelho ainda pode trocar.
+  const proximo = $derived(escolhido ?? fila[0]);
   const salaSugerida = $derived(proximo?.prioridade && config?.salas.prioritaria ? config.salas.prioritaria : (config?.salas.porTratamento?.[meuTratamento] ?? null));
   const limite = $derived(estado?.limites?.[meuTratamento] ?? 1);
   const vagaLivre = $derived(emCurso.length < limite);
@@ -92,8 +96,19 @@
     if (!valor) return mostrar("Informe a sala antes de chamar.", true);
     // Salas sugeridas (prioritária, Sala Reiki) não viram a "última sala" dos demais pacientes.
     if (valor !== config?.salas.prioritaria && valor !== config?.salas.porTratamento?.[meuTratamento]) lembrar("gelf.sala", valor);
-    const r = await executar("chamarProximo", { tratamento: meuTratamento, sala: valor, equipeId });
-    if (r?.ok) mostrar(`Chamando ${r.chamada.nome} ${r.chamada.sobrenome}`);
+    const r = escolhido
+      ? await executar("chamarPaciente", { id: escolhido.id, tratamento: meuTratamento, sala: valor, equipeId })
+      : await executar("chamarProximo", { tratamento: meuTratamento, sala: valor, equipeId });
+    if (r?.ok) {
+      escolhidoId = null;
+      mostrar(`Chamando ${r.chamada.nome} ${r.chamada.sobrenome}`);
+    }
+  }
+
+  // Toque na fila: escolhe (ou desfaz a escolha de) um paciente e leva a tela ao botão de chamar.
+  function escolherNaFila(p) {
+    escolhidoId = escolhidoId === p.id ? null : p.id;
+    if (escolhidoId && vagaLivre) document.querySelector(".bloco-chamar")?.scrollIntoView({ behavior: "smooth", block: "center" });
   }
 
   const rechamar = (p) => executar("rechamar", { id: p.id }, "Chamada repetida na TV");
@@ -185,8 +200,11 @@
           <div class="room-hint">Toque em uma sala ou digite livremente acima</div>
         {/if}
         <button class="btn-call btn-grande" disabled={ocupado || fechado || fila.length === 0} onclick={chamarProximo}>
-          {fila.length ? `Chamar próximo: ${fila[0].nomeExibicao}` : "Fila vazia"}
+          {fila.length ? `${escolhido ? "Chamar" : "Chamar próximo"}: ${proximo.nomeExibicao}` : "Fila vazia"}
         </button>
+        {#if escolhido}
+          <button type="button" class="link-claro" onclick={() => (escolhidoId = null)}>Voltar ao próximo da fila ({fila[0].nomeExibicao})</button>
+        {/if}
       </section>
     {/if}
 
@@ -199,12 +217,16 @@
     {#if fila.length > 0}
       <section class="fila-lista">
         <h3>Fila de espera</h3>
+        {#if fila.length > 1}
+          <p class="fila-dica">Para chamar um paciente fora da ordem, toque no nome dele.</p>
+        {/if}
         {#each fila as p, i (p.id)}
-          <div class="fila-item" style:border-left-color={trat.cor}>
+          <button type="button" class="fila-item" class:escolhido={p.id === escolhidoId} aria-pressed={p.id === escolhidoId} style:border-left-color={trat.cor} onclick={() => escolherNaFila(p)}>
             <span class="fila-pos">{i + 1}</span>
             <span class="fila-nome">{p.nomeExibicao}</span>
             {#if p.prioridade}<span class="selo-prioridade">Prioridade</span>{/if}
-          </div>
+            {#if p.id === escolhidoId}<span class="selo-escolhido">Escolhido</span>{/if}
+          </button>
         {/each}
       </section>
     {/if}

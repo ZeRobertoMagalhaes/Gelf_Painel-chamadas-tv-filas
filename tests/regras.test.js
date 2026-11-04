@@ -110,6 +110,34 @@ test('chamar próximo: pega o primeiro, exige sala, fila vazia dá erro', () => 
     assert.equal(r.chamada.sala, 'Sala 2');
 });
 
+test('chamar paciente específico: qualquer posição da fila, sem mexer na ordem dos demais', () => {
+    const e = diaAberto();
+    const a = cad(e, 'Ana', 'A');
+    const b = cad(e, 'Bia', 'B');
+    const c = cad(e, 'Cris', 'C');
+    const r = R.chamarPaciente(e, { id: c.id, tratamento: 'reiki', sala: 'Sala 3', equipeId: 'e1' }, ctx());
+    assert.equal(r.paciente.id, c.id);
+    assert.equal(r.paciente.situacao, 'chamado');
+    assert.equal(r.paciente.sala, 'Sala 3');
+    assert.equal(r.chamada.nome, 'Cris');
+    assert.equal(R.chamarProximo(e, { tratamento: 'reiki', sala: 'Sala 4' }, ctx()).paciente.id, a.id, 'o primeiro da fila continua sendo o primeiro');
+    assert.equal(R.chamarProximo(e, { tratamento: 'reiki', sala: 'Sala 5' }, ctx()).paciente.id, b.id);
+});
+
+test('chamar paciente específico: respeita limite, tratamento, situação e dia aberto', () => {
+    const e = diaAberto({ reiki: 1 });
+    const a = cad(e, 'Ana', 'A');
+    const g = cad(e, 'Gabi', 'G', 'gao');
+    assert.equal(codigo(() => R.chamarPaciente(e, { id: g.id, tratamento: 'reiki', sala: '1' }, ctx())), 'invalido', 'outro tratamento');
+    assert.equal(codigo(() => R.chamarPaciente(e, { id: 'nao-existe', tratamento: 'reiki', sala: '1' }, ctx())), 'nao_encontrado');
+    assert.equal(codigo(() => R.chamarPaciente(e, { id: a.id, tratamento: 'reiki', sala: ' ' }, ctx())), 'invalido', 'sala obrigatória');
+    R.chamarPaciente(e, { id: a.id, tratamento: 'reiki', sala: '1' }, ctx());
+    assert.equal(codigo(() => R.chamarPaciente(e, { id: a.id, tratamento: 'reiki', sala: '2' }, ctx())), 'estado_invalido', 'já foi chamado');
+    const b = cad(e, 'Bia', 'B');
+    assert.equal(codigo(() => R.chamarPaciente(e, { id: b.id, tratamento: 'reiki', sala: '2' }, ctx())), 'limite_atingido');
+    assert.equal(codigo(() => R.chamarPaciente(R.novoDia('2026-10-10'), { id: a.id, tratamento: 'reiki', sala: '1' }, ctx())), 'fechado');
+});
+
 test('duas equipes chamando seguidamente recebem pacientes diferentes', () => {
     const e = diaAberto();
     const a = cad(e, 'Ana', 'A');

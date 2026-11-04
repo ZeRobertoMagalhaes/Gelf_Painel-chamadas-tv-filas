@@ -291,6 +291,21 @@ function limparSala(valor) {
 // e a terceira chamada só sai quando um deles for concluído ou não comparecer.
 // "equipeId" só registra quem chamou (aparece nas telas de atendimento).
 function chamarProximo(estado, args, ctx) {
+    return chamarDaFila(estado, args, ctx, null);
+}
+
+// Chama um paciente específico da fila, em qualquer posição (a equipe pode, por exemplo,
+// chamar quem já está presente ou quem precisa de uma sala específica). Vale o mesmo
+// limite simultâneo do "chamar próximo"; a posição de quem ficou na fila não muda.
+function chamarPaciente(estado, args, ctx) {
+    exigirAberto(estado);
+    const p = buscar(estado, args.id);
+    if (p.tratamento !== args.tratamento) throw new ErroRegra('invalido', 'Esse paciente é de outro tratamento.');
+    exigirSituacao(p, ['aguardando'], 'chamar');
+    return chamarDaFila(estado, args, ctx, p);
+}
+
+function chamarDaFila(estado, args, ctx, escolhido) {
     exigirAberto(estado);
     exigirTratamento(ctx.config, args.tratamento);
     const sala = limparSala(args.sala);
@@ -304,14 +319,14 @@ function chamarProximo(estado, args, ctx) {
             `${nome}: já há ${emSala} ${emSala === 1 ? 'paciente' : 'pacientes'} em sala (limite de ${limite} ao mesmo tempo). Conclua ou marque "não compareceu" antes de chamar o próximo.`,
         );
     }
-    const proximo = fila(estado, args.tratamento)[0];
-    if (!proximo) throw new ErroRegra('fila_vazia', 'Não há pacientes aguardando neste tratamento.');
+    const chamado = escolhido || fila(estado, args.tratamento)[0];
+    if (!chamado) throw new ErroRegra('fila_vazia', 'Não há pacientes aguardando neste tratamento.');
 
-    proximo.situacao = 'chamado';
-    proximo.sala = sala;
-    proximo.chamadoPor = equipeId || null;
-    const chamada = registrarChamada(estado, proximo, ctx);
-    return { paciente: proximo, chamada };
+    chamado.situacao = 'chamado';
+    chamado.sala = sala;
+    chamado.chamadoPor = equipeId || null;
+    const chamada = registrarChamada(estado, chamado, ctx);
+    return { paciente: chamado, chamada };
 }
 
 function rechamar(estado, args, ctx) {
@@ -445,6 +460,7 @@ module.exports = {
     priorizar,
     remover,
     chamarProximo,
+    chamarPaciente,
     rechamar,
     iniciar,
     concluir,

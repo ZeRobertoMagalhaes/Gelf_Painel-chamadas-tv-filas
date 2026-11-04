@@ -2,6 +2,7 @@
   import { onMount } from "svelte";
   import { rede, conectar } from "../lib/conexao.svelte.js";
   import { horaCurta, SITUACAO } from "../lib/util.js";
+  import { salvarRelatorio } from "../lib/relatorio.js";
 
   const estado = $derived(rede.estado);
   const registro = $derived(estado?.registro);
@@ -14,10 +15,34 @@
   const geradoEm = new Date().toLocaleString("pt-BR");
   const nomeCompleto = (p) => `${p.nome} ${p.sobrenome}`;
 
-  // O navegador sugere o título da página como nome do arquivo ao salvar em PDF.
-  $effect(() => {
-    if (registro?.data) document.title = `Gelf-Relatorio-Tratamentos_${registro.data.split("-").reverse().join("-")}`;
-  });
+  // Mesmos dados do PDF, para o arquivo JSON gravado junto.
+  function dadosJson(agora, nomeBase) {
+    return {
+      relatorio: "Filas por tratamento — Relatório do dia",
+      instituicao: "GELF Apometria Campinas",
+      arquivoPdf: `${nomeBase}.pdf`,
+      dia: registro.data,
+      geradoEm: agora.toLocaleString("pt-BR"),
+      geradoEmIso: agora.toISOString(),
+      resumoGeral: resumo,
+      pacientes: registro.pacientes.map((p) => ({
+        nome: nomeCompleto(p),
+        prioritario: !!p.prioridade,
+        vezesChamado: p.chamadas,
+        tratamento: p.tratamentoNome,
+        chegada: p.chegada ?? null,
+        chamado: p.chamado ?? null,
+        sala: p.sala ?? null,
+        inicio: p.iniciado ?? null,
+        fim: p.situacao === "concluido" || p.situacao === "nao_compareceu" ? (p.concluido ?? null) : null,
+        esperaMin: p.esperaMin ?? null,
+        duracaoMin: p.duracaoMin ?? null,
+        situacao: p.situacao,
+        situacaoTexto: SITUACAO[p.situacao] ?? p.situacao,
+      })),
+      aviso: "Documento com dados de pacientes (LGPD): guarde com cuidado.",
+    };
+  }
 
   onMount(() => conectar());
 </script>
@@ -51,7 +76,7 @@
       <p>GELF Apometria Campinas{registro ? ` • Dia ${dataBR(registro.data)}` : ""} • gerado em {geradoEm}</p>
     </div>
     <div class="rel-acoes sem-impressao">
-      <button class="rel-botao" onclick={() => window.print()} disabled={!registro}>Salvar em PDF / Imprimir</button>
+      <button class="rel-botao" onclick={() => salvarRelatorio(dadosJson)} disabled={!registro}>Salvar em PDF / Imprimir</button>
       <a class="rel-link" href="/recepcao">Voltar à recepção</a>
     </div>
   </header>
@@ -71,7 +96,8 @@
   {:else}
     <p class="rel-dica sem-impressao">
       Para guardar em <strong>PDF</strong>: toque em <strong>Salvar em PDF / Imprimir</strong> e, na janela que abrir, escolha
-      <strong>Salvar como PDF</strong> como destino. Faça isso <strong>antes de fechar o atendimento</strong>, pois os nomes são apagados no fechamento.
+      <strong>Salvar como PDF</strong> como destino. Junto com o PDF, é baixado um arquivo <strong>JSON</strong> com os mesmos dados.
+      Faça isso <strong>antes de fechar o atendimento</strong>, pois os nomes são apagados no fechamento.
     </p>
 
     <section>

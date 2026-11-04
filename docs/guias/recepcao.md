@@ -20,6 +20,6 @@ Se aparecer **"Já existe um paciente com este nome"**, confira: se for outra pe
 
 **Fim do dia**
 1. Toque em **Relatório do dia (PDF)** (abre em outra aba): mostra o resumo por tratamento e o registro de cada paciente
-   (chegada, chamada, sala, início, fim, espera e duração). Toque em **Salvar em PDF / Imprimir** e escolha *Salvar como PDF*.
+   (chegada, chamada, sala, início, fim, espera e duração). Toque em **Salvar em PDF / Imprimir** e escolha *Salvar como PDF* (nome sugerido: `Relatorio Atendimentos Gelf DD-MM-AAAA_HHMMSS.pdf`; junto é baixado um arquivo `.json` com o mesmo nome e os mesmos dados).
 2. Só depois toque em **Fechar atendimento** (confirme com o segundo toque): apaga todas as filas e nomes.
    Fica salvo apenas o resumo em números, sem nomes (`dados/relatorios/fila-AAAA-MM-DD.json`).

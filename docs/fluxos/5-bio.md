@@ -203,7 +203,8 @@ O botão **Relatório do atendimento (PDF)**, no menu da esquerda (abaixo de **F
 
 ![Relatório do atendimento, pronto para salvar em PDF](img/bio-15-relatorio-pdf.webp)
 
-**Para salvar em PDF:** toque em **Salvar em PDF / Imprimir** e, na janela que abrir, escolha **Salvar como PDF** como destino. Faça
+**Para salvar em PDF:** toque em **Salvar em PDF / Imprimir** e, na janela que abrir, escolha **Salvar como PDF** como destino. O nome sugerido é
+`Relatorio Atendimentos Gelf DD-MM-AAAA_HHMMSS.pdf` e, junto, é baixado um arquivo **JSON** com o mesmo nome e as mesmas informações. Faça
 isso **antes de fechar o dia**: o relatório tem nomes, que são apagados no fechamento.
 
 Há também o resumo rápido sem nomes, em **Relatório do dia → Mostrar**, na parte de baixo do controle. Quem é removido do fluxo

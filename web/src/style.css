@@ -762,6 +762,11 @@ button:disabled { opacity: .5; cursor: not-allowed; filter: grayscale(.3); }
 .fila-pos { width: 28px; height: 28px; border-radius: 50%; background: var(--gelf-blue-light); color: var(--gelf-blue-main); display: grid; place-items: center; font-weight: 800; font-size: .85rem; flex-shrink: 0; }
 .fila-nome { flex: 1; font-weight: 700; color: var(--gelf-blue-dark); overflow-wrap: anywhere; }
 .selo-prioridade { background: var(--gelf-yellow-gold); color: #fff; font-weight: 800; font-size: .7rem; padding: 3px 8px; border-radius: 12px; text-transform: uppercase; }
+.fila-item { width: 100%; border-top: 0; border-right: 0; border-bottom: 0; font: inherit; text-align: left; cursor: pointer; }
+.fila-item:hover { background: var(--gelf-blue-light); }
+.fila-item.escolhido { outline: 3px solid var(--gelf-yellow-gold); background: #fffbeb; }
+.fila-dica { margin: 0 0 8px; color: #475569; font-size: .85rem; }
+.selo-escolhido { background: var(--gelf-blue-main); color: #fff; font-weight: 800; font-size: .7rem; padding: 3px 8px; border-radius: 12px; text-transform: uppercase; }
 
 .toast {
     position: fixed; left: 0; right: 0; bottom: 24px; margin: 0 auto; width: fit-content;

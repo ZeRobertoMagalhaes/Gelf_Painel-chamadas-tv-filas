@@ -2,6 +2,7 @@
   import { onMount } from "svelte";
   import { rede, conectar } from "../lib/conexao.svelte.js";
   import { horaCurta } from "../lib/util.js";
+  import { salvarRelatorio } from "../lib/relatorio.js";
 
   const estado = $derived(rede.estado);
   const config = $derived(rede.config);
@@ -26,6 +27,45 @@
   const nomeCompleto = (p) => `${p.nome} ${p.sobrenome}`;
   const localPrioridade = $derived(config?.locais.find((l) => l.id === config?.prioridade?.localEspera)?.nome ?? "");
 
+  // Mesmos dados do PDF, para o arquivo JSON gravado junto.
+  function dadosJson(agora, nomeBase) {
+    return {
+      relatorio: "Cura Mediúnica — Relatório do atendimento",
+      instituicao: "GELF Apometria Campinas",
+      arquivoPdf: `${nomeBase}.pdf`,
+      dia: registro.data,
+      geradoEm: agora.toLocaleString("pt-BR"),
+      geradoEmIso: agora.toISOString(),
+      resumoGeral: resumo,
+      avisoPrioridade: config?.prioridade?.aviso ?? null,
+      localEsperaPrioritarios: localPrioridade || null,
+      pacientes: registro.pacientes.map((p) => ({
+        nome: nomeCompleto(p),
+        prioritario: !!p.prioridade,
+        chegada: p.chegada ?? null,
+        situacao: p.situacao,
+        situacaoTexto: SITUACAO[p.situacao] ?? p.situacao,
+        concluidoEm: p.concluido ?? null,
+        tempoTotalMin: p.tempoTotalMin ?? null,
+        prontuario: p.prontuario ? { codigo: p.prontuario, texto: PRONTUARIO[p.prontuario] ?? p.prontuario } : null,
+        salaInformada: p.salaDestino ?? null,
+        descricao: p.descricao ?? null,
+        etapas: p.passos.map((x) => ({
+          etapa: x.nome,
+          sala: x.sala ?? null,
+          local: x.local ?? null,
+          entrouEspera: x.entrouEspera ?? null,
+          inicio: x.inicio ?? null,
+          fim: x.fim ?? null,
+          duracaoMin: x.duracaoMin ?? null,
+          resultado: x.resultado,
+          resultadoTexto: RESULTADO[x.resultado] ?? x.resultado,
+        })),
+      })),
+      aviso: "Documento com dados de pacientes (LGPD): guarde com cuidado.",
+    };
+  }
+
   onMount(() => conectar("/bio"));
 </script>
 
@@ -36,7 +76,7 @@
       <p>GELF Apometria Campinas{registro ? ` • Dia ${dataBR(registro.data)}` : ""} • gerado em {geradoEm}</p>
     </div>
     <div class="rel-acoes sem-impressao">
-      <button class="rel-botao" onclick={() => window.print()} disabled={!registro}>Salvar em PDF / Imprimir</button>
+      <button class="rel-botao" onclick={() => salvarRelatorio(dadosJson)} disabled={!registro}>Salvar em PDF / Imprimir</button>
       <a class="rel-link" href="/bio/controle">Voltar ao controle</a>
     </div>
   </header>
@@ -50,7 +90,8 @@
   {:else}
     <p class="rel-dica sem-impressao">
       Para guardar em <strong>PDF</strong>: toque em <strong>Salvar em PDF / Imprimir</strong> e, na janela que abrir, escolha
-      <strong>Salvar como PDF</strong> como destino. Faça isso <strong>antes de fechar o dia</strong>, pois os nomes são apagados no fechamento.
+      <strong>Salvar como PDF</strong> como destino. Junto com o PDF, é baixado um arquivo <strong>JSON</strong> com os mesmos dados.
+      Faça isso <strong>antes de fechar o dia</strong>, pois os nomes são apagados no fechamento.
     </p>
 
     <section>

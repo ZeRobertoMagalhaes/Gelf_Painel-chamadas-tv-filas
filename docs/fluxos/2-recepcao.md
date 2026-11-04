@@ -72,8 +72,9 @@ contagem de concluídos: em verde quem **concluiu** e em vermelho quem **não co
 
 ### 8. Relatório e fechamento do atendimento (fim do dia)
 Antes de fechar, toque em **Relatório do dia (PDF)**: abre o resumo por tratamento e o registro de cada paciente
-(com nomes). Use **Salvar em PDF / Imprimir**: o nome sugerido para o arquivo já vem como `Gelf-Relatorio-Tratamentos_DD-MM-AAAA.pdf`
-(com a data do dia). Guarde o arquivo, porque os nomes não poderão ser recuperados.
+(com nomes). Use **Salvar em PDF / Imprimir**: o nome sugerido para o arquivo já vem como `Relatorio Atendimentos Gelf DD-MM-AAAA_HHMMSS.pdf`
+(data e hora de quando foi gerado). Junto com o PDF, o sistema baixa um arquivo **JSON** com o mesmo nome (`.json`) e as mesmas
+informações do relatório. Guarde os arquivos, porque os nomes não poderão ser recuperados.
 
 Depois toque em **Fechar atendimento**. O botão vira **Confirmar: apagar tudo**, porque fechar **apaga todas as filas e
 chamadas do dia** na hora; **Cancelar** desfaz. Se esquecer, o sistema apaga sozinho na virada do dia.

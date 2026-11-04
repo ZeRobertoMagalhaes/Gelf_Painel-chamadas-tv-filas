@@ -35,6 +35,10 @@ No cartão escuro, informe a sala em **Selecione / Informe a Sala**: toque no n�
 livremente (ex.: "Sala 02"). O botão laranja mostra quem será chamado: **Chamar próximo: nome**.
 A sala **já vem selecionada** conforme o próximo da fila: **Sala Prioritários - Térreo** se ele for prioritário; **Sala Reiki** se for do Reiki e não for prioritário. Dá para trocar antes de chamar. (Configurável em `config/configuracao.json`, `salas.prioritaria` e `salas.porTratamento`.)
 
+**Chamar alguém fora da ordem:** na **Fila de espera**, toque no nome do paciente que será chamado, em qualquer posição. Ele fica
+marcado como **Escolhido**, o botão passa a mostrar **Chamar: nome** (e a sala sugerida acompanha o escolhido) e vale o mesmo limite de
+pacientes simultâneos. Para desistir, toque de novo no nome ou em **Voltar ao próximo da fila**. Quem ficou na fila mantém a posição.
+
 ![Tela inicial da equipe](img/atendimento-2-tela-inicial.webp)
 
 ![Sala escolhida e botão de chamar](img/atendimento-3-sala-escolhida.webp)

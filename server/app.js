@@ -25,6 +25,7 @@ function criarApp({ config, store, io, relogio = () => new Date() }) {
         priorizar: R.priorizar,
         remover: R.remover,
         chamarProximo: R.chamarProximo,
+        chamarPaciente: R.chamarPaciente,
         rechamar: R.rechamar,
         iniciar: R.iniciar,
         concluir: R.concluir,
