@@ -970,3 +970,9 @@ body.tela-relatorio { display: block; height: auto; min-height: 100%; overflow: 
 .room-chip-claro.active { background: var(--gelf-yellow-gold); border-color: var(--gelf-yellow-gold); color: #78350f; }
 .campo-local .room-chip-claro { margin-top: 4px; align-self: flex-start; }
 .rel-local { display: block; color: #475569; font-size: .75rem; }
+
+/* Pergunta antes de fechar o dia: o relatório já foi gerado? */
+.pergunta-relatorio { background: #fffbeb; border: 2px solid var(--gelf-yellow-gold); border-radius: var(--radius-sm); padding: 10px 12px; color: var(--gelf-blue-dark); display: grid; gap: 6px; }
+.pergunta-relatorio p { margin: 0; font-size: .9rem; }
+.pergunta-relatorio .estado-dica { color: #92400e; }
+.pergunta-botoes { display: flex; gap: 8px; flex-wrap: wrap; }

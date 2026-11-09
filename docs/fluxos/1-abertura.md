@@ -32,7 +32,7 @@ o botão some. O indicador **conectado** (canto superior direito) confirma a lig
 
 ### 3. Abrir o atendimento
 Na recepção, confira (canto esquerdo, embaixo) quantos pacientes de cada tratamento podem estar em sala ao
-mesmo tempo (padrão 1) e toque em **Abrir atendimento**. O indicador passa a
+mesmo tempo (já vem com os valores do último dia; na primeira vez, 1) e toque em **Abrir atendimento**. O indicador passa a
 **Atendimento aberto**, o cadastro é liberado (com o dia fechado, **Cadastrar** devolve um aviso de erro) e as seis filas aparecem vazias. Na TV, o aviso muda
 para **Aguardando próxima chamada** (ver [Fluxo 4 — Painel](4-painel.md)).
 

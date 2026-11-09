@@ -41,14 +41,14 @@ quantidade de chamadas anteriores). Alterações valem ao reiniciar o servidor.
 `dados/fila-AAAA-MM-DD.json`: um arquivo por dia, gravado de forma atômica
 (`.tmp` + rename) antes de avisar as telas; recuperado se o servidor reiniciar no
 mesmo dia; arquivos de dias anteriores são apagados ao iniciar e na virada do dia.
-"Fechar atendimento" apaga tudo na hora, guardando só o relatório em números (`dados/relatorios/fila-AAAA-MM-DD.json`, sem nomes). Os arquivos não são versionados (LGPD).
+"Fechar atendimento" (e "Fechar o dia", no Bio) pergunta antes se o relatório do dia já foi gerado — "Não" cancela — e apaga tudo na hora, guardando só o relatório em números (`dados/relatorios/fila-AAAA-MM-DD.json`, sem nomes). Os arquivos não são versionados (LGPD).
 
 ## Regras decididas no servidor
 
 - Situações: aguardando → chamado → em atendimento → concluído (ou não compareceu / removido).
 - Fila por tratamento: prioritários primeiro, depois ordem de chegada.
 - Dois aparelhos chamando ao mesmo tempo nunca recebem o mesmo paciente.
-- Ao abrir o atendimento, a Recepção define, por tratamento, quantos pacientes podem estar em sala ao mesmo tempo (padrão 1; de 1 a 20; ajustável durante o dia). Passou do limite, a chamada é recusada até concluir ou marcar "não compareceu". Tratamentos diferentes têm limites independentes e não se bloqueiam. Cadastrar com o dia fechado devolve erro.
+- Ao abrir o atendimento, a Recepção define, por tratamento, quantos pacientes podem estar em sala ao mesmo tempo (de 1 a 20; ajustável durante o dia). O último valor usado fica guardado em `dados/limites-padrao.json` (fora do Git, não apagado na virada do dia) e já vem preenchido nos dias seguintes; na primeira vez vale 1. Passou do limite, a chamada é recusada até concluir ou marcar "não compareceu". Tratamentos diferentes têm limites independentes e não se bloqueiam. Cadastrar com o dia fechado devolve erro.
 - Aviso de nome repetido (ignora acento e maiúsculas), com opção de confirmar.
 - A sala é informada por quem chama, a cada chamada.
 

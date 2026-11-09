@@ -76,7 +76,7 @@ Antes de fechar, toque em **Relatório do dia (PDF)**: abre o resumo por tratame
 (data e hora de quando foi gerado). Junto com o PDF, o sistema baixa um arquivo **JSON** com o mesmo nome (`.json`) e as mesmas
 informações do relatório. Guarde os arquivos, porque os nomes não poderão ser recuperados.
 
-Depois toque em **Fechar atendimento**. O botão vira **Confirmar: apagar tudo**, porque fechar **apaga todas as filas e
+Depois toque em **Fechar atendimento**. O sistema pergunta **"Você já gerou o relatório de atendimentos do dia?"**: **Sim, já gerei** segue para a confirmação; **Não, cancelar** desiste (o dia continua aberto). Com o **Sim**, o botão vira **Confirmar: apagar tudo**, porque fechar **apaga todas as filas e
 chamadas do dia** na hora; **Cancelar** desfaz. Se esquecer, o sistema apaga sozinho na virada do dia.
 
 ![Confirmação para fechar o atendimento](img/recepcao-8-fechar-confirmar.webp)

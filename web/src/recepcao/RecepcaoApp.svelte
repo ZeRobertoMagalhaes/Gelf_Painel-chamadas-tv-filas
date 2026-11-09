@@ -11,6 +11,8 @@
   let aviso = $state({ texto: "", erro: false });
   let editando = $state(null); // { id, modo: "corrigir" | "trocar" | "remover", nome }
   let confirmandoFechar = $state(false);
+  let perguntandoRelatorio = $state(false);
+  let fechamentoCancelado = $state(false);
   let campoNome = $state();
   let limitesForm = $state({}); // tratamento -> pacientes ao mesmo tempo (campo de abertura do dia)
   let limitesAlterados = $state(false);
@@ -87,13 +89,24 @@
       if (r.ok) limitesAlterados = false;
       return;
     }
+    // Antes de fechar, pergunta se o relatório do dia já foi gerado; só com "Sim" segue para a confirmação.
     if (!confirmandoFechar) {
-      confirmandoFechar = true;
+      fechamentoCancelado = false;
+      perguntandoRelatorio = true;
       return;
     }
     confirmandoFechar = false;
     const r = await acao("fecharAtendimento");
     if (r.ok) mostrar("Atendimento fechado. Filas e chamadas foram apagadas; só o relatório (sem nomes) ficou salvo.");
+  }
+
+  function responderRelatorio(jaGerou) {
+    perguntandoRelatorio = false;
+    if (jaGerou) confirmandoFechar = true;
+    else {
+      fechamentoCancelado = true;
+      setTimeout(() => (fechamentoCancelado = false), 10000);
+    }
   }
 
   async function salvarLimites() {
@@ -226,13 +239,26 @@
           {/if}
         </div>
       {/if}
-      {#if estado}
+      {#if estado && !(aberto && perguntandoRelatorio)}
         <button class="btn-mini" class:ouro={!aberto} class:perigo={confirmandoFechar} onclick={alternarAtendimento}>
           {aberto ? (confirmandoFechar ? "Confirmar: apagar tudo" : "Fechar atendimento") : "Abrir atendimento"}
         </button>
       {/if}
       {#if estado && aberto}
         <a class="btn-mini btn-relatorio" href="/relatorio" target="_blank" rel="noopener">Relatório do dia (PDF)</a>
+      {/if}
+      {#if perguntandoRelatorio && aberto}
+        <div class="pergunta-relatorio" role="alertdialog" aria-labelledby="pergunta-relatorio-titulo">
+          <p id="pergunta-relatorio-titulo"><strong>Você já gerou o relatório de atendimentos do dia?</strong></p>
+          <p class="estado-dica">Ao fechar, os nomes são apagados e não poderão ser recuperados.</p>
+          <div class="pergunta-botoes">
+            <button class="btn-mini ouro" onclick={() => responderRelatorio(true)}>Sim, já gerei</button>
+            <button class="btn-mini" onclick={() => responderRelatorio(false)}>Não, cancelar</button>
+          </div>
+        </div>
+      {/if}
+      {#if fechamentoCancelado && aberto}
+        <p class="estado-dica" role="status">Fechamento cancelado. Gere o <strong>Relatório do dia (PDF)</strong> e feche o atendimento depois.</p>
       {/if}
       {#if confirmandoFechar}
         <p class="estado-dica">

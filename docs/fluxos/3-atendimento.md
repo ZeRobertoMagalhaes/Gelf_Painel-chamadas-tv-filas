@@ -19,7 +19,7 @@ flowchart TD
     H --> B
 ```
 
-O número de pacientes em sala **ao mesmo tempo em cada tratamento** é definido pela recepção na abertura do dia (padrão 1): com o limite cheio, só depois de concluir (ou marcar "não compareceu") dá para chamar outro do mesmo tratamento. Tratamentos diferentes não se bloqueiam.
+O número de pacientes em sala **ao mesmo tempo em cada tratamento** é definido pela recepção na abertura do dia (o último valor usado é lembrado nos dias seguintes; na primeira vez, 1): com o limite cheio, só depois de concluir (ou marcar "não compareceu") dá para chamar outro do mesmo tratamento. Tratamentos diferentes não se bloqueiam.
 
 ## Passo a passo
 

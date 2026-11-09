@@ -37,6 +37,8 @@
   let duplicado = $state(null);
   let aviso = $state({ texto: "", erro: false });
   let confirmandoFechar = $state(false);
+  let perguntandoRelatorio = $state(false);
+  let fechamentoCancelado = $state(false);
   let campoNome = $state();
   let timerAviso;
   let ajustesDia = $state({}); // salaId -> { ativa, capacidade } na abertura
@@ -173,10 +175,23 @@
     }
   }
   async function fecharDia() {
-    if (!confirmandoFechar) return (confirmandoFechar = true);
+    // Antes de fechar, pergunta se o relatório do atendimento já foi gerado; só com "Sim" segue para a confirmação.
+    if (!confirmandoFechar) {
+      fechamentoCancelado = false;
+      return (perguntandoRelatorio = true);
+    }
     confirmandoFechar = false;
     const r = await acao("fecharDia", {});
     if (r.ok) mostrar("Dia fechado. Nomes apagados; o relatório ficou salvo.");
+  }
+
+  function responderRelatorio(jaGerou) {
+    perguntandoRelatorio = false;
+    if (jaGerou) confirmandoFechar = true;
+    else {
+      fechamentoCancelado = true;
+      setTimeout(() => (fechamentoCancelado = false), 10000);
+    }
   }
 
   function alternarHistorico(id) {
@@ -305,7 +320,7 @@
         <span class="estado-ponto"></span>
         {estado ? (aberto ? "Dia aberto" : "Dia fechado") : "Conectando…"}
       </div>
-      {#if estado && aberto}
+      {#if estado && aberto && !perguntandoRelatorio}
         <button class="btn-mini perigo" onclick={fecharDia}>{confirmandoFechar ? "Confirmar: apagar tudo" : "Fechar o dia"}</button>
       {/if}
       {#if estado && aberto}
@@ -313,6 +328,19 @@
       {/if}
       {#if estado && aberto && prontuariosAGuardar > 0}
         <p class="estado-dica alerta-prontuario">📋 {prontuariosAGuardar} prontuário(s) ainda não guardado(s).</p>
+      {/if}
+      {#if perguntandoRelatorio && aberto}
+        <div class="pergunta-relatorio" role="alertdialog" aria-labelledby="pergunta-relatorio-titulo">
+          <p id="pergunta-relatorio-titulo"><strong>Você já gerou o relatório de atendimentos do dia?</strong></p>
+          <p class="estado-dica">Ao fechar, os nomes são apagados e não poderão ser recuperados.</p>
+          <div class="pergunta-botoes">
+            <button class="btn-mini ouro" onclick={() => responderRelatorio(true)}>Sim, já gerei</button>
+            <button class="btn-mini" onclick={() => responderRelatorio(false)}>Não, cancelar</button>
+          </div>
+        </div>
+      {/if}
+      {#if fechamentoCancelado && aberto}
+        <p class="estado-dica" role="status">Fechamento cancelado. Gere o <strong>Relatório do atendimento (PDF)</strong> e feche o dia depois.</p>
       {/if}
       {#if confirmandoFechar}
         <p class="estado-dica">

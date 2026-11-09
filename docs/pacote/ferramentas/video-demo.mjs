@@ -6,6 +6,7 @@
 //   CHROME_PATH=/usr/bin/google-chrome FFMPEG=<ffmpeg> PIPER_PY=<python do piper> PIPER_MODELO=<voz.onnx> \
 //     node docs/pacote/ferramentas/video-demo.mjs [saida.mp4]
 // Requer: Node 22+ (WebSocket nativo), Chrome, ffmpeg e Piper (voz pt-BR; pip install piper-tts).
+// MODO=celular: grava só a tela do celular da equipe (vertical, 720x1280), sem Recepção nem TV.
 // Variável opcional PASTA_TRABALHO: onde ficam os quadros e áudios (padrão: pasta temporária).
 import { createRequire } from 'module';
 import { spawn, execFileSync } from 'child_process';
@@ -15,7 +16,11 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 
 const RAIZ = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..');
-const SAIDA = path.resolve(process.argv[2] || path.join(RAIZ, 'dist', 'Demo-Painel-Gelf-Evangelho-Terapia.mp4'));
+const MODO = process.env.MODO === 'celular' ? 'celular' : 'completo';
+const LARG = MODO === 'celular' ? 720 : 1280;
+const ALT = MODO === 'celular' ? 1280 : 720;
+const NOME_PADRAO = MODO === 'celular' ? 'Demo-Celular-da-Equipe-Evangelho-Terapia.mp4' : 'Demo-Painel-Gelf-Evangelho-Terapia.mp4';
+const SAIDA = path.resolve(process.argv[2] || path.join(RAIZ, 'dist', NOME_PADRAO));
 const CHROME = process.env.CHROME_PATH || 'google-chrome';
 const FFMPEG = process.env.FFMPEG || 'ffmpeg';
 const PIPER_PY = process.env.PIPER_PY;
@@ -96,7 +101,8 @@ ws.onmessage = (m) => {
 };
 const cdp = (method, params = {}) => new Promise((r) => { pend[++seq] = r; ws.send(JSON.stringify({ id: seq, method, params })); });
 const js = async (expr) => (await cdp('Runtime.evaluate', { expression: expr, awaitPromise: true, returnByValue: true })).result?.value;
-await cdp('Emulation.setDeviceMetricsOverride', { width: 1280, height: 720, deviceScaleFactor: 1, mobile: false });
+if (MODO === 'celular') await cdp('Emulation.setDeviceMetricsOverride', { width: 360, height: 640, deviceScaleFactor: 2, mobile: true });
+else await cdp('Emulation.setDeviceMetricsOverride', { width: 1280, height: 720, deviceScaleFactor: 1, mobile: false });
 await cdp('Page.enable'); // sem isto o Chrome não injeta o script das "mãos" nas páginas novas
 
 // "Mãos" da demo: cursor visível, clique e digitação com ritmo humano. Vale na página de topo e, por ela, nos iframes (mesma origem).
@@ -218,7 +224,7 @@ const prepararPalco = async () => {
 
 // ---------------------------------------------------------------- roteiro: o que se diz e o que se faz, passo a passo
 // Cada passo fala uma frase e executa a ação ao mesmo tempo; o passo dura o que for maior (fala ou ação).
-const cenas = [
+const cenasCompleto = [
   {
     id: 'abertura',
     preparar: () => ir(titulo('Painel Gelf', 'Demonstração: Evangelho Terapia', 'Chamadas por painel de TV')),
@@ -319,13 +325,23 @@ const cenas = [
         fazer: () => clicar('button.btn-call', 'Iniciar atendimento', cel({})),
       },
       {
-        fala: 'Agora, o próximo da fila é a Maria, que não é prioritária. Como o tratamento é o Reiki, a Sala Reiki já vem selecionada.',
-        fazer: () => rolar('.bloco-chamar', null, 'cel'),
+        fala: 'Agora a fila tem a Maria e a Beatriz. Para chamar alguém fora da ordem, basta tocar no nome do paciente na fila de espera. Vamos escolher a Beatriz, que está em segundo lugar.',
+        fazer: async () => {
+          await rolar('.fila-lista', null, 'cel');
+          await clicar('button.fila-item', 'Beatriz', cel({}));
+        },
       },
       {
-        fala: 'Chamamos a Maria. Os dois lugares do Reiki ficam ocupados.',
+        fala: 'O botão passa a mostrar Chamar Beatriz, e como o tratamento é o Reiki, a Sala Reiki já vem selecionada. Para desistir, é só tocar em Voltar ao próximo da fila.',
         fazer: async () => {
-          await clicar('.bloco-chamar .btn-call', 'Chamar próximo', cel({}));
+          await rolar('.bloco-chamar', null, 'cel');
+          await destacar('.bloco-chamar .link-claro', 2500, 'cel');
+        },
+      },
+      {
+        fala: 'Chamamos a Beatriz. Os dois lugares do Reiki ficam ocupados, e a Maria continua esperando, na mesma posição da fila.',
+        fazer: async () => {
+          await clicar('.bloco-chamar .btn-call', 'Chamar', cel({}));
           await esperar(2500);
         },
       },
@@ -351,7 +367,7 @@ const cenas = [
     id: 'outro-tratamento',
     passos: [
       {
-        fala: 'Tratamentos diferentes não se bloqueiam. O limite vale só para cada tratamento. Enquanto a Maria está na sala do Reiki, a equipe do Apométrico, com o seu próprio celular, trabalha normalmente.',
+        fala: 'Tratamentos diferentes não se bloqueiam. O limite vale só para cada tratamento. Enquanto a Beatriz está na sala do Reiki, a equipe do Apométrico, com o seu próprio celular, trabalha normalmente.',
         // Outro aparelho: a memória do celular é apagada, como se fosse o celular de outra equipe.
         fazer: async () => {
           await js(`(() => { document.querySelector('.rot').textContent = 'Celular da equipe do Apométrico'; const c = document.getElementById('cel').contentWindow; c.localStorage.clear(); c.location.reload(); })()`);
@@ -359,7 +375,7 @@ const cenas = [
         },
       },
       {
-        fala: 'Essa equipe escolhe o Apométrico, escolhe a sala, e chama a Ana. A televisão mostra a Ana, e a Maria continua na sala do Reiki. O aviso amarelo é o limite do próprio Apométrico, de um paciente, e não depende do Reiki. Cada equipe segue o seu atendimento, sem interferir nas outras.',
+        fala: 'Essa equipe escolhe o Apométrico, escolhe a sala, e chama a Ana. A televisão mostra a Ana, e a Beatriz continua na sala do Reiki. O aviso amarelo é o limite do próprio Apométrico, de um paciente, e não depende do Reiki. Cada equipe segue o seu atendimento, sem interferir nas outras.',
         fazer: async () => {
           await clicar('button.trat-botao', 'Apométrico', cel({}));
           await clicar('button.room-chip', '2', cel({}));
@@ -400,11 +416,132 @@ const cenas = [
     preparar: () => ir(titulo('Painel Gelf', 'Obrigado pela atenção', 'Evangelho Terapia')),
     passos: [
       {
-        fala: 'Esta foi a demonstração do Painel Guélf para o Evangelho Terapia: limite de pacientes por tratamento, equipes de tratamentos diferentes trabalhando sem se bloquear, salas já selecionadas, aviso com o dia fechado, e o relatório do dia. Obrigado pela atenção.',
+        fala: 'Esta foi a demonstração do Painel Guélf para o Evangelho Terapia: limite de pacientes por tratamento, chamada de qualquer paciente da fila, equipes de tratamentos diferentes trabalhando sem se bloquear, salas já selecionadas, aviso com o dia fechado, e o relatório do dia. Obrigado pela atenção.',
       },
     ],
   },
 ];
+
+// ---------------------------------------------------------------- roteiro só do celular da equipe (MODO=celular)
+// Os dados do dia (pacientes e limites) são preparados fora da tela, como se a Recepção já tivesse feito o seu trabalho.
+const prepararDia = async () => {
+  await agir('abrirAtendimento', { limites: { reiki: 2 } });
+  for (const [nome, tratamento] of [['Maria Souza', 'Reiki'], ['João Pereira', 'Reiki'], ['Beatriz Alves Costa', 'Reiki'], ['Ana Paula Lima', 'Apométrico']]) {
+    await agir('cadastrar', { nome, tratamento: tratamento === 'Reiki' ? 'reiki' : 'apometrico' });
+  }
+  const joao = filas.est.v.pacientes.find((x) => x.nomeExibicao.startsWith('João'));
+  await agir('priorizar', { id: joao.id });
+};
+const celularLimpo = async () => {
+  await ir('/atendimento');
+  await js(`localStorage.clear(); location.reload()`);
+  await esperar(2200);
+};
+const cenasCelular = [
+  {
+    id: 'celular-escolher',
+    preparar: async () => {
+      await prepararDia();
+      await celularLimpo();
+    },
+    passos: [
+      {
+        fala: 'Este vídeo mostra apenas a tela do celular da equipe, a página de Atendimento do Evangelho Terapia. Na primeira vez, a pessoa escolhe o tratamento, e o aparelho lembra.',
+        fazer: () => clicar('button.trat-botao', 'Reiki'),
+      },
+      {
+        fala: 'No topo, aparecem quantos pacientes aguardam, e quantos estão em sala, dentro do limite do tratamento. O próximo da fila, o João, é prioritário. Por isso, a Sala Prioritários, Térreo, já vem selecionada.',
+        fazer: () => rolar('.bloco-chamar'),
+      },
+    ],
+  },
+  {
+    id: 'celular-chamar',
+    passos: [
+      {
+        fala: 'Ao tocar em Chamar próximo, o paciente é chamado, e a televisão do painel mostra o nome e a sala.',
+        fazer: async () => {
+          await clicar('.bloco-chamar .btn-call', 'Chamar próximo');
+          await esperar(2500);
+        },
+      },
+      {
+        fala: 'Quando ele chegar à sala, a equipe toca em Iniciar atendimento.',
+        fazer: () => clicar('button.btn-call', 'Iniciar atendimento'),
+      },
+    ],
+  },
+  {
+    id: 'celular-fora-da-ordem',
+    passos: [
+      {
+        fala: 'Agora a fila tem a Maria e a Beatriz. Para chamar alguém fora da ordem, basta tocar no nome do paciente na fila de espera. Vamos escolher a Beatriz, que está em segundo lugar.',
+        fazer: async () => {
+          await rolar('.fila-lista');
+          await clicar('button.fila-item', 'Beatriz');
+        },
+      },
+      {
+        fala: 'O botão passa a mostrar Chamar Beatriz, e como o tratamento é o Reiki, a Sala Reiki já vem selecionada. Para desistir, é só tocar em Voltar ao próximo da fila.',
+        fazer: async () => {
+          await rolar('.bloco-chamar');
+          await destacar('.bloco-chamar .link-claro', 2500);
+        },
+      },
+      {
+        fala: 'Chamamos a Beatriz. Os dois lugares do Reiki ficam ocupados, e a Maria continua esperando, na mesma posição da fila.',
+        fazer: async () => {
+          await clicar('.bloco-chamar .btn-call', 'Chamar');
+          await esperar(2500);
+        },
+      },
+      {
+        fala: 'Como o limite é de dois, o sistema avisa, e não permite chamar mais ninguém, até que um atendimento termine.',
+        fazer: () => rolar('.faixa-aviso'),
+      },
+    ],
+  },
+  {
+    id: 'celular-concluir',
+    passos: [
+      {
+        fala: 'Quando o João termina, a equipe toca em Concluir atendimento. A vaga é liberada, e o botão de chamar volta a aparecer.',
+        fazer: async () => {
+          await clicar('button.btn-call', 'Concluir atendimento');
+          await rolar('.bloco-chamar');
+        },
+      },
+      {
+        fala: 'Se o paciente chamado não aparece, a equipe toca em Chamar novamente e, se ainda assim ele não vier, em Não compareceu, com um segundo toque para confirmar.',
+        fazer: () => rolar('.acoes-secundarias'),
+      },
+    ],
+  },
+  {
+    id: 'celular-outra-equipe',
+    preparar: celularLimpo,
+    passos: [
+      {
+        fala: 'Tratamentos diferentes não se bloqueiam. Agora, o celular de outra equipe, a do Apométrico, que escolhe o seu tratamento.',
+        fazer: () => clicar('button.trat-botao', 'Apométrico'),
+      },
+      {
+        fala: 'Essa equipe escolhe a sala, e chama a Ana, sem nenhum bloqueio, mesmo com o Reiki ocupado. Cada equipe segue o seu atendimento, sem interferir nas outras.',
+        fazer: async () => {
+          await clicar('button.room-chip', '2');
+          await clicar('.bloco-chamar .btn-call', 'Chamar próximo');
+          await esperar(3000);
+        },
+      },
+      {
+        fala: 'Esse foi o passo a passo do celular da equipe. Obrigada pela atenção.',
+        fazer: () => esperar(500),
+      },
+    ],
+  },
+];
+
+const cenas = MODO === 'celular' ? cenasCelular : cenasCompleto;
 
 // ---------------------------------------------------------------- voz (Piper, local) e vídeo (ffmpeg)
 const VOZ = ['--length-scale', '1.2', '--noise-scale', '0.5', '--noise-w', '0.55', '--sentence-silence', '0.6'];
@@ -498,7 +635,7 @@ for (const [i, cena] of cenas.entries()) {
   fs.writeFileSync(path.join(dir, 'quadros.txt'), linhas.join('\n'));
   const mp4 = path.join(dir, 'cena.mp4');
   ff('-f', 'concat', '-safe', '0', '-i', path.join(dir, 'quadros.txt'), '-i', audio,
-    '-vf', 'fps=25,scale=1280:720,format=yuv420p', '-c:v', 'libx264', '-preset', 'veryfast', '-crf', '21',
+    '-vf', `fps=25,scale=${LARG}:${ALT},format=yuv420p`, '-c:v', 'libx264', '-preset', 'veryfast', '-crf', '21',
     '-c:a', 'aac', '-b:a', '160k', '-ar', '44100', '-t', duracaoCena.toFixed(3), mp4);
   videosCena.push(mp4);
   totalSeg += duracaoCena;

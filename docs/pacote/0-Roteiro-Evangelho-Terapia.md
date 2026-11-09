@@ -37,7 +37,7 @@ O celular precisa estar na **mesma rede Wi-Fi** do computador.
 
 ## 3. A recepção abre o atendimento
 
-Abra a **Recepção** (`/recepcao`) e no canto esquerdo, embaixo, confira em **Pacientes chamados ao mesmo tempo** quantos pacientes de cada tratamento podem estar em sala (padrão 1) e toque em **Abrir atendimento**. Sem isso ninguém cadastra nem chama (cadastrar com o dia fechado mostra um aviso de erro).
+Abra a **Recepção** (`/recepcao`) e no canto esquerdo, embaixo, confira em **Pacientes chamados ao mesmo tempo** quantos pacientes de cada tratamento podem estar em sala (já vem com os valores do último dia; na primeira vez, 1) e toque em **Abrir atendimento**. Sem isso ninguém cadastra nem chama (cadastrar com o dia fechado mostra um aviso de erro).
 
 <figure><img src="img/e-02-recepcao-fechada.webp"><figcaption>Recepção com o atendimento fechado: toque em <b>Abrir atendimento</b>.</figcaption></figure>
 
@@ -86,7 +86,7 @@ A TV mostra o **nome**, a **sala** e toca o **sinal sonoro**. Na TV, abra o **Pa
 - Quer chamar alguém que não é o primeiro? Na **Fila de espera**, toque no nome do paciente (fica como **Escolhido**) e depois em **Chamar: nome**.
 - Não apareceu: **Chamar novamente** e, se ainda assim não vier, **Não compareceu** (toque duas vezes para confirmar).
 
-Cada tratamento atende até o limite definido na abertura do dia (padrão 1 paciente por vez): conclua antes de chamar além do limite. Tratamentos diferentes não se bloqueiam.
+Cada tratamento atende até o limite definido na abertura do dia (na primeira vez, 1 paciente por vez; depois vale o último valor usado): conclua antes de chamar além do limite. Tratamentos diferentes não se bloqueiam.
 
 <div class="lado"><figure><img src="img/e-08-atendimento-chamado.webp"><figcaption>Chamado: <b>Iniciar atendimento</b>.</figcaption></figure><figure><img src="img/e-09-atendimento-em-atendimento.webp"><figcaption>Em atendimento: <b>Concluir atendimento</b>.</figcaption></figure><figure><img src="img/e-10-atendimento-concluido.webp"><figcaption>Concluído: já dá para chamar o próximo.</figcaption></figure></div>
 
@@ -98,7 +98,7 @@ Cada tratamento atende até o limite definido na abertura do dia (padrão 1 paci
 
 1. Na Recepção, toque em **Relatório do dia (PDF)**. Ele mostra o resumo por tratamento e o registro de cada paciente (chegada, chamada, sala, início, fim, espera e duração).
 2. Toque em **Salvar em PDF / Imprimir** e, na janela, escolha **Salvar como PDF**. O nome sugerido é `Relatorio Atendimentos Gelf DD-MM-AAAA_HHMMSS.pdf`, e o sistema baixa também um arquivo `.json` com o mesmo nome e os mesmos dados.
-3. **Só depois** toque em **Fechar atendimento** e confirme: os nomes são apagados. Fica salvo apenas o resumo em números.
+3. **Só depois** toque em **Fechar atendimento**, responda **Sim, já gerei** à pergunta "Você já gerou o relatório de atendimentos do dia?" (com **Não**, o fechamento é cancelado) e confirme: os nomes são apagados. Fica salvo apenas o resumo em números.
 
 <figure><img src="img/e-11-recepcao-fechar.webp"><figcaption>Antes de fechar: <b>Relatório do dia (PDF)</b>. O botão de fechar pede uma confirmação.</figcaption></figure>
 

@@ -12,8 +12,20 @@ function nomeExibicao(config, nome, sobrenome) {
     return inicial ? `${nome} ${inicial.toUpperCase()}.` : nome;
 }
 
-function criarApp({ config, store, io, relogio = () => new Date() }) {
+// `limitesPadrao` (opcional): guarda o último limite de pacientes ao mesmo tempo usado pela recepção,
+// para que todo dia novo comece com ele (ver limitesPadrao.js).
+function criarApp({ config, store, io, relogio = () => new Date(), limitesPadrao = { carregar: () => ({}), salvar: () => {} } }) {
     let estado = store.carregar();
+
+    // Dia sem limites definidos (dia novo ou arquivo antigo): começa com o último padrão usado.
+    function aplicarLimitesPadrao() {
+        if (Object.keys(estado.limites || {}).length > 0) return;
+        const padrao = limitesPadrao.carregar(config);
+        if (Object.keys(padrao).length === 0) return;
+        estado.limites = padrao;
+        store.salvar(estado);
+    }
+    aplicarLimitesPadrao();
 
     const acoes = {
         abrirAtendimento: R.abrirAtendimento,
@@ -78,6 +90,7 @@ function criarApp({ config, store, io, relogio = () => new Date() }) {
         if (estado.atendimentoAberto) salvarRelatorio(R.relatorio(estado, config));
         estado = R.novoDia(hoje);
         store.limparOutrosDias(hoje);
+        aplicarLimitesPadrao();
         store.salvar(estado);
         transmitirEstado();
         return true;
@@ -106,6 +119,8 @@ function criarApp({ config, store, io, relogio = () => new Date() }) {
             return { ok: false, codigo: 'erro', mensagem: 'Não foi possível gravar. Tente novamente.' };
         }
 
+        // Abrir o atendimento ou salvar limites vira o novo padrão dos próximos dias.
+        if (tipo === 'abrirAtendimento' || tipo === 'definirLimites') limitesPadrao.salvar(R.limites(estado, config));
         if (resultado.relatorio) salvarRelatorio(resultado.relatorio);
         transmitirEstado();
         if (resultado.chamada) {

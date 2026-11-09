@@ -128,6 +128,18 @@ function lerLimites(estado, bruto, config) {
     return novos;
 }
 
+// Só as entradas válidas (tratamento conhecido, inteiro de 1 a 20); o resto é ignorado.
+// Serve para ler o arquivo de limites padrão, que pode ter sido editado à mão.
+function filtrarLimites(bruto, config) {
+    const ok = {};
+    if (bruto === null || typeof bruto !== 'object' || Array.isArray(bruto)) return ok;
+    for (const t of config.tratamentos) {
+        const valor = bruto[t.id];
+        if (Number.isInteger(valor) && valor >= 1 && valor <= SIMULTANEOS_MAXIMO) ok[t.id] = valor;
+    }
+    return ok;
+}
+
 // Abre o dia. `limites` (opcional) define, por tratamento, quantos pacientes
 // podem ser chamados ao mesmo tempo; o que não vier fica com o valor anterior
 // (ou 1). Com o dia já aberto nada muda (o ajuste durante o dia é definirLimites).
@@ -449,6 +461,7 @@ module.exports = {
     lerNome,
     fila,
     limites,
+    filtrarLimites,
     abrirAtendimento,
     definirLimites,
     fecharAtendimento,

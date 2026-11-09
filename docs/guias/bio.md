@@ -100,7 +100,7 @@ Em cada sala:
   no fechamento.
 - **Relatório do dia** (embaixo, **Mostrar / Ocultar**): resumo rápido, sem nomes, com chegadas, concluídos, não compareceram,
   em andamento, tempo médio total e, por etapa, atendidos, espera média, duração média e quem aguarda agora.
-- Ao final, **salve o PDF** e toque em **Fechar o dia** e confirme em **Confirmar: apagar tudo**. Isso apaga pacientes e
+- Ao final, **salve o PDF** e toque em **Fechar o dia**, responda **Sim, já gerei** à pergunta sobre o relatório e confirme em **Confirmar: apagar tudo**. Isso apaga pacientes e
   pré-inscritos; só o relatório fica salvo (`dados/relatorios/bio-AAAA-MM-DD.json`).
 - O relatório do último dia fechado aparece na tela de abertura do dia seguinte.
 

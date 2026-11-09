@@ -7,6 +7,7 @@ const mdns = require('multicast-dns');
 const { carregarConfig } = require('./config');
 const { criarStore } = require('./store');
 const { criarApp } = require('./app');
+const { criarLimitesPadrao } = require('./limitesPadrao');
 const { carregarConfigBio } = require('./bio/config');
 const { novoDiaBio } = require('./bio/regras');
 const { criarAppBio } = require('./bio/app');
@@ -52,7 +53,7 @@ const store = criarStore(path.join(__dirname, '..', 'dados'));
 const expressApp = express();
 const httpServer = createServer(expressApp);
 const io = new Server(httpServer);
-const app = criarApp({ config, store, io });
+const app = criarApp({ config, store, io, limitesPadrao: criarLimitesPadrao(path.join(__dirname, '..', 'dados')) });
 // Módulo bioenergético: namespace "/bio" do Socket.io e arquivo diário próprio (bio-AAAA-MM-DD.json).
 const appBio = criarAppBio({
     config: carregarConfigBio(),

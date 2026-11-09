@@ -2,7 +2,7 @@
 
 Endereço: `/recepcao` (ex.: http://painel-gelf-filas.local:3000/recepcao)
 
-**Começar o dia:** no canto esquerdo, embaixo, informe em **Pacientes chamados ao mesmo tempo** quantos pacientes de cada tratamento podem estar em sala (padrão 1) e toque em **Abrir atendimento**. Sem isso ninguém cadastra nem chama: tentar cadastrar com o dia fechado mostra um aviso de erro. Durante o dia dá para mudar os números e tocar em **Salvar limites**.
+**Começar o dia:** no canto esquerdo, embaixo, informe em **Pacientes chamados ao mesmo tempo** quantos pacientes de cada tratamento podem estar em sala (já vem com os valores do último dia; na primeira vez, 1) e toque em **Abrir atendimento**. Sem isso ninguém cadastra nem chama: tentar cadastrar com o dia fechado mostra um aviso de erro. Durante o dia dá para mudar os números e tocar em **Salvar limites**.
 
 **Cadastrar um paciente**
 1. Digite **Nome e Sobrenome** (no mesmo campo; precisa ter pelo menos duas palavras).
@@ -21,5 +21,5 @@ Se aparecer **"Já existe um paciente com este nome"**, confira: se for outra pe
 **Fim do dia**
 1. Toque em **Relatório do dia (PDF)** (abre em outra aba): mostra o resumo por tratamento e o registro de cada paciente
    (chegada, chamada, sala, início, fim, espera e duração). Toque em **Salvar em PDF / Imprimir** e escolha *Salvar como PDF* (nome sugerido: `Relatorio Atendimentos Gelf DD-MM-AAAA_HHMMSS.pdf`; junto é baixado um arquivo `.json` com o mesmo nome e os mesmos dados).
-2. Só depois toque em **Fechar atendimento** (confirme com o segundo toque): apaga todas as filas e nomes.
+2. Só depois toque em **Fechar atendimento**, responda **Sim, já gerei** à pergunta "Você já gerou o relatório de atendimentos do dia?" (com **Não**, o fechamento é cancelado) e confirme com o segundo toque: apaga todas as filas e nomes.
    Fica salvo apenas o resumo em números, sem nomes (`dados/relatorios/fila-AAAA-MM-DD.json`).

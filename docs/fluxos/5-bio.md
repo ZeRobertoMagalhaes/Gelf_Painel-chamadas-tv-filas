@@ -213,7 +213,7 @@ não conta como chegada.
 ![Relatório do dia e finalizados](img/bio-9-relatorio.webp)
 
 ### 11. Fechar o dia
-**Antes, salve o relatório completo em PDF** (item 10). Toque em **Fechar o dia** e confirme em **Confirmar: apagar tudo**. Isso apaga pacientes e pré-inscritos; só o
+**Antes, salve o relatório completo em PDF** (item 10). Toque em **Fechar o dia**: o sistema pergunta **"Você já gerou o relatório de atendimentos do dia?"**: **Sim, já gerei** segue para a confirmação; **Não, cancelar** desiste (o dia continua aberto). Com o **Sim**, confirme em **Confirmar: apagar tudo**. Isso apaga pacientes e pré-inscritos; só o
 relatório, **sem nomes**, fica salvo em `dados/relatorios/bio-AAAA-MM-DD.json`. O painel da TV volta a
 **Atendimento encerrado**.
 
