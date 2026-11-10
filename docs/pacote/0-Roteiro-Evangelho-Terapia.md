@@ -86,7 +86,7 @@ A TV mostra o **nome**, a **sala** e toca o **sinal sonoro**. Na TV, abra o **Pa
 - Quer chamar alguém que não é o primeiro? Na **Fila de espera**, toque no nome do paciente (fica como **Escolhido**) e depois em **Chamar: nome**.
 - Não apareceu: **Chamar novamente** e, se ainda assim não vier, **Não compareceu** (toque duas vezes para confirmar).
 
-Cada tratamento atende até o limite definido na abertura do dia (na primeira vez, 1 paciente por vez; depois vale o último valor usado): conclua antes de chamar além do limite. Tratamentos diferentes não se bloqueiam.
+Cada tratamento atende até o limite definido na abertura do dia (na primeira vez, 1 paciente por vez; depois vale o último valor usado): conclua antes de chamar além do limite. Tratamentos diferentes não se bloqueiam. Uma sala com paciente chamado ou em atendimento não recebe outro: o sistema avisa para aguardar a finalização (exceto o Reiki, que divide a Sala Reiki).
 
 <div class="lado"><figure><img src="img/e-08-atendimento-chamado.webp"><figcaption>Chamado: <b>Iniciar atendimento</b>.</figcaption></figure><figure><img src="img/e-09-atendimento-em-atendimento.webp"><figcaption>Em atendimento: <b>Concluir atendimento</b>.</figcaption></figure><figure><img src="img/e-10-atendimento-concluido.webp"><figcaption>Concluído: já dá para chamar o próximo.</figcaption></figure></div>
 

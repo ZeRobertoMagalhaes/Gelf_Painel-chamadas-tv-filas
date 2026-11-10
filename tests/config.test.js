@@ -10,9 +10,10 @@ test('salas: padrão do arquivo e valores inválidos caem no padrão', () => {
         extras: ['Sala Reiki', 'Sala Prioritários - Térreo'],
         prioritaria: 'Sala Prioritários - Térreo',
         porTratamento: { reiki: 'Sala Reiki' },
+        compartilhadas: ['reiki'],
     });
     const t = [{ id: 'a', nome: 'A', cor: '#111111' }];
-    const base = { prioritaria: '', porTratamento: {} };
+    const base = { prioritaria: '', porTratamento: {}, compartilhadas: [] };
     assert.deepEqual(normalizar({ tratamentos: t }).salas, { quantidade: 6, prefixo: 'Sala', extras: [], ...base });
     assert.deepEqual(normalizar({ tratamentos: t, salas: { quantidade: 999, prefixo: '  ' } }).salas, { quantidade: 6, prefixo: 'Sala', extras: [], ...base });
     assert.deepEqual(normalizar({ tratamentos: t, salas: { quantidade: 4, prefixo: 'Maca', extras: [' Sala Reiki ', '', 7] } }).salas, { quantidade: 4, prefixo: 'Maca', extras: ['Sala Reiki'], ...base });
@@ -21,6 +22,9 @@ test('salas: padrão do arquivo e valores inválidos caem no padrão', () => {
     assert.equal(sugestoes.prioritaria, 'Prioritária');
     assert.deepEqual(sugestoes.porTratamento, { a: 'Sala A' });
     assert.equal(normalizar({ tratamentos: t, salas: { prioritaria: 5, porTratamento: [1] } }).salas.prioritaria, '');
+    // salas compartilhadas: só tratamentos que existem
+    assert.deepEqual(normalizar({ tratamentos: t, salas: { compartilhadas: ['a', 'x', 7] } }).salas.compartilhadas, ['a']);
+    assert.deepEqual(normalizar({ tratamentos: t, salas: { compartilhadas: 'a' } }).salas.compartilhadas, []);
 });
 
 test('rede.ipServidor: aceita IPv4 e ignora valores inválidos', () => {

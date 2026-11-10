@@ -45,6 +45,8 @@ for (const d of ['server', 'public', 'config']) fs.cpSync(path.join(RAIZ, d), pa
 fs.copyFileSync(path.join(RAIZ, 'package.json'), path.join(sistema, 'package.json'));
 fs.symlinkSync(path.join(RAIZ, 'node_modules'), path.join(sistema, 'node_modules'));
 fs.mkdirSync(path.join(sistema, 'dados'));
+// Como se a recepção já tivesse aberto o dia anterior com Reiki em dois: o sistema lembra o último limite usado.
+if (process.env.MODO !== 'celular') fs.writeFileSync(path.join(sistema, 'dados', 'limites-padrao.json'), JSON.stringify({ reiki: 2 }));
 
 // Só na cópia: o servidor da demo não anuncia o nome na rede e finge ter o IP do servidor real.
 const indexCopia = path.join(sistema, 'server', 'index.js');
@@ -264,12 +266,16 @@ const cenasCompleto = [
   },
   {
     id: 'abertura-do-dia',
+    preparar: () => ir('/recepcao'),
     passos: [
       {
-        fala: 'Para abrir o dia, a Recepção define, para cada tratamento, quantos pacientes podem ser chamados ao mesmo tempo para as salas. O padrão é um.',
+        fala: 'Para abrir o dia, a Recepção define, para cada tratamento, quantos pacientes podem ser chamados ao mesmo tempo para as salas.',
         fazer: () => rolar('.limites'),
       },
-      { fala: 'Aqui, o Reiki terá dois atendimentos simultâneos. Os outros tratamentos continuam com um.', fazer: () => digitar('.limite-linha', '2', { texto: 'Reiki', filho: 'input' }) },
+      {
+        fala: 'Os valores já vêm preenchidos com os do último dia de atendimento: aqui, o Reiki com dois, e os outros com um. O sistema lembra o último valor usado, e a Recepção só altera o que mudou. Na primeira vez, o padrão é um.',
+        fazer: () => destacar('.limites', 5000),
+      },
       { fala: 'Em seguida, toca em Abrir atendimento. A partir de agora, o cadastro e as chamadas estão liberados.', fazer: () => clicar('button.btn-mini', 'Abrir atendimento') },
     ],
   },
@@ -392,19 +398,32 @@ const cenasCompleto = [
     passos: [
       { fala: 'De volta à Recepção, a tela mostra as filas, e quem está em atendimento em cada tratamento, em tempo real.', fazer: () => esperar(1500) },
       {
-        fala: 'Ao longo do dia, o relatório mostra os números por tratamento e o registro de cada paciente, e pode ser salvo em PDF.',
+        fala: 'Ao longo do dia, o relatório mostra os números por tratamento e o registro de cada paciente. Ao salvar em PDF, o sistema sugere o nome com a data e a hora, e baixa também um arquivo JSON com os mesmos dados.',
         fazer: async () => {
           await js(`location.href = '/relatorio'`);
           await esperar(2500);
         },
       },
       {
-        fala: 'Para encerrar, a Recepção fecha o atendimento. Por privacidade, as filas e os nomes são apagados, e só o relatório, sem nomes, fica guardado.',
+        fala: 'Para encerrar, toca em Fechar atendimento. O sistema pergunta se o relatório de atendimentos do dia já foi gerado. Se a resposta for não, o fechamento é cancelado, e o atendimento continua aberto.',
         fazer: async () => {
           await js(`location.href = '/recepcao'`);
           await esperar(2200);
           await clicar('button.btn-mini', 'Fechar atendimento');
-          await esperar(1200);
+          await esperar(1500);
+          await rolar('.pergunta-relatorio');
+          await destacar('.pergunta-relatorio', 2500);
+          await clicar('button.btn-mini', 'Não, cancelar');
+          await destacar('.estado-dica[role=status]', 2500);
+        },
+      },
+      {
+        fala: 'Com o relatório já gerado, a resposta é sim, e a Recepção confirma. Por privacidade, as filas e os nomes são apagados, e só o relatório, sem nomes, fica guardado.',
+        fazer: async () => {
+          await clicar('button.btn-mini', 'Fechar atendimento');
+          await esperar(800);
+          await clicar('button.btn-mini', 'Sim, já gerei');
+          await esperar(1000);
           await clicar('button.btn-mini', 'Confirmar: apagar tudo');
           await esperar(1500);
         },
@@ -416,7 +435,7 @@ const cenasCompleto = [
     preparar: () => ir(titulo('Painel Gelf', 'Obrigado pela atenção', 'Evangelho Terapia')),
     passos: [
       {
-        fala: 'Esta foi a demonstração do Painel Guélf para o Evangelho Terapia: limite de pacientes por tratamento, chamada de qualquer paciente da fila, equipes de tratamentos diferentes trabalhando sem se bloquear, salas já selecionadas, aviso com o dia fechado, e o relatório do dia. Obrigado pela atenção.',
+        fala: 'Esta foi a demonstração do Painel Guélf para o Evangelho Terapia: limite de pacientes por tratamento, lembrado de um dia para o outro, chamada de qualquer paciente da fila, equipes de tratamentos diferentes trabalhando sem se bloquear, salas já selecionadas, aviso com o dia fechado, o relatório do dia, e a pergunta antes de fechar o atendimento. Obrigado pela atenção.',
       },
     ],
   },

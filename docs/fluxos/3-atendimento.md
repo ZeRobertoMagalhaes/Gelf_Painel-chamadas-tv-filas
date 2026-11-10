@@ -21,6 +21,8 @@ flowchart TD
 
 O número de pacientes em sala **ao mesmo tempo em cada tratamento** é definido pela recepção na abertura do dia (o último valor usado é lembrado nos dias seguintes; na primeira vez, 1): com o limite cheio, só depois de concluir (ou marcar "não compareceu") dá para chamar outro do mesmo tratamento. Tratamentos diferentes não se bloqueiam.
 
+Uma sala só recebe um novo paciente quando não há outro **chamado ou em atendimento** nela: se houver, o sistema recusa com a mensagem "Sala X já tem paciente em atendimento. Aguarde a finalização antes de chamar outro paciente para esta sala". A sala é liberada ao **concluir** ou marcar **não compareceu**. A regra não vale para o **Reiki**, que divide a Sala Reiki entre vários pacientes (até o limite definido na abertura do dia); a lista de tratamentos assim está em `config/configuracao.json`, `salas.compartilhadas`.
+
 ## Passo a passo
 
 ### 1. Escolher o tratamento

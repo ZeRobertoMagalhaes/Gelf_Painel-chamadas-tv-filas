@@ -138,6 +138,61 @@ test('chamar paciente específico: respeita limite, tratamento, situação e dia
     assert.equal(codigo(() => R.chamarPaciente(R.novoDia('2026-10-10'), { id: a.id, tratamento: 'reiki', sala: '1' }, ctx())), 'fechado');
 });
 
+test('sala ocupada: outro paciente não é chamado para sala com paciente chamado ou em atendimento (exceto Reiki)', () => {
+    const e = diaAberto();
+    const a = cad(e, 'Ana', 'A', 'apometrico');
+    const b = cad(e, 'Bia', 'B', 'apometrico');
+    R.chamarProximo(e, { tratamento: 'apometrico', sala: 'Sala 2' }, ctx());
+    const recusa = () => R.chamarProximo(e, { tratamento: 'apometrico', sala: 'Sala 2' }, ctx());
+    assert.equal(codigo(recusa), 'sala_ocupada', 'paciente chamado ocupa a sala');
+    try { recusa(); } catch (x) { assert.match(x.message, /Sala 2 já tem paciente em atendimento \(Ana\)\. Aguarde a finalização/); }
+    R.iniciar(e, { id: a.id }, ctx());
+    assert.equal(codigo(recusa), 'sala_ocupada', 'paciente em atendimento ocupa a sala');
+    assert.equal(codigo(() => R.chamarPaciente(e, { id: b.id, tratamento: 'apometrico', sala: ' sala  02 ' }, ctx())), 'sala_ocupada', 'ignora caixa, espaços e zero à esquerda');
+    assert.equal(e.pacientes.find((p) => p.id === b.id).situacao, 'aguardando', 'o recusado continua na fila');
+    R.chamarProximo(e, { tratamento: 'apometrico', sala: 'Sala 3' }, ctx()); // outra sala está livre
+    R.concluir(e, { id: a.id }, ctx());
+});
+
+test('sala ocupada: liberada ao concluir ou marcar não compareceu', () => {
+    const e = diaAberto();
+    const a = cad(e, 'Ana', 'A', 'gao');
+    const b = cad(e, 'Bia', 'B', 'gao');
+    const c = cad(e, 'Cris', 'C', 'gao');
+    R.chamarProximo(e, { tratamento: 'gao', sala: 'Sala 4' }, ctx());
+    assert.equal(codigo(() => R.chamarProximo(e, { tratamento: 'gao', sala: 'Sala 4' }, ctx())), 'sala_ocupada');
+    R.naoCompareceu(e, { id: a.id }, ctx());
+    assert.equal(R.chamarProximo(e, { tratamento: 'gao', sala: 'Sala 4' }, ctx()).paciente.id, b.id);
+    R.iniciar(e, { id: b.id }, ctx());
+    R.concluir(e, { id: b.id }, ctx());
+    assert.equal(R.chamarProximo(e, { tratamento: 'gao', sala: 'Sala 4' }, ctx()).paciente.id, c.id);
+});
+
+test('sala ocupada: Reiki divide a sala entre vários pacientes; outros tratamentos não entram na sala ocupada', () => {
+    const e = diaAberto({ reiki: 3 });
+    cad(e, 'Ana', 'A');
+    cad(e, 'Bia', 'B');
+    cad(e, 'Cris', 'C');
+    for (let i = 0; i < 3; i++) R.chamarProximo(e, { tratamento: 'reiki', sala: 'Sala Reiki' }, ctx());
+    assert.equal(e.pacientes.filter((p) => p.sala === 'Sala Reiki' && p.situacao === 'chamado').length, 3);
+    cad(e, 'Dora', 'D', 'entrevista');
+    assert.equal(codigo(() => R.chamarProximo(e, { tratamento: 'entrevista', sala: 'sala reiki' }, ctx())), 'sala_ocupada');
+    assert.equal(R.chamarProximo(e, { tratamento: 'entrevista', sala: 'Sala 1' }, ctx()).paciente.nome, 'Dora');
+});
+
+test('sala ocupada: chamar novamente na mesma sala vale; trocar para sala ocupada não', () => {
+    const e = diaAberto();
+    const a = cad(e, 'Ana', 'A', 'passe');
+    cad(e, 'Bia', 'B', 'acolhimento');
+    R.chamarProximo(e, { tratamento: 'passe', sala: 'Sala 1' }, ctx());
+    R.chamarProximo(e, { tratamento: 'acolhimento', sala: 'Sala 2' }, ctx());
+    R.rechamar(e, { id: a.id, sala: 'sala 1' }, ctx());
+    assert.equal(codigo(() => R.rechamar(e, { id: a.id, sala: 'Sala 2' }, ctx())), 'sala_ocupada');
+    assert.equal(e.pacientes.find((p) => p.id === a.id).sala, 'Sala 1');
+    R.rechamar(e, { id: a.id, sala: 'Sala 5' }, ctx());
+    assert.equal(e.pacientes.find((p) => p.id === a.id).sala, 'Sala 5');
+});
+
 test('duas equipes chamando seguidamente recebem pacientes diferentes', () => {
     const e = diaAberto();
     const a = cad(e, 'Ana', 'A');

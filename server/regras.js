@@ -302,6 +302,24 @@ function limparSala(valor) {
 // aparelhos: com limite 2, dois pacientes podem estar em sala ao mesmo tempo
 // e a terceira chamada só sai quando um deles for concluído ou não comparecer.
 // "equipeId" só registra quem chamou (aparece nas telas de atendimento).
+// Uma sala só recebe novo paciente quando não há outro chamado ou em atendimento nela. Não vale para os
+// tratamentos de sala compartilhada (Reiki, em config salas.compartilhadas), cujo limite é o de pacientes
+// simultâneos do tratamento. Vale para qualquer tratamento que chame para uma sala já ocupada por outro.
+const semAcento = (s) => s.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+const chaveSala = (s) => semAcento(String(s)).toLowerCase().replace(/\s+/g, ' ').trim().replace(/\b0+(\d)/g, '$1'); // "Sala 02" = "sala 2"
+
+function exigirSalaLivre(estado, p, tratamento, sala, ctx) {
+    if ((ctx.config.salas?.compartilhadas ?? []).includes(tratamento)) return;
+    const alvo = chaveSala(sala);
+    const ocupante = estado.pacientes.find((x) => x.id !== p.id && EM_CURSO.includes(x.situacao) && x.sala && chaveSala(x.sala) === alvo);
+    if (ocupante) {
+        throw new ErroRegra(
+            'sala_ocupada',
+            `${sala} já tem paciente em atendimento (${ocupante.nome}). Aguarde a finalização antes de chamar outro paciente para esta sala.`,
+        );
+    }
+}
+
 function chamarProximo(estado, args, ctx) {
     return chamarDaFila(estado, args, ctx, null);
 }
@@ -333,6 +351,7 @@ function chamarDaFila(estado, args, ctx, escolhido) {
     }
     const chamado = escolhido || fila(estado, args.tratamento)[0];
     if (!chamado) throw new ErroRegra('fila_vazia', 'Não há pacientes aguardando neste tratamento.');
+    exigirSalaLivre(estado, chamado, args.tratamento, sala, ctx);
 
     chamado.situacao = 'chamado';
     chamado.sala = sala;
@@ -345,7 +364,13 @@ function rechamar(estado, args, ctx) {
     exigirAberto(estado);
     const p = buscar(estado, args.id);
     exigirSituacao(p, ['chamado'], 'chamar novamente');
-    if (args.sala !== undefined && String(args.sala).trim()) p.sala = limparSala(args.sala);
+    if (args.sala !== undefined && String(args.sala).trim()) {
+        const nova = limparSala(args.sala);
+        if (chaveSala(nova) !== chaveSala(p.sala || '')) {
+            exigirSalaLivre(estado, p, p.tratamento, nova, ctx);
+            p.sala = nova;
+        }
+    }
     const chamada = registrarChamada(estado, p, ctx);
     return { paciente: p, chamada };
 }

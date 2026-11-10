@@ -3,7 +3,7 @@ const path = require('path');
 
 const PADRAO = {
     tratamentos: [],
-    salas: { quantidade: 6, prefixo: 'Sala', extras: [], prioritaria: '', porTratamento: {} },
+    salas: { quantidade: 6, prefixo: 'Sala', extras: [], prioritaria: '', porTratamento: {}, compartilhadas: [] },
     som: { repeticoes: 2, intervaloMs: 4000, volume: 0.3 },
     painel: { destaqueMs: 15000, exibirSobrenomeCompleto: true, ultimasChamadas: 4 },
     rede: { ipServidor: '' },
@@ -44,6 +44,9 @@ function normalizar(bruto) {
             // Sala que já vem selecionada no Atendimento quando o próximo da fila é prioritário.
             prioritaria: typeof salas.prioritaria === 'string' ? salas.prioritaria.trim().slice(0, 40) : PADRAO.salas.prioritaria,
             // Sala que já vem selecionada, por tratamento (id -> sala), para o próximo da fila que não é prioritário.
+            // Tratamentos que dividem a mesma sala entre vários pacientes (ex.: Reiki): a chamada deles não é
+            // recusada por a sala já ter paciente. Os demais só chamam para sala sem paciente em atendimento.
+            compartilhadas: (Array.isArray(salas.compartilhadas) ? salas.compartilhadas : []).filter((id) => tratamentos.some((t) => t.id === id)),
             porTratamento: Object.fromEntries(
                 Object.entries(salas.porTratamento && typeof salas.porTratamento === 'object' ? salas.porTratamento : {})
                     .filter(([id, nome]) => tratamentos.some((t) => t.id === id) && typeof nome === 'string' && nome.trim())

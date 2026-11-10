@@ -48,7 +48,7 @@ mesmo dia; arquivos de dias anteriores são apagados ao iniciar e na virada do d
 - Situações: aguardando → chamado → em atendimento → concluído (ou não compareceu / removido).
 - Fila por tratamento: prioritários primeiro, depois ordem de chegada.
 - Dois aparelhos chamando ao mesmo tempo nunca recebem o mesmo paciente.
-- Ao abrir o atendimento, a Recepção define, por tratamento, quantos pacientes podem estar em sala ao mesmo tempo (de 1 a 20; ajustável durante o dia). O último valor usado fica guardado em `dados/limites-padrao.json` (fora do Git, não apagado na virada do dia) e já vem preenchido nos dias seguintes; na primeira vez vale 1. Passou do limite, a chamada é recusada até concluir ou marcar "não compareceu". Tratamentos diferentes têm limites independentes e não se bloqueiam. Cadastrar com o dia fechado devolve erro.
+- Ao abrir o atendimento, a Recepção define, por tratamento, quantos pacientes podem estar em sala ao mesmo tempo (de 1 a 20; ajustável durante o dia). O último valor usado fica guardado em `dados/limites-padrao.json` (fora do Git, não apagado na virada do dia) e já vem preenchido nos dias seguintes; na primeira vez vale 1. Cada sala só recebe um paciente por vez (chamado ou em atendimento): chamar para sala ocupada é recusado com aviso; exceção: Reiki, que divide a Sala Reiki (`salas.compartilhadas` em `config/configuracao.json`). Passou do limite, a chamada é recusada até concluir ou marcar "não compareceu". Tratamentos diferentes têm limites independentes e não se bloqueiam. Cadastrar com o dia fechado devolve erro.
 - Aviso de nome repetido (ignora acento e maiúsculas), com opção de confirmar.
 - A sala é informada por quem chama, a cada chamada.
 
