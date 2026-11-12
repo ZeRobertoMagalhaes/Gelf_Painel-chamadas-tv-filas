@@ -1,7 +1,7 @@
 <script>
   import { onMount } from "svelte";
   import { rede, conectar, agir } from "../lib/conexao.svelte.js";
-  import { horaCurta, SITUACAO } from "../lib/util.js";
+  import { horaCurta, SITUACAO, iniciaisMaiusculas } from "../lib/util.js";
   import HeroHeader from "../lib/HeroHeader.svelte";
   import ConnStatus from "../lib/ConnStatus.svelte";
 
@@ -174,7 +174,7 @@
       <form class="form-recepcao" onsubmit={aoEnviar}>
         <div class="form-group">
           <label for="nome">Nome e Sobrenome</label>
-          <input id="nome" class="iniciais-maiusculas" bind:this={campoNome} bind:value={nome} maxlength="100" autocomplete="off" required />
+          <input id="nome" class="iniciais-maiusculas" use:iniciaisMaiusculas bind:this={campoNome} bind:value={nome} maxlength="100" autocomplete="off" required />
         </div>
         <div class="form-group">
           <span class="rotulo">Tratamento</span>
@@ -293,7 +293,7 @@
             <div class="cartao-paciente" class:prioridade={p.prioridade}>
               {#if editando?.id === p.id && editando.modo === "corrigir"}
                 <div class="edicao">
-                  <input class="iniciais-maiusculas" bind:value={editando.nome} maxlength="100" aria-label="Nome e Sobrenome" />
+                  <input class="iniciais-maiusculas" use:iniciaisMaiusculas bind:value={editando.nome} maxlength="100" aria-label="Nome e Sobrenome" />
                   <div class="alerta-acoes">
                     <button class="btn-mini ouro" onclick={salvarCorrecao}>Salvar</button>
                     <button class="btn-mini" onclick={() => (editando = null)}>Cancelar</button>

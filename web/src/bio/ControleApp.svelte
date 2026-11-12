@@ -1,7 +1,7 @@
 <script>
   import { onMount } from "svelte";
   import { rede, conectar, agir } from "../lib/conexao.svelte.js";
-  import { horaCurta, lembrar } from "../lib/util.js";
+  import { horaCurta, lembrar, iniciaisMaiusculas } from "../lib/util.js";
   import HeroHeader from "../lib/HeroHeader.svelte";
   import ConnStatus from "../lib/ConnStatus.svelte";
 
@@ -280,7 +280,7 @@
       <form class="form-recepcao" onsubmit={aoEnviar}>
         <div class="form-group">
           <label for="bnome">Nome e Sobrenome</label>
-          <input id="bnome" class="iniciais-maiusculas" bind:this={campoNome} bind:value={nome} maxlength="100" autocomplete="off" required />
+          <input id="bnome" class="iniciais-maiusculas" use:iniciaisMaiusculas bind:this={campoNome} bind:value={nome} maxlength="100" autocomplete="off" required />
         </div>
 
         {#if duplicado}
