@@ -18,7 +18,7 @@ flowchart TD
 ## Passo a passo
 
 ### 1. Cadastrar um paciente
-Digite **Nome e Sobrenome** (em um só campo, com pelo menos duas palavras) e toque no **tratamento** (o botão escolhido fica preenchido).
+Digite **Nome e Sobrenome** (em um só campo, com pelo menos duas palavras) e toque no **tratamento** (o botão escolhido fica preenchido). A **1ª letra de cada palavra** do nome vira maiúscula automaticamente (ex.: "Maria Da Silva"). O mesmo vale ao corrigir o nome.
 
 ![Formulário de cadastro com o tratamento escolhido](img/recepcao-1-formulario.webp)
 

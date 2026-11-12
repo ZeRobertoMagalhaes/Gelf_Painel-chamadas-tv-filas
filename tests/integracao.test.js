@@ -114,7 +114,7 @@ test('fechar o atendimento grava o relatório do dia e a visão traz o registro 
     assert.equal(app.visao().registro, null);
     assert.equal(app.visao().relatorio.cadastrados, 1);
     const salvo = fs.readFileSync(path.join(dir, 'relatorios', 'fila-2026-10-10.json'), 'utf8');
-    assert.ok(!salvo.includes('Ana'));
+    assert.ok(!/\bana\b/i.test(salvo));
     fechar(a);
 });
 
@@ -138,7 +138,7 @@ test('virada do dia com o servidor ligado apaga o dia anterior', async () => {
     // o relatório do dia que virou (só números, sem nomes) fica guardado
     const salvo = fs.readFileSync(path.join(dir, 'relatorios', 'fila-2026-10-10.json'), 'utf8');
     assert.equal(JSON.parse(salvo).cadastrados, 1);
-    assert.ok(!salvo.includes('Ana'));
+    assert.ok(!/\bana\b/i.test(salvo));
     assert.equal(app.visao().atendimentoAberto, false);
     assert.equal(app.visao().pacientes.length, 0);
     fechar(a);

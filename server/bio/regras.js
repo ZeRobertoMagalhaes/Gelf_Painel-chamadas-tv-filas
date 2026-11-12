@@ -7,7 +7,7 @@
 // Mesmo desenho das regras das filas: funções puras sobre o estado do dia,
 // sem rede nem disco; cada uma valida antes de alterar e lança ErroRegra.
 
-const { ErroRegra, dataLocal, isoLocal, chavePaciente, lerNome } = require('../regras');
+const { ErroRegra, dataLocal, isoLocal, chavePaciente, lerNome, iniciaisMaiusculas } = require('../regras');
 
 const LIMITE_HISTORICO = 20;
 const EM_SALA = ['chamado', 'em_atendimento'];
@@ -158,7 +158,7 @@ function importarPreinscritos(estado, args) {
     let novos = 0;
     for (const linha of String(args.texto ?? '').split(/\r?\n/)) {
         const [nomeCompleto, dia, ...resto] = linha.split(/;|\t/);
-        const partes = limparTexto(nomeCompleto, 100).split(' ').filter(Boolean);
+        const partes = limparTexto(nomeCompleto, 100).split(' ').filter(Boolean).map(iniciaisMaiusculas);
         if (partes.length < 2) continue;
         const nome = partes[0].slice(0, 40);
         const sobrenome = partes.slice(1).join(' ').slice(0, 60);

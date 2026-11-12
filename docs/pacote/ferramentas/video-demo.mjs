@@ -123,7 +123,7 @@ await cdp('Page.addScriptToEvaluateOnNewDocument', {
   const doc = (f) => (f ? document.getElementById(f).contentDocument : document);
   const achar = (f, sel, texto, filho) => {
     const lista = [...doc(f).querySelectorAll(sel)];
-    const el = texto ? lista.find((e) => e.textContent.trim().includes(texto)) : lista[0];
+    const el = texto ? lista.find((e) => e.textContent.trim().toUpperCase().includes(texto.toUpperCase())) : lista[0];
     return el && filho ? el.querySelector(filho) : el;
   };
   const ponto = (f, el) => {
@@ -283,7 +283,7 @@ const cenasCompleto = [
     id: 'cadastro',
     passos: [
       {
-        fala: 'O cadastro é feito em um único campo, com nome e sobrenome. Vamos cadastrar Maria Souza e João Pereira, no Reiki, e Ana Paula Lima, no Apométrico.',
+        fala: 'O cadastro é feito em um único campo, com nome e sobrenome, e a primeira letra de cada palavra vira maiúscula automaticamente. Vamos cadastrar Maria Souza e João Pereira, no Reiki, e Ana Paula Lima, no Apométrico.',
         fazer: async () => {
           for (const [nome, trat] of [['Maria Souza', 'Reiki'], ['João Pereira', 'Reiki'], ['Ana Paula Lima', 'Apométrico']]) {
             await digitar('#nome', nome);
@@ -381,9 +381,22 @@ const cenasCompleto = [
         },
       },
       {
-        fala: 'Essa equipe escolhe o Apométrico, escolhe a sala, e chama a Ana. A televisão mostra a Ana, e a Beatriz continua na sala do Reiki. O aviso amarelo é o limite do próprio Apométrico, de um paciente, e não depende do Reiki. Cada equipe segue o seu atendimento, sem interferir nas outras.',
+        fala: 'Essa equipe escolhe o Apométrico. Uma sala só recebe um paciente por vez. Veja o que acontece se ela tentar chamar a Ana para a Sala Reiki, onde a Beatriz está.',
         fazer: async () => {
           await clicar('button.trat-botao', 'Apométrico', cel({}));
+          await clicar('button.room-chip', 'Sala Reiki', cel({}));
+        },
+      },
+      {
+        fala: 'O sistema recusa, e pede para aguardar a finalização. Só o Reiki divide a sala entre vários pacientes.',
+        fazer: async () => {
+          await clicar('.bloco-chamar .btn-call', 'Chamar próximo', cel({}));
+          await destacar('.toast', 4500, 'cel');
+        },
+      },
+      {
+        fala: 'Então a equipe escolhe a Sala 2, que está livre, e chama a Ana. A televisão mostra a Ana, e a Beatriz continua na sala do Reiki. O aviso amarelo é o limite do próprio Apométrico, de um paciente, e não depende do Reiki. Cada equipe segue o seu atendimento, sem interferir nas outras.',
+        fazer: async () => {
           await clicar('button.room-chip', '2', cel({}));
           await clicar('.bloco-chamar .btn-call', 'Chamar próximo', cel({}));
           await esperar(3500);
@@ -435,7 +448,7 @@ const cenasCompleto = [
     preparar: () => ir(titulo('Painel Gelf', 'Obrigado pela atenção', 'Evangelho Terapia')),
     passos: [
       {
-        fala: 'Esta foi a demonstração do Painel Guélf para o Evangelho Terapia: limite de pacientes por tratamento, lembrado de um dia para o outro, chamada de qualquer paciente da fila, equipes de tratamentos diferentes trabalhando sem se bloquear, salas já selecionadas, aviso com o dia fechado, o relatório do dia, e a pergunta antes de fechar o atendimento. Obrigado pela atenção.',
+        fala: 'Esta foi a demonstração do Painel Guélf para o Evangelho Terapia: limite de pacientes por tratamento, lembrado de um dia para o outro, chamada de qualquer paciente da fila, uma sala para cada paciente, equipes de tratamentos diferentes trabalhando sem se bloquear, salas já selecionadas, aviso com o dia fechado, o relatório do dia, e a pergunta antes de fechar o atendimento. Obrigado pela atenção.',
       },
     ],
   },
@@ -448,7 +461,7 @@ const prepararDia = async () => {
   for (const [nome, tratamento] of [['Maria Souza', 'Reiki'], ['João Pereira', 'Reiki'], ['Beatriz Alves Costa', 'Reiki'], ['Ana Paula Lima', 'Apométrico']]) {
     await agir('cadastrar', { nome, tratamento: tratamento === 'Reiki' ? 'reiki' : 'apometrico' });
   }
-  const joao = filas.est.v.pacientes.find((x) => x.nomeExibicao.startsWith('João'));
+  const joao = filas.est.v.pacientes.find((x) => x.nomeExibicao.toUpperCase().startsWith('JOÃO'));
   await agir('priorizar', { id: joao.id });
 };
 const celularLimpo = async () => {
@@ -545,7 +558,18 @@ const cenasCelular = [
         fazer: () => clicar('button.trat-botao', 'Apométrico'),
       },
       {
-        fala: 'Essa equipe escolhe a sala, e chama a Ana, sem nenhum bloqueio, mesmo com o Reiki ocupado. Cada equipe segue o seu atendimento, sem interferir nas outras.',
+        fala: 'Uma sala só recebe um paciente por vez. Veja o que acontece se essa equipe tentar chamar a Ana para a Sala Reiki, onde a Beatriz está.',
+        fazer: () => clicar('button.room-chip', 'Sala Reiki'),
+      },
+      {
+        fala: 'O sistema recusa, e pede para aguardar a finalização. Só o Reiki divide a sala entre vários pacientes.',
+        fazer: async () => {
+          await clicar('.bloco-chamar .btn-call', 'Chamar próximo');
+          await destacar('.toast', 4500);
+        },
+      },
+      {
+        fala: 'Então a equipe escolhe a Sala 2, que está livre, e chama a Ana, sem nenhum bloqueio, mesmo com o Reiki ocupado. Cada equipe segue o seu atendimento, sem interferir nas outras.',
         fazer: async () => {
           await clicar('button.room-chip', '2');
           await clicar('.bloco-chamar .btn-call', 'Chamar próximo');

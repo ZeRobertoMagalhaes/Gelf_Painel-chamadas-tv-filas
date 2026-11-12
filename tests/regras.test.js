@@ -36,7 +36,9 @@ test('cadastro valida campos e normaliza espaços', () => {
     assert.equal(codigo(() => cad(e, 'Maria', 'Silva', 'inexistente')), 'invalido');
     const p = cad(e, '  Maria   ', ' da  Silva ');
     assert.equal(p.nome, 'Maria');
-    assert.equal(p.sobrenome, 'da Silva');
+    assert.equal(p.sobrenome, 'Da Silva'); // 1ª letra de cada palavra em maiúscula
+    const q = R.cadastrar(e, { nome: 'joÃO  dE ávila', tratamento: 'gao' }, ctx()).paciente;
+    assert.deepEqual([q.nome, q.sobrenome], ['João', 'De Ávila']);
     assert.equal(p.situacao, 'aguardando');
 });
 
@@ -44,7 +46,7 @@ test('cadastro aceita o nome completo em um único campo', () => {
     const e = diaAberto();
     const p = R.cadastrar(e, { nome: '  Maria   da  Silva  Santos ', tratamento: 'reiki' }, ctx()).paciente;
     assert.equal(p.nome, 'Maria');
-    assert.equal(p.sobrenome, 'da Silva Santos');
+    assert.equal(p.sobrenome, 'Da Silva Santos');
     assert.equal(codigo(() => R.cadastrar(e, { nome: 'Maria', tratamento: 'reiki' }, ctx())), 'invalido');
     assert.equal(codigo(() => R.cadastrar(e, { nome: {}, tratamento: 'reiki' }, ctx())), 'invalido');
     // a mesma pessoa digitada em um campo ou nos dois é reconhecida como duplicada

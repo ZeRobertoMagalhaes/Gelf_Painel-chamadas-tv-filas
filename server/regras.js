@@ -45,13 +45,20 @@ function limparTexto(valor, max) {
 // guardando nome (1ª palavra) e sobrenome (o resto), que é o que o painel usa
 // para abreviar. Aceita também os campos antigos separados (nome + sobrenome).
 // Sem args.nome/args.sobrenome, usa `atual` (ex.: corrigir sem mudar o nome).
+// O nome é sempre guardado com a 1ª letra de cada palavra em maiúscula e o resto em minúsculas
+// ("maria DA silva" -> "Maria Da Silva"), como aparece nas telas e no relatório.
+const iniciaisMaiusculas = (palavra) => {
+    const letras = Array.from(palavra.toLocaleLowerCase('pt-BR'));
+    return letras[0].toLocaleUpperCase('pt-BR') + letras.slice(1).join('');
+};
+
 function lerNome(args, atual = {}) {
     const texto = (v) => (typeof v === 'string' ? v : '');
     const completo =
         args.nome === undefined && args.sobrenome === undefined
             ? `${texto(atual.nome)} ${texto(atual.sobrenome)}`
             : `${texto(args.nome)} ${texto(args.sobrenome)}`;
-    const palavras = limparTexto(completo, 101).split(' ').filter(Boolean);
+    const palavras = limparTexto(completo, 101).split(' ').filter(Boolean).map(iniciaisMaiusculas);
     if (palavras.length < 2) throw new ErroRegra('invalido', 'Informe nome e sobrenome.');
     return { nome: palavras[0].slice(0, 40), sobrenome: palavras.slice(1).join(' ').slice(0, 60) };
 }
@@ -484,6 +491,7 @@ module.exports = {
     novoDia,
     chavePaciente,
     lerNome,
+    iniciaisMaiusculas,
     fila,
     limites,
     filtrarLimites,

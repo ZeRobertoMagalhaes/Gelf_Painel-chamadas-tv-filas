@@ -30,7 +30,7 @@ test('chegada aceita o nome completo em um único campo', () => {
     const e = diaAberto();
     const p = R.registrarChegada(e, { nome: 'João  da Silva' }, ctx()).paciente;
     assert.equal(p.nome, 'João');
-    assert.equal(p.sobrenome, 'da Silva');
+    assert.equal(p.sobrenome, 'Da Silva'); // 1ª letra de cada palavra em maiúscula
     assert.equal(codigo(() => R.registrarChegada(e, { nome: 'Joao' }, ctx())), 'invalido');
     assert.equal(codigo(() => R.registrarChegada(e, { nome: 'joao DA silva' }, ctx())), 'duplicado');
     R.corrigir(e, { id: p.id, nome: 'João Lima' }, ctx());
@@ -456,7 +456,7 @@ test('relatório do dia: só números (sem nomes), esperas e durações por etap
     const dou = rel.etapas.find((x) => x.id === 'doutores');
     assert.deepEqual([dou.atendidos, dou.esperaMediaMin, dou.duracaoMediaMin], [1, 5, 30]);
     assert.equal(rel.tempoMedioTotalMin, 67);
-    assert.equal(JSON.stringify(rel).includes('Ana'), false);
+    assert.equal(JSON.stringify(rel).toUpperCase().includes('ANA '), false);
 });
 
 test('fechar o dia apaga tudo, devolve o relatório e bloqueia ações', () => {
@@ -501,6 +501,6 @@ test('integração /bio: ação pelo socket, evento de chamada, relatório salvo
     const arquivo = path.join(dir, 'relatorios', `bio-${fim.relatorio.data}.json`);
     const salvo = fs.readFileSync(arquivo, 'utf8');
     assert.equal(JSON.parse(salvo).chegadas, 1);
-    assert.equal(salvo.includes('Rita'), false);
+    assert.equal(salvo.toUpperCase().includes('RITA'), false);
     controle.close(); painel.close(); io.close(); http.close();
 });

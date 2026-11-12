@@ -976,3 +976,6 @@ body.tela-relatorio { display: block; height: auto; min-height: 100%; overflow: 
 .pergunta-relatorio p { margin: 0; font-size: .9rem; }
 .pergunta-relatorio .estado-dica { color: #92400e; }
 .pergunta-botoes { display: flex; gap: 8px; flex-wrap: wrap; }
+
+/* Nome do paciente: 1ª letra de cada palavra em maiúscula enquanto se digita (o servidor grava assim). */
+input.iniciais-maiusculas { text-transform: capitalize; }

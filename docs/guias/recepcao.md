@@ -5,7 +5,7 @@ Endereço: `/recepcao` (ex.: http://painel-gelf-filas.local:3000/recepcao)
 **Começar o dia:** no canto esquerdo, embaixo, informe em **Pacientes chamados ao mesmo tempo** quantos pacientes de cada tratamento podem estar em sala (já vem com os valores do último dia; na primeira vez, 1) e toque em **Abrir atendimento**. Sem isso ninguém cadastra nem chama: tentar cadastrar com o dia fechado mostra um aviso de erro. Durante o dia dá para mudar os números e tocar em **Salvar limites**.
 
 **Cadastrar um paciente**
-1. Digite **Nome e Sobrenome** (no mesmo campo; precisa ter pelo menos duas palavras).
+1. Digite **Nome e Sobrenome** (no mesmo campo; precisa ter pelo menos duas palavras). A **1ª letra de cada palavra** do nome vira maiúscula automaticamente (ex.: "Maria Da Silva").
 2. Toque no **tratamento** (botão colorido).
 3. Toque em **Cadastrar** (ou Enter). O paciente entra no fim da fila e o cursor volta ao nome.
 

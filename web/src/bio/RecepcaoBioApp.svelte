@@ -105,7 +105,7 @@
       <form class="form-recepcao" onsubmit={aoEnviar}>
         <div class="form-group">
           <label for="rnome">Nome e Sobrenome</label>
-          <input id="rnome" bind:this={campoNome} bind:value={nome} maxlength="100" autocomplete="off" required />
+          <input id="rnome" class="iniciais-maiusculas" bind:this={campoNome} bind:value={nome} maxlength="100" autocomplete="off" required />
         </div>
 
         {#if duplicado}
@@ -163,7 +163,7 @@
           <div class="cartao-paciente" class:prioridade={p.prioridade}>
             {#if editando?.id === p.id && editando.modo === "corrigir"}
               <div class="cartao-edicao">
-                <input bind:value={editando.nome} maxlength="100" aria-label="Nome e Sobrenome" />
+                <input class="iniciais-maiusculas" bind:value={editando.nome} maxlength="100" aria-label="Nome e Sobrenome" />
                 <div class="alerta-acoes">
                   <button class="btn-mini ouro" onclick={salvarCorrecao}>Salvar</button>
                   <button class="btn-mini" onclick={() => (editando = null)}>Cancelar</button>

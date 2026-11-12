@@ -47,7 +47,7 @@ Abra a **Recepção** (`/recepcao`) e no canto esquerdo, embaixo, confira em **P
 
 ## 4. Cadastrar os pacientes
 
-1. Digite **Nome e Sobrenome** (no mesmo campo; pelo menos duas palavras).
+1. Digite **Nome e Sobrenome** (no mesmo campo; pelo menos duas palavras). A **1ª letra de cada palavra** do nome vira maiúscula automaticamente (ex.: "Maria Da Silva").
 2. Toque no **tratamento**.
 3. Toque em **Cadastrar**. O paciente entra no fim da fila. Use ★ para dar **prioridade**.
 
